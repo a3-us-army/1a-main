@@ -1,0 +1,473 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>PERSTAT</title>
+  <meta content="1A Website" property="og:title" />
+  <meta content="Welcome to 1A!" property="og:description" />
+  <meta content="https://1a75.org/personnel" property="og:url" />
+  <meta content="https://cdn.xanderxx.xyz/1a-logo.png" property="og:image" />
+  <meta content="#4b5a2a" data-react-helmet="true" name="theme-color" />
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="icon" href="/favicon.ico">
+  <link rel="stylesheet" href="/custom.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+  <style>
+    .personnel-card {
+      min-width: 260px;
+      max-width: 340px;
+      margin-bottom: 1.5rem;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+      border-radius: 1rem;
+      cursor: grab;
+    }
+    .personnel-avatar {
+      width: 72px;
+      height: 72px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 2px solid #dee2e6;
+      margin-bottom: 0.5rem;
+    }
+    .personnel-status {
+      font-size: 0.95rem;
+      margin-bottom: 0.5rem;
+    }
+    .personnel-actions .btn {
+      margin-right: 0.5rem;
+    }
+    .badge-reserve {
+      background: #1a237e !important;
+      color: #fff !important;
+    }
+    .platoon-section {
+      margin-bottom: 2.5rem;
+    }
+    .platoon-title {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: #ffe066;
+      margin-bottom: 0.5rem;
+      margin-top: 2rem;
+      cursor: grab;
+    }
+    .squad-title {
+      font-size: 1.15rem;
+      font-weight: 600;
+      color: #b68900;
+      margin-bottom: 1rem;
+      margin-top: 1.5rem;
+      cursor: grab;
+    }
+    @media (max-width: 600px) {
+      .personnel-card {
+        min-width: 100%;
+        max-width: 100%;
+      }
+      .availability-btn {
+        margin-top: 0.5rem;
+      }
+    }
+    .availability-btn {
+  color: #23272f !important;
+  background-color: #0dcaf0 !important; /* Bootstrap info color */
+  border-color: #0dcaf0 !important;
+  font-weight: 600;
+}
+.availability-btn:hover, .availability-btn:focus {
+  color: #181a1b !important;
+  background-color: #31d2f2 !important;
+  border-color: #31d2f2 !important;
+}
+  </style>
+</head>
+<body>
+  <%- include("partials/navbar", { user, active }) %>
+  <div class="container mt-5" id="main-content">
+    <h2 class="mb-4 text-center">
+      <i class="bi bi-people me-2"></i>All Personnel
+    </h2>
+    <div class="row mb-3">
+      <div class="col-md-7">
+        <input id="searchBox" type="text" class="form-control" placeholder="Search by Name, Role, or MOS">
+      </div>
+      <div class="col-md-2">
+        <button id="clearBtn" class="btn btn-outline-secondary w-100">
+          <i class="bi bi-x-circle"></i> Clear
+        </button>
+      </div>
+      <div class="col-md-3 mt-2 mt-md-0 d-flex justify-content-md-end justify-content-center">
+        <a href="https://docs.google.com/spreadsheets/d/11b5ZnMwxw3qj66q3-PMy0YHFOn5Th_I-NnsJH5cRrF4" target="_blank" rel="noopener" class="btn btn-info w-100 availability-btn">
+          <i class="bi bi-calendar-check"></i> Show Availability
+        </a>
+      </div>
+    </div>
+    <% if (isAdmin) { %>
+      <div class="mb-3 d-flex justify-content-end align-items-center gap-2">
+        <button id="editModeBtn" class="btn btn-warning">
+          <i class="bi bi-pencil-square"></i> <span id="editModeBtnText">Enable Reordering</span>
+        </button>
+        <button id="addUserBtn" class="btn btn-success">
+          <i class="bi bi-person-plus"></i> Add User
+        </button>
+      </div>
+    <% } %>
+    <div id="platoon-sections"></div>
+  </div>
+
+  <!-- Add/Edit User Modal -->
+  <div class="modal fade" id="userModal" tabindex="-1" aria-labelledby="userModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <form class="modal-content" id="userForm">
+        <div class="modal-header">
+          <h5 class="modal-title" id="userModalLabel">Add/Edit User</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <input type="hidden" id="userId" name="id">
+          <div class="mb-2">
+            <label class="form-label">Discord ID</label>
+            <input type="text" class="form-control" id="discordId" name="discord_id" required>
+          </div>
+          <div class="mb-2">
+            <label class="form-label">Discord Username</label>
+            <input type="text" class="form-control" id="discordUsername" name="discord_username" required>
+          </div>
+          <div class="mb-2">
+            <label class="form-label">Name</label>
+            <input type="text" class="form-control" id="unitName" name="name" required>
+          </div>
+          <div class="mb-2">
+            <label class="form-label">Position</label>
+            <input type="text" class="form-control" id="position" name="position">
+          </div>
+          <div class="mb-2">
+            <label class="form-label">Callsign</label>
+            <input type="text" class="form-control" id="callsign" name="callsign">
+          </div>
+          <div class="mb-2">
+            <label class="form-label">Role/MOS</label>
+            <input list="mosList" type="text" class="form-control" id="role" name="role">
+            <datalist id="mosList"><option value="">Select one</option>
+                <option value="11B">11B - Infantryman</option>
+                <option value="11C">11C - Indirect Infantryman (Mortars)</option>
+                <option value="13F">13F - Forward Observer</option>
+                <option value="68W">68W - Medic</option>
+                <option value="153A">153A - Rotary Wing Aviator</option>
+                <option value="11F1X">11F1X - Fixed Wing Aviator</option></datalist>
+          </div>
+          <div class="mb-2">
+            <label class="form-label">Status</label>
+            <select class="form-select" id="status" name="status">
+              <option value="Active">Active</option>
+              <option value="Inactive">Inactive</option>
+              <option value="Reserve">Reserve</option>
+              <option value="Empty">Empty</option>
+              <option value="LOA">LOA</option>
+            </select>
+          </div>
+          <div class="mb-2">
+            <label class="form-label">Squad</label>
+            <input list="squadList" type="text" class="form-control" id="squad" name="squad">
+            <datalist id="squadList"></datalist>
+          </div>
+          <div class="mb-2">
+            <label class="form-label">Platoon</label>
+            <input list="platoonList" type="text" class="form-control" id="platoon" name="platoon">
+            <datalist id="platoonList"></datalist>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="submit" class="btn btn-primary">Save</button>
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <%- include("partials/footer") %>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.2/Sortable.min.js"></script>
+  <script>
+    const isAdmin = <%= isAdmin ? "true" : "false" %>;
+    let editMode = false;
+    let lastPersonnel = [];
+
+    function getStatusBadge(status) {
+      if (status === "Active") return "success";
+      if (status === "Inactive") return "danger";
+      if (status === "LOA") return "warning";
+      if (status && status.toLowerCase().includes("reserve")) return "reserve";
+      return "secondary";
+    }
+
+    function renderCard(person) {
+      const avatar = person.discord_avatar
+        ? `https://cdn.discordapp.com/avatars/${person.discord_id}/${person.discord_avatar}.png`
+        : '';
+      const statusClass = getStatusBadge(person.status);
+      return `
+        <div class="col-12 col-sm-6 col-md-4 col-lg-3 d-flex" data-id="${person.id}">
+          <div class="card personnel-card flex-fill">
+            <div class="card-body text-center">
+              <img src="${avatar}" class="personnel-avatar" alt="Avatar" onerror="this.src=''">
+              <h5 class="card-title mb-1">${person.name || ""}</h5>
+              <div class="text-muted mb-1">${person.discord_username || ""}</div>
+              <div class="personnel-status mb-2">
+                <span class="badge ${statusClass === "reserve" ? "badge-reserve" : "bg-" + statusClass}">
+                  ${person.status || "Unknown"}
+                </span>
+              </div>
+              <div class="mb-1"><strong>Role/MOS:</strong> ${person.role || "—"}</div>
+              <div class="mb-1"><strong>Position:</strong> ${person.position || "—"}</div>
+              <div class="mb-1"><strong>Callsign:</strong> ${person.callsign || "—"}</div>
+              ${isAdmin ? `
+                <div class="personnel-actions mt-2">
+                  <button class="btn btn-sm btn-outline-primary edit-btn" data-id="${person.id}" title="Edit"><i class="bi bi-pencil"></i> Edit</button>
+                  <button class="btn btn-sm btn-outline-danger delete-btn" data-id="${person.id}" title="Delete"><i class="bi bi-trash"></i> Delete</button>
+                </div>
+              ` : ""}
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    function groupPersonnel(personnel) {
+      const grouped = {};
+      personnel.forEach(person => {
+        const platoon = person.platoon || "Unassigned Platoon";
+        const squad = person.squad || "Unassigned Squad";
+        if (!grouped[platoon]) grouped[platoon] = { order: person.platoon_order ?? 9999, squads: {} };
+        if (!grouped[platoon].squads[squad]) grouped[platoon].squads[squad] = { order: person.squad_order ?? 9999, people: [] };
+        grouped[platoon].squads[squad].people.push(person);
+      });
+      return grouped;
+    }
+
+    function renderSections(personnel) {
+      lastPersonnel = personnel; // Save for datalist population
+      const container = document.getElementById("platoon-sections");
+      const grouped = groupPersonnel(personnel);
+
+      // Sort platoons by platoon_order
+      const platoonNames = Object.keys(grouped).sort((a, b) => (grouped[a].order ?? 9999) - (grouped[b].order ?? 9999));
+      let html = `<div id="platoon-list">`;
+      platoonNames.forEach(platoon => {
+        html += `<div class="platoon-section" data-platoon="${platoon}">
+          <div class="platoon-title handle">${platoon}</div>
+          <div class="squad-list">`;
+
+        // Sort squads by squad_order
+        const squads = grouped[platoon].squads;
+        const squadNames = Object.keys(squads).sort((a, b) => (squads[a].order ?? 9999) - (squads[b].order ?? 9999));
+        squadNames.forEach(squad => {
+          html += `<div class="squad-section" data-squad="${squad}">
+            <div class="squad-title handle">${squad}</div>
+            <div class="row personnel-row" id="squad-row-${encodeURIComponent(squad)}" data-squad="${squad}">`;
+          squads[squad].people
+            .sort((a, b) => (a.sort_order ?? 9999) - (b.sort_order ?? 9999))
+            .forEach(person => {
+              html += renderCard(person);
+            });
+          html += `</div></div>`;
+        });
+
+        html += `</div></div>`;
+      });
+      html += `</div>`;
+      container.innerHTML = html;
+
+      if (isAdmin) {
+        // Enable drag-and-drop for personnel within squads
+        document.querySelectorAll('.personnel-row').forEach(row => {
+          row._sortable = new Sortable(row, {
+            animation: 150,
+            handle: '.card',
+            disabled: !editMode,
+            onEnd: function (evt) {
+              if (!editMode) return;
+              const squad = row.getAttribute('data-squad');
+              const ids = Array.from(row.querySelectorAll('.col-12[data-id]')).map(card => card.getAttribute('data-id'));
+              fetch('/personnel/api/personnel/reorder', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ squad, ids })
+              });
+            }
+          });
+        });
+
+        // Enable drag-and-drop for squads within platoons
+        document.querySelectorAll('.squad-list').forEach(list => {
+          list._sortable = new Sortable(list, {
+            animation: 150,
+            handle: '.squad-title',
+            disabled: !editMode,
+            onEnd: function (evt) {
+              if (!editMode) return;
+              const platoon = list.closest('.platoon-section').getAttribute('data-platoon');
+              const squads = Array.from(list.querySelectorAll('.squad-section')).map(sec => sec.getAttribute('data-squad'));
+              fetch('/personnel/api/personnel/reorder-squads', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ platoon, squads })
+              });
+            }
+          });
+        });
+
+        // Enable drag-and-drop for platoons
+        const platoonList = document.getElementById('platoon-list');
+        if (platoonList) {
+          platoonList._sortable = new Sortable(platoonList, {
+            animation: 150,
+            handle: '.platoon-title',
+            disabled: !editMode,
+            onEnd: function (evt) {
+              if (!editMode) return;
+              const platoons = Array.from(document.querySelectorAll('.platoon-section')).map(sec => sec.getAttribute('data-platoon'));
+              fetch('/personnel/api/personnel/reorder-platoons', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ platoons })
+              });
+            }
+          });
+        }
+
+        // Attach edit/delete handlers
+        document.querySelectorAll(".edit-btn").forEach(btn => {
+          btn.onclick = function() {
+            const id = btn.getAttribute("data-id");
+            const person = lastPersonnel.find(p => String(p.id) === String(id));
+            if (!person) return;
+            document.getElementById("userId").value = person.id || "";
+            document.getElementById("discordId").value = person.discord_id || "";
+            document.getElementById("discordUsername").value = person.discord_username || "";
+            document.getElementById("unitName").value = person.name || "";
+            document.getElementById("position").value = person.position || "";
+            document.getElementById("callsign").value = person.callsign || "";
+            document.getElementById("role").value = person.role || "";
+            document.getElementById("status").value = person.status || "Active";
+            document.getElementById("squad").value = person.squad || "";
+            document.getElementById("platoon").value = person.platoon || "";
+            document.getElementById("userModalLabel").textContent = "Edit User";
+            new bootstrap.Modal(document.getElementById("userModal")).show();
+          };
+        });
+        document.querySelectorAll(".delete-btn").forEach(btn => {
+          btn.onclick = function() {
+            const id = btn.getAttribute("data-id");
+            if (confirm("Are you sure you want to delete this user?")) {
+              fetch("/personnel/api/personnel/delete", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ id })
+              }).then(() => loadPersonnel());
+            }
+          };
+        });
+      }
+
+      updateDatalists();
+      updateEditModeUI();
+    }
+
+    // Populate datalists for platoon, squad, and MOS
+    function updateDatalists() {
+      const platoonSet = new Set();
+      const squadSet = new Set();
+      const mosSet = new Set();
+      lastPersonnel.forEach(p => {
+        if (p.platoon && p.platoon !== "Unassigned Platoon") platoonSet.add(p.platoon);
+        if (p.squad && p.squad !== "Unassigned Squad") squadSet.add(p.squad);
+        if (p.role && p.role !== "—") mosSet.add(p.role);
+      });
+      document.getElementById("platoonList").innerHTML =
+        Array.from(platoonSet).sort().map(p => `<option value="${p}">`).join("");
+      document.getElementById("squadList").innerHTML =
+        Array.from(squadSet).sort().map(s => `<option value="${s}">`).join("");
+      document.getElementById("mosList").innerHTML =
+        Array.from(mosSet).sort().map(m => `<option value="${m}">`).join("");
+    }
+
+    // Load personnel from API
+    async function loadPersonnel() {
+      const res = await fetch("/personnel/api/personnel");
+      const personnel = await res.json();
+      renderSections(personnel);
+    }
+
+    // Live search as you type
+    function debounce(func, wait) {
+      let timeout;
+      return function(...args) {
+        clearTimeout(timeout);
+        timeout = setTimeout(() => func.apply(this, args), wait);
+      };
+    }
+
+    const searchBox = document.getElementById("searchBox");
+    const liveSearch = debounce(function() {
+      const val = searchBox.value.trim();
+      let url = "/personnel/api/personnel";
+      if (val) url += "?search=" + encodeURIComponent(val);
+      fetch(url)
+        .then(res => res.json())
+        .then(personnel => renderSections(personnel));
+    }, 250);
+
+    searchBox.addEventListener("input", liveSearch);
+
+    document.getElementById("clearBtn").onclick = function() {
+      searchBox.value = "";
+      liveSearch();
+    };
+
+    // Edit Mode Toggle
+    function updateEditModeUI() {
+      if (!isAdmin) return;
+      document.querySelectorAll('.personnel-row, .squad-list, #platoon-list').forEach(row => {
+        if (row._sortable) {
+          row._sortable.option("disabled", !editMode);
+        }
+      });
+      document.getElementById("editModeBtnText").textContent = editMode ? "Disable Reordering" : "Enable Reordering";
+    }
+
+    if (isAdmin) {
+      document.getElementById("editModeBtn").onclick = function() {
+        editMode = !editMode;
+        updateEditModeUI();
+      };
+
+      document.getElementById("addUserBtn").onclick = function() {
+        document.getElementById("userForm").reset();
+        document.getElementById("userId").value = "";
+        document.getElementById("userModalLabel").textContent = "Add User";
+        new bootstrap.Modal(document.getElementById("userModal")).show();
+      };
+
+      // Handle add/edit form submit
+      document.getElementById("userForm").onsubmit = function(e) {
+        e.preventDefault();
+        const form = e.target;
+        const data = Object.fromEntries(new FormData(form).entries());
+        const url = data.id ? "/personnel/api/personnel/update-full" : "/personnel/api/personnel/add";
+        fetch(url, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(data)
+        }).then(() => {
+          bootstrap.Modal.getInstance(document.getElementById("userModal")).hide();
+          loadPersonnel();
+        });
+      };
+    }
+
+    // Initial load
+    loadPersonnel();
+  </script>
+</body>
+</html>

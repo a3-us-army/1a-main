@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Equipment Out on Deployment</title>
+  <meta content="1A Website" property="og:title" />
+  <meta content="Welcome to 1A!" property="og:description" />
+  <meta content="https://1a75.org/equipment/out" property="og:url" />
+  <meta content="https://cdn.xanderxx.xyz/1a-logo.png" property="og:image" />
+  <meta content="#4b5a2a" data-react-helmet="true" name="theme-color" />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="/custom.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+  <style>
+    .deployment-card {
+      border-radius: 0.7rem;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+      border: 1.5px solid #23272f;
+      background: #23272f;
+      color: #fff;
+      margin-bottom: 1.2rem;
+    }
+    .deployment-card .card-title {
+      color: #ffe066;
+      font-size: 1.1rem;
+      font-weight: 600;
+      text-shadow: 0 1px 2px #000, 0 0 2px #23272f;
+    }
+    .deployment-card .badge {
+      font-size: 0.95em;
+    }
+    .deployment-card .card-text {
+      color: #f1f1f1;
+      text-shadow: 0 1px 2px #000, 0 0 2px #23272f;
+    }
+    .deployment-card .card-footer {
+      background: transparent;
+      border-top: none;
+    }
+    @media (max-width: 600px) {
+      .deployment-card {
+        margin-bottom: 1rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <%- include("partials/navbar", { user, active }) %>
+  <div class="container mt-4">
+    <h1>Equipment Out on Deployment</h1>
+    <% if (outRequests.length === 0) { %>
+      <div class="alert alert-info text-center">No equipment is currently out on deployment.</div>
+    <% } %>
+    <div class="row g-3">
+      <% outRequests.forEach(r => { %>
+        <div class="col-12 col-md-6 col-lg-4">
+          <div class="card deployment-card h-100">
+            <div class="card-body d-flex flex-column">
+              <div class="d-flex justify-content-between align-items-center mb-2">
+                <span class="card-title"><i class="bi bi-box"></i> <%= r.equipment_name %></span>
+                <span class="badge bg-secondary"><%= r.event_title %></span>
+              </div>
+              <div class="mb-2">
+                <span class="badge bg-info text-dark me-1">
+                  Checked Out By: <%= r.requested_by_username || r.requested_by %>
+                </span>
+                <span class="badge bg-primary me-1">Qty: <%= r.quantity %></span>
+              </div>
+              <div class="mb-2">
+                <span class="text-muted">
+                  Approved At:
+                  <% if (r.approved_at) { %>
+                    <span class="approved-at" data-iso="<%= r.approved_at %>"></span>
+                  <% } else { %>
+                    N/A
+                  <% } %>
+                </span>
+              </div>
+              <div class="mb-2">
+                <span class="text-muted">
+                  Event Date:
+                  <% if (r.event_time) { %>
+                    <span class="event-date" data-epoch="<%= r.event_time %>"></span>
+                  <% } else { %>
+                    N/A
+                  <% } %>
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+      <% }) %>
+    </div>
+  </div>
+
+  <!-- Centered Back Button at the Bottom -->
+  <div class="container mt-5 mb-4">
+    <div class="d-flex justify-content-center">
+      <a href="/equipment" class="btn btn-outline-secondary">
+        <i class="bi bi-arrow-left"></i> Back to Inventory
+      </a>
+    </div>
+  </div>
+
+  <%- include("partials/footer") %>
+  <script>
+    document.addEventListener("DOMContentLoaded", function() {
+      // Format ISO dates to local time
+      document.querySelectorAll('.approved-at').forEach(function(el) {
+        const iso = el.getAttribute('data-iso');
+        if (iso) {
+          const date = new Date(iso);
+          el.textContent = date.toLocaleString();
+        }
+      });
+      // Format event dates (epoch seconds)
+      document.querySelectorAll('.event-date').forEach(function(el) {
+        const epoch = el.getAttribute('data-epoch');
+        if (epoch) {
+          const date = new Date(Number(epoch) * 1000);
+          el.textContent = date.toLocaleString();
+        }
+      });
+    });
+  </script>
+</body>
+</html>

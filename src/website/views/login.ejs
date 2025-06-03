@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Access Expired</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="icon" href="/favicon.ico">
+  <link rel="stylesheet" href="/custom.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+  <style>
+    body {
+      background: #181a1b;
+      color: #fff;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+    .expired-container {
+      flex: 1 0 auto;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      min-height: 70vh;
+    }
+    .expired-logo {
+      width: 90px;
+      height: 90px;
+      object-fit: contain;
+      margin-bottom: 1.5rem;
+      border-radius: 0.7rem;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.13);
+      background: #23272f;
+      padding: 0.5rem;
+    }
+    .discord-btn {
+      background: #5865f2;
+      color: #fff;
+      font-weight: 600;
+      border: none;
+      border-radius: 0.4rem;
+      padding: 0.7rem 2.2rem;
+      font-size: 1.15rem;
+      margin-top: 2.5rem;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.12);
+      transition: background 0.2s;
+      display: flex;
+      align-items: center;
+      gap: 0.7rem;
+    }
+    .discord-btn:hover, .discord-btn:focus {
+      background: #4752c4;
+      color: #fff;
+      text-decoration: none;
+    }
+    .discord-btn i {
+      font-size: 1.5rem;
+      vertical-align: middle;
+    }
+    @media (max-width: 600px) {
+      .expired-container h1 {
+        font-size: 1.2rem;
+      }
+      .discord-btn {
+        width: 100%;
+        justify-content: center;
+        font-size: 1rem;
+        padding: 0.7rem 0;
+      }
+      .expired-logo {
+        width: 64px;
+        height: 64px;
+        margin-bottom: 1rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="expired-container">
+    <img src="https://cdn.xanderxx.xyz/1a-logo.png" alt="1A Logo" class="expired-logo">
+    <h1 class="mb-4 text-center">
+      <i class="bi bi-exclamation-triangle-fill text-warning me-2"></i>
+      Your access has expired.<br>Please log in again.
+    </h1>
+    <a href="/login" class="discord-btn">
+      <i class="bi bi-discord"></i>
+      Log in with Discord
+    </a>
+  </div>
+  <%- include("partials/footer") %>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

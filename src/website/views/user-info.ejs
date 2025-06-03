@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>User Info</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+  <link rel="icon" href="/favicon.ico">
+  <link rel="stylesheet" href="/custom.css">
+  <style>
+    .user-banner {
+      width: 100%;
+      max-height: 180px;
+      object-fit: cover;
+      border-radius: 1rem 1rem 0 0;
+      margin-bottom: -48px;
+    }
+    .user-avatar {
+      width: 96px;
+      height: 96px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 4px solid #fff;
+      margin-top: -48px;
+      background: #fff;
+    }
+    .role-badge {
+      display: inline-block;
+      margin: 0.2rem 0.3rem 0.2rem 0;
+      padding: 0.4em 0.8em;
+      border-radius: 1em;
+      font-size: 0.97em;
+      font-weight: 500;
+      border: 1.5px solid #fff;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.04);
+      transition: filter 0.1s;
+    }
+    .role-badge:hover {
+      filter: brightness(1.1);
+    }
+  </style>
+</head>
+<body>
+  <%- include("partials/navbar", { user, active }) %>
+  <div class="container mt-4" id="main-content">
+    <div class="row justify-content-center">
+      <div class="col-12 col-md-8 col-lg-6">
+        <div class="card shadow-lg mx-auto">
+          <% if (bannerUrl) { %>
+            <img src="<%= bannerUrl %>" class="user-banner" alt="Discord Banner">
+          <% } %>
+          <div class="card-body text-center">
+            <img src="<%= avatarUrl %>" class="user-avatar mb-2" alt="User Avatar">
+            <h3 class="card-title mb-1">
+              <%= discordUser.username %>
+              <% if (discordUser.discriminator && discordUser.discriminator !== "0") { %>
+                #<%= discordUser.discriminator %>
+              <% } %>
+            </h3>
+            <p class="text-muted mb-2">Discord ID: <%= discordUser.id %></p>
+            <% 
+            // Helper: get best text color for a given hex background
+            function getRoleTextColor(hex) {
+              if (!hex) return "#fff";
+              const r = parseInt(hex.substring(0,2), 16);
+              const g = parseInt(hex.substring(2,4), 16);
+              const b = parseInt(hex.substring(4,6), 16);
+              const luminance = 0.299*r + 0.587*g + 0.114*b;
+              return luminance > 186 ? "#222" : "#fff";
+            }
+            %>
+            <% if (userRoles && userRoles.length) { %>
+              <div class="mb-2">
+                <strong>Roles in Server:</strong><br>
+                <% userRoles.forEach(role => { 
+                  const hex = role.color.toString(16).padStart(6, '0');
+                  const textColor = getRoleTextColor(hex);
+                %>
+                  <span class="role-badge" style="background: #<%= hex %>; color: <%= textColor %>;">
+                    <%= role.name %>
+                  </span>
+                <% }) %>
+              </div>
+            <% } %>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <%- include("partials/footer") %>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

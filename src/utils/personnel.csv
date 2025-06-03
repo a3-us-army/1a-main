@@ -1,0 +1,36 @@
+,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,"1st Platoon, Alpha Company",,,,,Alpha Company Headquarters,,,,,,
+,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,Position,Callsign,Status,Name,,Position,Callsign,Status,Name,,,
+,,,,,,,,,Platoon Leader,KA16,Active Reserve,J. Burdick,,A Co. CMDR,KA01,Active,Y. Ramrod,,,
+,,,,,,,,,Platoon Sergeant,KA17,Active,A. Falcon,,A  Co. XO,KA02,Active,J. Vu,,,
+,,,,,,,,,Platoon Medic,KA19,Inactive,B. Abdulrahman,,A Co. 1SG,KA03,Active,D. Quantum,,,
+,,,,,,,,,Platoon RTO,KA16R,Empty,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,
+,"1st Platoon, 1st Squad (Assault 1) ",,,,,"1st Platoon, 2nd Squad (Assault 2) ",,,,,,"1st Platoon, 3rd Squad (Security) ",,,,,"1st Platoon, 4th Squad (Weapons) ",,,
+,,,,,,,,,,,,,,,,,,,,
+,Position,Callsign,Status,Name,,Position,Callsign,Status,Name,,,Position,Callsign,Status,Name,,Position,Callsign,Status,Name
+,Squad Leader,KA11,Empty,,,Squad Leader,KA12,Empty,,,,Squad Leader,KA13,Empty,,,Squad Leader,KA14,Active,A. Gerber
+,A Team Leader,KA11A,Active,H. Xander,,A Team Leader,KA12A,Empty,,,,A Team Leader,KA13A,Empty,,,A Gun TL,KA14A,Active,M. Clarkson
+,A SAW,N/A,Active,C. James,,A SAW,N/A,Empty,,,,A SAW,N/A,Empty,,,240,N/A,Active,A. Day
+,A Grenadier,N/A,Empty,,,A Grenadier,N/A,Empty,,,,A Grenadier,N/A,Empty,,,B Gun TL,KA14B,Active,L. Hite
+,A Rifleman,N/A,Active,C. Kyle,,A Rifleman,N/A,Empty,,,,A Rifleman,N/A,Empty,,,240,N/A,Empty,
+,B Team Leader,KA11B,Active,O. Omoeo,,B Team Leader,KA12B,Empty,,,,B Team Leader,KA13B,Empty,,,C Gun TL,KA14C,Active,D. Blackburn
+,B SAW,N/A,Empty,,,B SAW,N/A,Empty,,,,B SAW,N/A,Empty,,,240,N/A,Inactive,C. Stone
+,B Grenadier,N/A,Empty,,,B Grenadier,N/A,Empty,,,,B Grenadier,N/A,Empty,,,AT Team Leader,KA18,Active,R. Vance
+,B Rifleman,N/A,Empty,,,B Rifleman,N/A,Empty,,,,B Rifleman,N/A,Empty,,,Carl Gustaf,N/A,Active,N. Phillips
+,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,
+,Alpha Company Fires Cell,,,,,"Delta Company, Battalion Mortars",,,,,,"Delta Company, Sniper Section",,,,,,,,
+,,,,,,,,,,,,,,,,,,,,
+,Position,Callsign,Status,Name,,Position,Callsign,Status,Name,,,Position,Callsign,Status,Name,,,,,
+,17th STS TACP,STRIKER,Active,E. Fox,,Mortar FDC,VERMIN,Active,R. George,,,Team 1 TL,KS1A,Active,T. Luci,,,,,
+,FO,TYRANT12,Empty,,,Mortar Gun 1 TL,MTR1,Active,L. Lazarus,,,Team 1 Spotter ,KS1A,Active,J. Hermes,,,,,
+,FO,KA72,Empty,,,60mm Mortar,N/A,Empty,,,,Team 2 TL,KS2A,Empty,,,,,,
+,,,,,,Mortar Gun 2 TL,MTR2,Empty,,,,Team 2 Spotter,KS2A,Empty,,,,,,
+,,,,,,60mm Mortar,N/A,Empty,,,,,,,,,,,,

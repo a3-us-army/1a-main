@@ -1,0 +1,2123 @@
+[
+  {
+    "id": "1375211467770691710",
+    "application_id": "1297310943885394030",
+    "version": "1375211467967561863",
+    "default_member_permissions": "4",
+    "type": 1,
+    "name": "ban",
+    "name_localizations": null,
+    "description": "Ban a member from the server",
+    "description_localizations": null,
+    "dm_permission": true,
+    "contexts": null,
+    "integration_types": [
+      0,
+      1
+    ],
+    "options": [
+      {
+        "type": 6,
+        "name": "user",
+        "name_localizations": null,
+        "description": "User to ban",
+        "description_localizations": null,
+        "required": true
+      },
+      {
+        "type": 3,
+        "name": "reason",
+        "name_localizations": null,
+        "description": "Reason",
+        "description_localizations": null
+      }
+    ],
+    "nsfw": false,
+    "category": "Admin"
+  },
+  {
+    "id": "1375211467770691711",
+    "application_id": "1297310943885394030",
+    "version": "1375211467967561864",
+    "default_member_permissions": "8192",
+    "type": 1,
+    "name": "clear",
+    "name_localizations": null,
+    "description": "Bulk delete messages",
+    "description_localizations": null,
+    "dm_permission": true,
+    "contexts": null,
+    "integration_types": [
+      0,
+      1
+    ],
+    "options": [
+      {
+        "type": 4,
+        "name": "amount",
+        "name_localizations": null,
+        "description": "Number of messages (max 100)",
+        "description_localizations": null,
+        "required": true
+      }
+    ],
+    "nsfw": false,
+    "category": "Admin"
+  },
+  {
+    "id": "1375211467770691712",
+    "application_id": "1297310943885394030",
+    "version": "1375211467967561865",
+    "default_member_permissions": "2",
+    "type": 1,
+    "name": "kick",
+    "name_localizations": null,
+    "description": "Kick a member from the server",
+    "description_localizations": null,
+    "dm_permission": true,
+    "contexts": null,
+    "integration_types": [
+      0,
+      1
+    ],
+    "options": [
+      {
+        "type": 6,
+        "name": "user",
+        "name_localizations": null,
+        "description": "User to kick",
+        "description_localizations": null,
+        "required": true
+      },
+      {
+        "type": 3,
+        "name": "reason",
+        "name_localizations": null,
+        "description": "Reason",
+        "description_localizations": null
+      }
+    ],
+    "nsfw": false,
+    "category": "Admin"
+  },
+  {
+    "id": "1375211467770691713",
+    "application_id": "1297310943885394030",
+    "version": "1375211467967561866",
+    "default_member_permissions": "1099511627776",
+    "type": 1,
+    "name": "listwarnings",
+    "name_localizations": null,
+    "description": "List all warnings for a user",
+    "description_localizations": null,
+    "dm_permission": true,
+    "contexts": null,
+    "integration_types": [
+      0,
+      1
+    ],
+    "options": [
+      {
+        "type": 6,
+        "name": "user",
+        "name_localizations": null,
+        "description": "User to check",
+        "description_localizations": null,
+        "required": true
+      }
+    ],
+    "nsfw": false,
+    "category": "Admin"
+  },
+  {
+    "id": "1375211467770691714",
+    "application_id": "1297310943885394030",
+    "version": "1375211467967561867",
+    "default_member_permissions": "16",
+    "type": 1,
+    "name": "lockdown",
+    "name_localizations": null,
+    "description": "Lock the current channel (prevent @everyone from sending messages)",
+    "description_localizations": null,
+    "dm_permission": true,
+    "contexts": null,
+    "integration_types": [
+      0,
+      1
+    ],
+    "nsfw": false,
+    "category": "Admin"
+  },
+  {
+    "id": "1375211467770691716",
+    "application_id": "1297310943885394030",
+    "version": "1375211467967561868",
+    "default_member_permissions": "1099511627776",
+    "type": 1,
+    "name": "mute",
+    "name_localizations": null,
+    "description": "Timeout a member (mute)",
+    "description_localizations": null,
+    "dm_permission": true,
+    "contexts": null,
+    "integration_types": [
+      0,
+      1
+    ],
+    "options": [
+      {
+        "type": 6,
+        "name": "user",
+        "name_localizations": null,
+        "description": "User to mute",
+        "description_localizations": null,
+        "required": true
+      },
+      {
+        "type": 3,
+        "name": "duration",
+        "name_localizations": null,
+        "description": "Duration (e.g. 10m, 1h)",
+        "description_localizations": null,
+        "required": true
+      },
+      {
+        "type": 3,
+        "name": "reason",
+        "name_localizations": null,
+        "description": "Reason",
+        "description_localizations": null
+      }
+    ],
+    "nsfw": false,
+    "category": "Admin"
+  },
+  {
+    "id": "1375211467770691717",
+    "application_id": "1297310943885394030",
+    "version": "1375211468060102716",
+    "default_member_permissions": "134217728",
+    "type": 1,
+    "name": "nick",
+    "name_localizations": null,
+    "description": "Change a user's nickname",
+    "description_localizations": null,
+    "dm_permission": true,
+    "contexts": null,
+    "integration_types": [
+      0,
+      1
+    ],
+    "options": [
+      {
+        "type": 6,
+        "name": "user",
+        "name_localizations": null,
+        "description": "User to change nickname",
+        "description_localizations": null,
+        "required": true
+      },
+      {
+        "type": 3,
+        "name": "nickname",
+        "name_localizations": null,
+        "description": "New nickname",
+        "description_localizations": null,
+        "required": true
+      }
+    ],
+    "nsfw": false,
+    "category": "Admin"
+  },
+  {
+    "id": "1375211467770691718",
+    "application_id": "1297310943885394030",
+    "version": "1375211468060102717",
+    "default_member_permissions": "16",
+    "type": 1,
+    "name": "slowmode",
+    "name_localizations": null,
+    "description": "Set channel slowmode (seconds)",
+    "description_localizations": null,
+    "dm_permission": true,
+    "contexts": null,
+    "integration_types": [
+      0,
+      1
+    ],
+    "options": [
+      {
+        "type": 4,
+        "name": "seconds",
+        "name_localizations": null,
+        "description": "Slowmode in seconds (0 to disable)",
+        "description_localizations": null,
+        "required": true
+      }
+    ],
+    "nsfw": false,
+    "category": "Admin"
+  },
+  {
+    "id": "1375211467770691719",
+    "application_id": "1297310943885394030",
+    "version": "1375211468060102718",
+    "default_member_permissions": "4",
+    "type": 1,
+    "name": "unban",
+    "name_localizations": null,
+    "description": "Unban a user by ID or name",
+    "description_localizations": null,
+    "dm_permission": true,
+    "contexts": null,
+    "integration_types": [
+      0,
+      1
+    ],
+    "options": [
+      {
+        "type": 3,
+        "name": "user",
+        "name_localizations": null,
+        "description": "User to unban (ID or name)",
+        "description_localizations": null,
+        "required": true,
+        "autocomplete": true
+      }
+    ],
+    "nsfw": false,
+    "category": "Admin"
+  },
+  {
+    "id": "1375211467967561859",
+    "application_id": "1297310943885394030",
+    "version": "1375211468060102719",
+    "default_member_permissions": "16",
+    "type": 1,
+    "name": "unlock",
+    "name_localizations": null,
+    "description": "Unlock the current channel (allow @everyone to send messages)",
+    "description_localizations": null,
+    "dm_permission": true,
+    "contexts": null,
+    "integration_types": [
+      0,
+      1
+    ],
+    "nsfw": false,
+    "category": "Admin"
+  },
+  {
+    "id": "1375211467967561860",
+    "application_id": "1297310943885394030",
+    "version": "1375211468060102720",
+    "default_member_permissions": "1099511627776",
+    "type": 1,
+    "name": "unmute",
+    "name_localizations": null,
+    "description": "Remove timeout from a member (unmute)",
+    "description_localizations": null,
+    "dm_permission": true,
+    "contexts": null,
+    "integration_types": [
+      0,
+      1
+    ],
+    "options": [
+      {
+        "type": 3,
+        "name": "user",
+        "name_localizations": null,
+        "description": "User to unmute (username, tag, or ID)",
+        "description_localizations": null,
+        "required": true,
+        "autocomplete": true
+      }
+    ],
+    "nsfw": false,
+    "category": "Admin"
+  },
+  {
+    "id": "1375211467967561861",
+    "application_id": "1297310943885394030",
+    "version": "1375211468060102721",
+    "default_member_permissions": "1099511627776",
+    "type": 1,
+    "name": "unwarn",
+    "name_localizations": null,
+    "description": "Remove a warning from a user (by warning ID)",
+    "description_localizations": null,
+    "dm_permission": true,
+    "contexts": null,
+    "integration_types": [
+      0,
+      1
+    ],
+    "options": [
+      {
+        "type": 6,
+        "name": "user",
+        "name_localizations": null,
+        "description": "User to unwarn",
+        "description_localizations": null,
+        "required": true
+      },
+      {
+        "type": 3,
+        "name": "id",
+        "name_localizations": null,
+        "description": "Warning ID to remove (autocomplete)",
+        "description_localizations": null,
+        "required": true,
+        "autocomplete": true
+      }
+    ],
+    "nsfw": false,
+    "category": "Admin"
+  },
+  {
+    "id": "1375211467967561862",
+    "application_id": "1297310943885394030",
+    "version": "1375211468060102722",
+    "default_member_permissions": "1099511627776",
+    "type": 1,
+    "name": "warn",
+    "name_localizations": null,
+    "description": "Warn a user",
+    "description_localizations": null,
+    "dm_permission": true,
+    "contexts": null,
+    "integration_types": [
+      0,
+      1
+    ],
+    "options": [
+      {
+        "type": 6,
+        "name": "user",
+        "name_localizations": null,
+        "description": "User to warn",
+        "description_localizations": null,
+        "required": true
+      },
+      {
+        "type": 3,
+        "name": "reason",
+        "name_localizations": null,
+        "description": "Reason",
+        "description_localizations": null
+      }
+    ],
+    "nsfw": false,
+    "category": "Admin"
+  },
+  {
+    "id": "1373861545729069069",
+    "application_id": "1297310943885394030",
+    "version": "1373861545934852164",
+    "default_member_permissions": null,
+    "type": 1,
+    "name": "cert-requests",
+    "name_localizations": null,
+    "description": "List all pending certification requests (admin only)",
+    "description_localizations": null,
+    "dm_permission": true,
+    "contexts": null,
+    "integration_types": [
+      0,
+      1
+    ],
+    "nsfw": false,
+    "category": "Certification"
+  },
+  {
+    "id": "1373861545729069070",
+    "application_id": "1297310943885394030",
+    "version": "1373861545934852165",
+    "default_member_permissions": null,
+    "type": 1,
+    "name": "create-cert",
+    "name_localizations": null,
+    "description": "Create a new certification (admin only)",
+    "description_localizations": null,
+    "dm_permission": true,
+    "contexts": null,
+    "integration_types": [
+      0,
+      1
+    ],
+    "options": [
+      {
+        "type": 3,
+        "name": "name",
+        "name_localizations": null,
+        "description": "Certification name",
+        "description_localizations": null,
+        "required": true
+      },
+      {
+        "type": 3,
+        "name": "description",
+        "name_localizations": null,
+        "description": "Certification description",
+        "description_localizations": null
+      }
+    ],
+    "nsfw": false,
+    "category": "Certification"
+  },
+  {
+    "id": "1373861545729069071",
+    "application_id": "1297310943885394030",
+    "version": "1373861546047836161",
+    "default_member_permissions": null,
+    "type": 1,
+    "name": "delete-cert",
+    "name_localizations": null,
+    "description": "Delete a certification (admin only)",
+    "description_localizations": null,
+    "dm_permission": true,
+    "contexts": null,
+    "integration_types": [
+      0,
+      1
+    ],
+    "options": [
+      {
+        "type": 3,
+        "name": "certification",
+        "name_localizations": null,
+        "description": "Certification to delete",
+        "description_localizations": null,
+        "required": true,
+        "autocomplete": true
+      }
+    ],
+    "nsfw": false,
+    "category": "Certification"
+  },
+  {
+    "id": "1373861545729069072",
+    "application_id": "1297310943885394030",
+    "version": "1373861546047836162",
+    "default_member_permissions": null,
+    "type": 1,
+    "name": "edit-cert",
+    "name_localizations": null,
+    "description": "Edit a certification (admin only)",
+    "description_localizations": null,
+    "dm_permission": true,
+    "contexts": null,
+    "integration_types": [
+      0,
+      1
+    ],
+    "options": [
+      {
+        "type": 3,
+        "name": "certification",
+        "name_localizations": null,
+        "description": "Certification to edit",
+        "description_localizations": null,
+        "required": true,
+        "autocomplete": true
+      },
+      {
+        "type": 3,
+        "name": "name",
+        "name_localizations": null,
+        "description": "New name",
+        "description_localizations": null
+      },
+      {
+        "type": 3,
+        "name": "description",
+        "name_localizations": null,
+        "description": "New description",
+        "description_localizations": null
+      }
+    ],
+    "nsfw": false,
+    "category": "Certification"
+  },
+  {
+    "id": "1373861545729069073",
+    "application_id": "1297310943885394030",
+    "version": "1373861546047836163",
+    "default_member_permissions": null,
+    "type": 1,
+    "name": "list-certs",
+    "name_localizations": null,
+    "description": "List all available certifications you can request",
+    "description_localizations": null,
+    "dm_permission": true,
+    "contexts": null,
+    "integration_types": [
+      0,
+      1
+    ],
+    "nsfw": false,
+    "category": "Certification"
+  },
+  {
+    "id": "1373861545729069074",
+    "application_id": "1297310943885394030",
+    "version": "1373861546047836164",
+    "default_member_permissions": null,
+    "type": 1,
+    "name": "my-certs",
+    "name_localizations": null,
+    "description": "List your approved certifications",
+    "description_localizations": null,
+    "dm_permission": true,
+    "contexts": null,
+    "integration_types": [
+      0,
+      1
+    ],
+    "nsfw": false,
+    "category": "Certification"
+  },
+  {
+    "id": "1373861545729069075",
+    "application_id": "1297310943885394030",
+    "version": "1373861546047836165",
+    "default_member_permissions": null,
+    "type": 1,
+    "name": "request-cert",
+    "name_localizations": null,
+    "description": "Request a certification",
+    "description_localizations": null,
+    "dm_permission": true,
+    "contexts": null,
+    "integration_types": [
+      0,
+      1
+    ],
+    "options": [
+      {
+        "type": 3,
+        "name": "certification",
+        "name_localizations": null,
+        "description": "Certification to request",
+        "description_localizations": null,
+        "required": true,
+        "autocomplete": true
+      }
+    ],
+    "nsfw": false,
+    "category": "Certification"
+  },
+  {
+    "id": "1373861545729069076",
+    "application_id": "1297310943885394030",
+    "version": "1373861546047836166",
+    "default_member_permissions": null,
+    "type": 1,
+    "name": "user-certs",
+    "name_localizations": null,
+    "description": "List another user's approved certifications",
+    "description_localizations": null,
+    "dm_permission": true,
+    "contexts": null,
+    "integration_types": [
+      0,
+      1
+    ],
+    "options": [
+      {
+        "type": 6,
+        "name": "user",
+        "name_localizations": null,
+        "description": "The user whose certifications you want to view",
+        "description_localizations": null,
+        "required": true
+      }
+    ],
+    "nsfw": false,
+    "category": "Certification"
+  },
+  {
+    "id": "1374885496802513027",
+    "application_id": "1297310943885394030",
+    "version": "1374885496802513032",
+    "default_member_permissions": null,
+    "type": 1,
+    "name": "add-equipment",
+    "name_localizations": null,
+    "description": "Add new equipment to the inventory",
+    "description_localizations": null,
+    "dm_permission": true,
+    "contexts": null,
+    "integration_types": [
+      0,
+      1
+    ],
+    "options": [
+      {
+        "type": 3,
+        "name": "name",
+        "name_localizations": null,
+        "description": "Name of the equipment",
+        "description_localizations": null,
+        "required": true
+      },
+      {
+        "type": 3,
+        "name": "category",
+        "name_localizations": null,
+        "description": "Category of equipment",
+        "description_localizations": null,
+        "required": true,
+        "choices": [
+          {
+            "name": "Weapons",
+            "name_localizations": null,
+            "value": "Weapons"
+          },
+          {
+            "name": "Vehicles",
+            "name_localizations": null,
+            "value": "Vehicles"
+          },
+          {
+            "name": "Other",
+            "name_localizations": null,
+            "value": "Other"
+          }
+        ]
+      },
+      {
+        "type": 4,
+        "name": "quantity",
+        "name_localizations": null,
+        "description": "Total quantity available",
+        "description_localizations": null,
+        "required": true,
+        "min_value": 1
+      },
+      {
+        "type": 3,
+        "name": "description",
+        "name_localizations": null,
+        "description": "Description of the equipment",
+        "description_localizations": null
+      }
+    ],
+    "nsfw": false,
+    "category": "Equipment"
+  },
+  {
+    "id": "1374885496802513028",
+    "application_id": "1297310943885394030",
+    "version": "1374885496802513033",
+    "default_member_permissions": null,
+    "type": 1,
+    "name": "edit-equipment",
+    "name_localizations": null,
+    "description": "Edit equipment in the inventory",
+    "description_localizations": null,
+    "dm_permission": true,
+    "contexts": null,
+    "integration_types": [
+      0,
+      1
+    ],
+    "options": [
+      {
+        "type": 3,
+        "name": "equipment-id",
+        "name_localizations": null,
+        "description": "The ID of the equipment to edit",
+        "description_localizations": null,
+        "required": true,
+        "autocomplete": true
+      },
+      {
+        "type": 3,
+        "name": "name",
+        "name_localizations": null,
+        "description": "New name",
+        "description_localizations": null
+      },
+      {
+        "type": 3,
+        "name": "category",
+        "name_localizations": null,
+        "description": "New category",
+        "description_localizations": null,
+        "choices": [
+          {
+            "name": "Weapons",
+            "name_localizations": null,
+            "value": "Weapons"
+          },
+          {
+            "name": "Vehicles",
+            "name_localizations": null,
+            "value": "Vehicles"
+          },
+          {
+            "name": "Communications",
+            "name_localizations": null,
+            "value": "Communications"
+          },
+          {
+            "name": "Medical",
+            "name_localizations": null,
+            "value": "Medical"
+          },
+          {
+            "name": "Tactical",
+            "name_localizations": null,
+            "value": "Tactical"
+          },
+          {
+            "name": "Other",
+            "name_localizations": null,
+            "value": "Other"
+          }
+        ]
+      },
+      {
+        "type": 4,
+        "name": "quantity",
+        "name_localizations": null,
+        "description": "New total quantity",
+        "description_localizations": null,
+        "min_value": 1
+      },
+      {
+        "type": 3,
+        "name": "description",
+        "name_localizations": null,
+        "description": "New description",
+        "description_localizations": null
+      }
+    ],
+    "nsfw": false,
+    "category": "Equipment"
+  },
+  {
+    "id": "1374885496802513029",
+    "application_id": "1297310943885394030",
+    "version": "1374885496802513034",
+    "default_member_permissions": null,
+    "type": 1,
+    "name": "equipment-deployed",
+    "name_localizations": null,
+    "description": "Show what approved equipment is deployed and how much in each upcoming event, grouped by location",
+    "description_localizations": null,
+    "dm_permission": true,
+    "contexts": null,
+    "integration_types": [
+      0,
+      1
+    ],
+    "nsfw": false,
+    "category": "Equipment"
+  },
+  {
+    "id": "1374885496802513030",
+    "application_id": "1297310943885394030",
+    "version": "1374885496802513035",
+    "default_member_permissions": null,
+    "type": 1,
+    "name": "equipment-request",
+    "name_localizations": null,
+    "description": "Manage equipment requests for events",
+    "description_localizations": null,
+    "dm_permission": true,
+    "contexts": null,
+    "integration_types": [
+      0,
+      1
+    ],
+    "options": [
+      {
+        "type": 1,
+        "name": "add",
+        "name_localizations": null,
+        "description": "Request equipment for an event",
+        "description_localizations": null,
+        "options": [
+          {
+            "type": 3,
+            "name": "event-id",
+            "name_localizations": null,
+            "description": "The ID of the event",
+            "description_localizations": null,
+            "required": true,
+            "autocomplete": true
+          },
+          {
+            "type": 3,
+            "name": "equipment-id",
+            "name_localizations": null,
+            "description": "The ID of the equipment",
+            "description_localizations": null,
+            "required": true,
+            "autocomplete": true
+          },
+          {
+            "type": 4,
+            "name": "quantity",
+            "name_localizations": null,
+            "description": "Quantity of equipment needed",
+            "description_localizations": null,
+            "required": true,
+            "min_value": 1
+          },
+          {
+            "type": 7,
+            "name": "channel",
+            "name_localizations": null,
+            "description": "Channel to post the equipment request (defaults to configured channel)",
+            "description_localizations": null,
+            "channel_types": [
+              0
+            ]
+          }
+        ]
+      },
+      {
+        "type": 1,
+        "name": "remove",
+        "name_localizations": null,
+        "description": "Remove equipment from an event",
+        "description_localizations": null,
+        "options": [
+          {
+            "type": 3,
+            "name": "event-id",
+            "name_localizations": null,
+            "description": "The ID of the event",
+            "description_localizations": null,
+            "required": true,
+            "autocomplete": true
+          },
+          {
+            "type": 3,
+            "name": "equipment-id",
+            "name_localizations": null,
+            "description": "The ID of the equipment",
+            "description_localizations": null,
+            "required": true,
+            "autocomplete": true
+          }
+        ]
+      },
+      {
+        "type": 1,
+        "name": "list",
+        "name_localizations": null,
+        "description": "List all equipment for an event",
+        "description_localizations": null,
+        "options": [
+          {
+            "type": 3,
+            "name": "event-id",
+            "name_localizations": null,
+            "description": "The ID of the event",
+            "description_localizations": null,
+            "required": true,
+            "autocomplete": true
+          },
+          {
+            "type": 7,
+            "name": "channel",
+            "name_localizations": null,
+            "description": "Channel to post the equipment list (defaults to current channel)",
+            "description_localizations": null,
+            "channel_types": [
+              0
+            ]
+          }
+        ]
+      },
+      {
+        "type": 1,
+        "name": "approve",
+        "name_localizations": null,
+        "description": "Approve an equipment request",
+        "description_localizations": null,
+        "options": [
+          {
+            "type": 3,
+            "name": "event-id",
+            "name_localizations": null,
+            "description": "The ID of the event",
+            "description_localizations": null,
+            "required": true,
+            "autocomplete": true
+          },
+          {
+            "type": 3,
+            "name": "equipment-id",
+            "name_localizations": null,
+            "description": "The ID of the equipment",
+            "description_localizations": null,
+            "required": true,
+            "autocomplete": true
+          }
+        ]
+      },
+      {
+        "type": 1,
+        "name": "deny",
+        "name_localizations": null,
+        "description": "Deny an equipment request",
+        "description_localizations": null,
+        "options": [
+          {
+            "type": 3,
+            "name": "event-id",
+            "name_localizations": null,
+            "description": "The ID of the event",
+            "description_localizations": null,
+            "required": true,
+            "autocomplete": true
+          },
+          {
+            "type": 3,
+            "name": "equipment-id",
+            "name_localizations": null,
+            "description": "The ID of the equipment",
+            "description_localizations": null,
+            "required": true,
+            "autocomplete": true
+          },
+          {
+            "type": 3,
+            "name": "reason",
+            "name_localizations": null,
+            "description": "Reason for denial",
+            "description_localizations": null
+          }
+        ]
+      },
+      {
+        "type": 1,
+        "name": "pending",
+        "name_localizations": null,
+        "description": "List all pending equipment requests",
+        "description_localizations": null,
+        "options": [
+          {
+            "type": 7,
+            "name": "channel",
+            "name_localizations": null,
+            "description": "Channel to post the pending requests (defaults to current channel)",
+            "description_localizations": null,
+            "channel_types": [
+              0
+            ]
+          }
+        ]
+      }
+    ],
+    "nsfw": false,
+    "category": "Equipment"
+  },
+  {
+    "id": "1374885870745817088",
+    "application_id": "1297310943885394030",
+    "version": "1374885870745817090",
+    "default_member_permissions": null,
+    "type": 1,
+    "name": "inventory",
+    "name_localizations": null,
+    "description": "List all available equipment",
+    "description_localizations": null,
+    "dm_permission": true,
+    "contexts": null,
+    "integration_types": [
+      0,
+      1
+    ],
+    "options": [
+      {
+        "type": 7,
+        "name": "channel",
+        "name_localizations": null,
+        "description": "Channel to post the inventory (defaults to current channel)",
+        "description_localizations": null,
+        "channel_types": [
+          0
+        ]
+      }
+    ],
+    "nsfw": false,
+    "category": "Equipment"
+  },
+  {
+    "id": "1374885870745817089",
+    "application_id": "1297310943885394030",
+    "version": "1374885870745817091",
+    "default_member_permissions": null,
+    "type": 1,
+    "name": "remove-equipment",
+    "name_localizations": null,
+    "description": "Remove equipment from the inventory",
+    "description_localizations": null,
+    "dm_permission": true,
+    "contexts": null,
+    "integration_types": [
+      0,
+      1
+    ],
+    "options": [
+      {
+        "type": 3,
+        "name": "equipment-id",
+        "name_localizations": null,
+        "description": "The ID of the equipment to remove",
+        "description_localizations": null,
+        "required": true,
+        "autocomplete": true
+      }
+    ],
+    "nsfw": false,
+    "category": "Equipment"
+  },
+  {
+    "id": "1373861545842446460",
+    "application_id": "1297310943885394030",
+    "version": "1373861546098294924",
+    "default_member_permissions": null,
+    "type": 1,
+    "name": "reset-inventory",
+    "name_localizations": null,
+    "description": "Reset the entire equipment inventory (all equipment fully available)",
+    "description_localizations": null,
+    "dm_permission": true,
+    "contexts": null,
+    "integration_types": [
+      0,
+      1
+    ],
+    "nsfw": false,
+    "category": "Equipment"
+  },
+  {
+    "id": "1374885496802513031",
+    "application_id": "1297310943885394030",
+    "version": "1374885496802513036",
+    "default_member_permissions": null,
+    "type": 1,
+    "name": "attendance",
+    "name_localizations": null,
+    "description": "Show the attendance for an event",
+    "description_localizations": null,
+    "dm_permission": true,
+    "contexts": null,
+    "integration_types": [
+      0,
+      1
+    ],
+    "options": [
+      {
+        "type": 3,
+        "name": "event-id",
+        "name_localizations": null,
+        "description": "The ID of the event",
+        "description_localizations": null,
+        "required": true,
+        "autocomplete": true
+      }
+    ],
+    "nsfw": false,
+    "category": "Events"
+  },
+  {
+    "id": "1373861545842446461",
+    "application_id": "1297310943885394030",
+    "version": "1373861546098294925",
+    "default_member_permissions": null,
+    "type": 1,
+    "name": "create-event",
+    "name_localizations": null,
+    "description": "Create a new event.",
+    "description_localizations": null,
+    "dm_permission": true,
+    "contexts": null,
+    "integration_types": [
+      0,
+      1
+    ],
+    "nsfw": false,
+    "category": "Events"
+  },
+  {
+    "id": "1373861545842446462",
+    "application_id": "1297310943885394030",
+    "version": "1373861546098294926",
+    "default_member_permissions": null,
+    "type": 1,
+    "name": "delete-event",
+    "name_localizations": null,
+    "description": "Delete an event by its ID",
+    "description_localizations": null,
+    "dm_permission": true,
+    "contexts": null,
+    "integration_types": [
+      0,
+      1
+    ],
+    "options": [
+      {
+        "type": 3,
+        "name": "id",
+        "name_localizations": null,
+        "description": "The ID of the event to delete",
+        "description_localizations": null,
+        "required": true,
+        "autocomplete": true
+      }
+    ],
+    "nsfw": false,
+    "category": "Events"
+  },
+  {
+    "id": "1373861545842446463",
+    "application_id": "1297310943885394030",
+    "version": "1373861546098294927",
+    "default_member_permissions": null,
+    "type": 1,
+    "name": "event-history",
+    "name_localizations": null,
+    "description": "Show past events with attendance statistics",
+    "description_localizations": null,
+    "dm_permission": true,
+    "contexts": null,
+    "integration_types": [
+      0,
+      1
+    ],
+    "options": [
+      {
+        "type": 4,
+        "name": "limit",
+        "name_localizations": null,
+        "description": "Number of past events to show (default: 5, max: 20)",
+        "description_localizations": null,
+        "min_value": 1,
+        "max_value": 20
+      }
+    ],
+    "nsfw": false,
+    "category": "Events"
+  },
+  {
+    "id": "1373861545842446464",
+    "application_id": "1297310943885394030",
+    "version": "1373861546098294928",
+    "default_member_permissions": null,
+    "type": 1,
+    "name": "event-info",
+    "name_localizations": null,
+    "description": "Get detailed information about a specific event",
+    "description_localizations": null,
+    "dm_permission": true,
+    "contexts": null,
+    "integration_types": [
+      0,
+      1
+    ],
+    "options": [
+      {
+        "type": 3,
+        "name": "id",
+        "name_localizations": null,
+        "description": "The ID of the event to view",
+        "description_localizations": null,
+        "required": true,
+        "autocomplete": true
+      }
+    ],
+    "nsfw": false,
+    "category": "Events"
+  },
+  {
+    "id": "1373861545842446465",
+    "application_id": "1297310943885394030",
+    "version": "1373861546098294929",
+    "default_member_permissions": null,
+    "type": 1,
+    "name": "list-events",
+    "name_localizations": null,
+    "description": "List all upcoming events.",
+    "description_localizations": null,
+    "dm_permission": true,
+    "contexts": null,
+    "integration_types": [
+      0,
+      1
+    ],
+    "options": [
+      {
+        "type": 3,
+        "name": "location",
+        "name_localizations": null,
+        "description": "Filter events by location",
+        "description_localizations": null,
+        "autocomplete": true
+      }
+    ],
+    "nsfw": false,
+    "category": "Events"
+  },
+  {
+    "id": "1373861545842446466",
+    "application_id": "1297310943885394030",
+    "version": "1374406836727320696",
+    "default_member_permissions": null,
+    "type": 1,
+    "name": "remind-event",
+    "name_localizations": null,
+    "description": "Create a new event.",
+    "description_localizations": null,
+    "dm_permission": true,
+    "contexts": null,
+    "integration_types": [
+      0,
+      1
+    ],
+    "options": [
+      {
+        "type": 3,
+        "name": "id",
+        "name_localizations": null,
+        "description": "The ID of the event to delete",
+        "description_localizations": null,
+        "required": true,
+        "autocomplete": true
+      }
+    ],
+    "nsfw": false,
+    "category": "Events"
+  },
+  {
+    "id": "1374406023799902268",
+    "application_id": "1297310943885394030",
+    "version": "1374406023980384257",
+    "default_member_permissions": null,
+    "type": 1,
+    "name": "8ball",
+    "name_localizations": null,
+    "description": "Ask the magic 8-ball a question.",
+    "description_localizations": null,
+    "dm_permission": true,
+    "contexts": null,
+    "integration_types": [
+      0,
+      1
+    ],
+    "options": [
+      {
+        "type": 3,
+        "name": "question",
+        "name_localizations": null,
+        "description": "Your question",
+        "description_localizations": null,
+        "required": true
+      }
+    ],
+    "nsfw": false,
+    "category": "Fun"
+  },
+  {
+    "id": "1374408466042716191",
+    "application_id": "1297310943885394030",
+    "version": "1374408466042716197",
+    "default_member_permissions": null,
+    "type": 1,
+    "name": "callmedic",
+    "name_localizations": null,
+    "description": "Call for a medic (sends a meme).",
+    "description_localizations": null,
+    "dm_permission": true,
+    "contexts": null,
+    "integration_types": [
+      0,
+      1
+    ],
+    "nsfw": false,
+    "category": "Fun"
+  },
+  {
+    "id": "1374406154393878549",
+    "application_id": "1297310943885394030",
+    "version": "1374406154393878554",
+    "default_member_permissions": null,
+    "type": 1,
+    "name": "cat",
+    "name_localizations": null,
+    "description": "Get a random cat picture!",
+    "description_localizations": null,
+    "dm_permission": true,
+    "contexts": null,
+    "integration_types": [
+      0,
+      1
+    ],
+    "nsfw": false,
+    "category": "Fun"
+  },
+  {
+    "id": "1374406023799902269",
+    "application_id": "1297310943885394030",
+    "version": "1374406023980384258",
+    "default_member_permissions": null,
+    "type": 1,
+    "name": "coinflip",
+    "name_localizations": null,
+    "description": "Flip a coin!",
+    "description_localizations": null,
+    "dm_permission": true,
+    "contexts": null,
+    "integration_types": [
+      0,
+      1
+    ],
+    "nsfw": false,
+    "category": "Fun"
+  },
+  {
+    "id": "1374406023799902270",
+    "application_id": "1297310943885394030",
+    "version": "1374406023980384259",
+    "default_member_permissions": null,
+    "type": 1,
+    "name": "compliment",
+    "name_localizations": null,
+    "description": "Give a user a random compliment.",
+    "description_localizations": null,
+    "dm_permission": true,
+    "contexts": null,
+    "integration_types": [
+      0,
+      1
+    ],
+    "options": [
+      {
+        "type": 6,
+        "name": "user",
+        "name_localizations": null,
+        "description": "Who do you want to compliment?",
+        "description_localizations": null,
+        "required": true
+      }
+    ],
+    "nsfw": false,
+    "category": "Fun"
+  },
+  {
+    "id": "1374406154393878550",
+    "application_id": "1297310943885394030",
+    "version": "1374406154393878555",
+    "default_member_permissions": null,
+    "type": 1,
+    "name": "dadjoke",
+    "name_localizations": null,
+    "description": "Get a random dad joke!",
+    "description_localizations": null,
+    "dm_permission": true,
+    "contexts": null,
+    "integration_types": [
+      0,
+      1
+    ],
+    "nsfw": false,
+    "category": "Fun"
+  },
+  {
+    "id": "1374406154393878551",
+    "application_id": "1297310943885394030",
+    "version": "1374406154393878556",
+    "default_member_permissions": null,
+    "type": 1,
+    "name": "dog",
+    "name_localizations": null,
+    "description": "Get a random dog picture!",
+    "description_localizations": null,
+    "dm_permission": true,
+    "contexts": null,
+    "integration_types": [
+      0,
+      1
+    ],
+    "nsfw": false,
+    "category": "Fun"
+  },
+  {
+    "id": "1374406154393878552",
+    "application_id": "1297310943885394030",
+    "version": "1374406154393878557",
+    "default_member_permissions": null,
+    "type": 1,
+    "name": "fox",
+    "name_localizations": null,
+    "description": "Get a random fox picture!",
+    "description_localizations": null,
+    "dm_permission": true,
+    "contexts": null,
+    "integration_types": [
+      0,
+      1
+    ],
+    "nsfw": false,
+    "category": "Fun"
+  },
+  {
+    "id": "1374407342720028714",
+    "application_id": "1297310943885394030",
+    "version": "1374407342720028715",
+    "default_member_permissions": null,
+    "type": 1,
+    "name": "hack",
+    "name_localizations": null,
+    "description": "Pretend to hack a user (for fun!)",
+    "description_localizations": null,
+    "dm_permission": true,
+    "contexts": null,
+    "integration_types": [
+      0,
+      1
+    ],
+    "options": [
+      {
+        "type": 6,
+        "name": "user",
+        "name_localizations": null,
+        "description": "User to hack",
+        "description_localizations": null,
+        "required": true
+      }
+    ],
+    "nsfw": false,
+    "category": "Fun"
+  },
+  {
+    "id": "1374406023799902271",
+    "application_id": "1297310943885394030",
+    "version": "1374406023980384260",
+    "default_member_permissions": null,
+    "type": 1,
+    "name": "insult",
+    "name_localizations": null,
+    "description": "Send a random (mild) insult.",
+    "description_localizations": null,
+    "dm_permission": true,
+    "contexts": null,
+    "integration_types": [
+      0,
+      1
+    ],
+    "options": [
+      {
+        "type": 6,
+        "name": "user",
+        "name_localizations": null,
+        "description": "User to insult",
+        "description_localizations": null,
+        "required": true
+      }
+    ],
+    "nsfw": false,
+    "category": "Fun"
+  },
+  {
+    "id": "1373861545842446467",
+    "application_id": "1297310943885394030",
+    "version": "1373861546098294931",
+    "default_member_permissions": null,
+    "type": 1,
+    "name": "nuke",
+    "name_localizations": null,
+    "description": "Nuke someplace!",
+    "description_localizations": null,
+    "dm_permission": true,
+    "contexts": null,
+    "integration_types": [
+      0,
+      1
+    ],
+    "options": [
+      {
+        "type": 3,
+        "name": "where",
+        "name_localizations": null,
+        "description": "Where are you nuking?",
+        "description_localizations": null,
+        "required": true
+      }
+    ],
+    "nsfw": false,
+    "category": "Fun"
+  },
+  {
+    "id": "1374406023799902272",
+    "application_id": "1297310943885394030",
+    "version": "1374406023980384261",
+    "default_member_permissions": null,
+    "type": 1,
+    "name": "poll",
+    "name_localizations": null,
+    "description": "Create a quick poll.",
+    "description_localizations": null,
+    "dm_permission": true,
+    "contexts": null,
+    "integration_types": [
+      0,
+      1
+    ],
+    "options": [
+      {
+        "type": 3,
+        "name": "question",
+        "name_localizations": null,
+        "description": "Poll question",
+        "description_localizations": null,
+        "required": true
+      },
+      {
+        "type": 3,
+        "name": "option1",
+        "name_localizations": null,
+        "description": "First option",
+        "description_localizations": null,
+        "required": true
+      },
+      {
+        "type": 3,
+        "name": "option2",
+        "name_localizations": null,
+        "description": "Second option",
+        "description_localizations": null,
+        "required": true
+      }
+    ],
+    "nsfw": false,
+    "category": "Fun"
+  },
+  {
+    "id": "1374408466042716192",
+    "application_id": "1297310943885394030",
+    "version": "1374408466042716198",
+    "default_member_permissions": null,
+    "type": 1,
+    "name": "quote",
+    "name_localizations": null,
+    "description": "Get a random inspirational or funny quote.",
+    "description_localizations": null,
+    "dm_permission": true,
+    "contexts": null,
+    "integration_types": [
+      0,
+      1
+    ],
+    "nsfw": false,
+    "category": "Fun"
+  },
+  {
+    "id": "1373861545934852156",
+    "application_id": "1297310943885394030",
+    "version": "1373861546098294932",
+    "default_member_permissions": null,
+    "type": 1,
+    "name": "rate",
+    "name_localizations": null,
+    "description": "Get a totally real and totally accurate rating of something.",
+    "description_localizations": null,
+    "dm_permission": true,
+    "contexts": null,
+    "integration_types": [
+      0,
+      1
+    ],
+    "options": [
+      {
+        "type": 3,
+        "name": "thing",
+        "name_localizations": null,
+        "description": "What are you checking for?",
+        "description_localizations": null,
+        "required": true
+      },
+      {
+        "type": 3,
+        "name": "stat",
+        "name_localizations": null,
+        "description": "What stat are we checking?",
+        "description_localizations": null,
+        "required": true
+      }
+    ],
+    "nsfw": false,
+    "category": "Fun"
+  },
+  {
+    "id": "1374406023799902273",
+    "application_id": "1297310943885394030",
+    "version": "1374406023980384262",
+    "default_member_permissions": null,
+    "type": 1,
+    "name": "reverse",
+    "name_localizations": null,
+    "description": "Reverse your text!",
+    "description_localizations": null,
+    "dm_permission": true,
+    "contexts": null,
+    "integration_types": [
+      0,
+      1
+    ],
+    "options": [
+      {
+        "type": 3,
+        "name": "text",
+        "name_localizations": null,
+        "description": "Text to reverse",
+        "description_localizations": null,
+        "required": true
+      }
+    ],
+    "nsfw": false,
+    "category": "Fun"
+  },
+  {
+    "id": "1374406023799902274",
+    "application_id": "1297310943885394030",
+    "version": "1374406023980384263",
+    "default_member_permissions": null,
+    "type": 1,
+    "name": "roll",
+    "name_localizations": null,
+    "description": "Roll a die or dice.",
+    "description_localizations": null,
+    "dm_permission": true,
+    "contexts": null,
+    "integration_types": [
+      0,
+      1
+    ],
+    "options": [
+      {
+        "type": 4,
+        "name": "sides",
+        "name_localizations": null,
+        "description": "Number of sides",
+        "description_localizations": null,
+        "required": true,
+        "min_value": 2
+      },
+      {
+        "type": 4,
+        "name": "times",
+        "name_localizations": null,
+        "description": "How many dice? (default 1)",
+        "description_localizations": null,
+        "min_value": 1
+      }
+    ],
+    "nsfw": false,
+    "category": "Fun"
+  },
+  {
+    "id": "1374406023799902275",
+    "application_id": "1297310943885394030",
+    "version": "1374406023980384264",
+    "default_member_permissions": null,
+    "type": 1,
+    "name": "say",
+    "name_localizations": null,
+    "description": "Make the bot say something.",
+    "description_localizations": null,
+    "dm_permission": true,
+    "contexts": null,
+    "integration_types": [
+      0,
+      1
+    ],
+    "options": [
+      {
+        "type": 3,
+        "name": "text",
+        "name_localizations": null,
+        "description": "Text to say",
+        "description_localizations": null,
+        "required": true
+      }
+    ],
+    "nsfw": false,
+    "category": "Fun"
+  },
+  {
+    "id": "1374406023799902276",
+    "application_id": "1297310943885394030",
+    "version": "1374406023980384265",
+    "default_member_permissions": null,
+    "type": 1,
+    "name": "ship",
+    "name_localizations": null,
+    "description": "Ship two users and see their compatibility!",
+    "description_localizations": null,
+    "dm_permission": true,
+    "contexts": null,
+    "integration_types": [
+      0,
+      1
+    ],
+    "options": [
+      {
+        "type": 6,
+        "name": "user1",
+        "name_localizations": null,
+        "description": "First user",
+        "description_localizations": null,
+        "required": true
+      },
+      {
+        "type": 6,
+        "name": "user2",
+        "name_localizations": null,
+        "description": "Second user",
+        "description_localizations": null,
+        "required": true
+      }
+    ],
+    "nsfw": false,
+    "category": "Fun"
+  },
+  {
+    "id": "1374406023799902277",
+    "application_id": "1297310943885394030",
+    "version": "1374406024018264186",
+    "default_member_permissions": null,
+    "type": 1,
+    "name": "simprate",
+    "name_localizations": null,
+    "description": "How much of a simp is someone?",
+    "description_localizations": null,
+    "dm_permission": true,
+    "contexts": null,
+    "integration_types": [
+      0,
+      1
+    ],
+    "options": [
+      {
+        "type": 6,
+        "name": "user",
+        "name_localizations": null,
+        "description": "User to rate",
+        "description_localizations": null,
+        "required": true
+      }
+    ],
+    "nsfw": false,
+    "category": "Fun"
+  },
+  {
+    "id": "1374406154393878553",
+    "application_id": "1297310943885394030",
+    "version": "1374406154507255918",
+    "default_member_permissions": null,
+    "type": 1,
+    "name": "urban",
+    "name_localizations": null,
+    "description": "Look up a word on Urban Dictionary.",
+    "description_localizations": null,
+    "dm_permission": true,
+    "contexts": null,
+    "integration_types": [
+      0,
+      1
+    ],
+    "options": [
+      {
+        "type": 3,
+        "name": "word",
+        "name_localizations": null,
+        "description": "Word to look up",
+        "description_localizations": null,
+        "required": true
+      }
+    ],
+    "nsfw": false,
+    "category": "Fun"
+  },
+  {
+    "id": "1373861545934852157",
+    "application_id": "1297310943885394030",
+    "version": "1373861546098294933",
+    "default_member_permissions": null,
+    "type": 1,
+    "name": "event-times",
+    "name_localizations": null,
+    "description": "Our op times.",
+    "description_localizations": null,
+    "dm_permission": true,
+    "contexts": null,
+    "integration_types": [
+      0,
+      1
+    ],
+    "nsfw": false,
+    "category": "Tag"
+  },
+  {
+    "id": "1373861545934852158",
+    "application_id": "1297310943885394030",
+    "version": "1373861546123595847",
+    "default_member_permissions": null,
+    "type": 1,
+    "name": "recruitment-message",
+    "name_localizations": null,
+    "description": "The recruitment message.",
+    "description_localizations": null,
+    "dm_permission": true,
+    "contexts": null,
+    "integration_types": [
+      0,
+      1
+    ],
+    "nsfw": false,
+    "category": "Tag"
+  },
+  {
+    "id": "1373861545934852159",
+    "application_id": "1297310943885394030",
+    "version": "1373861546123595848",
+    "default_member_permissions": null,
+    "type": 1,
+    "name": "server-info",
+    "name_localizations": null,
+    "description": "ArmA-3 server info + Other useful information.",
+    "description_localizations": null,
+    "dm_permission": true,
+    "contexts": null,
+    "integration_types": [
+      0,
+      1
+    ],
+    "nsfw": false,
+    "category": "Tag"
+  },
+  {
+    "id": "1373861545934852160",
+    "application_id": "1297310943885394030",
+    "version": "1373861546123595849",
+    "default_member_permissions": null,
+    "type": 1,
+    "name": "socials",
+    "name_localizations": null,
+    "description": "The US Army social media accounts.",
+    "description_localizations": null,
+    "dm_permission": true,
+    "contexts": null,
+    "integration_types": [
+      0,
+      1
+    ],
+    "nsfw": false,
+    "category": "Tag"
+  },
+  {
+    "id": "1374408466042716193",
+    "application_id": "1297310943885394030",
+    "version": "1374408466042716199",
+    "default_member_permissions": null,
+    "type": 1,
+    "name": "avatar",
+    "name_localizations": null,
+    "description": "Show a user's avatar.",
+    "description_localizations": null,
+    "dm_permission": true,
+    "contexts": null,
+    "integration_types": [
+      0,
+      1
+    ],
+    "options": [
+      {
+        "type": 6,
+        "name": "user",
+        "name_localizations": null,
+        "description": "User to get avatar of",
+        "description_localizations": null
+      }
+    ],
+    "nsfw": false,
+    "category": "Useful"
+  },
+  {
+    "id": "1374409305578799124",
+    "application_id": "1297310943885394030",
+    "version": "1374409305578799125",
+    "default_member_permissions": null,
+    "type": 1,
+    "name": "generate-mention",
+    "name_localizations": null,
+    "description": "Generate a mention for any slash command",
+    "description_localizations": null,
+    "dm_permission": true,
+    "contexts": null,
+    "integration_types": [
+      0,
+      1
+    ],
+    "options": [
+      {
+        "type": 3,
+        "name": "command",
+        "name_localizations": null,
+        "description": "The command to mention",
+        "description_localizations": null,
+        "required": true,
+        "autocomplete": true
+      },
+      {
+        "type": 3,
+        "name": "subcommandgroup",
+        "name_localizations": null,
+        "description": "Subcommand group (if applicable)",
+        "description_localizations": null,
+        "autocomplete": true
+      },
+      {
+        "type": 3,
+        "name": "subcommand",
+        "name_localizations": null,
+        "description": "Subcommand (if applicable)",
+        "description_localizations": null,
+        "autocomplete": true
+      }
+    ],
+    "nsfw": false,
+    "category": "Useful"
+  },
+  {
+    "id": "1373861545934852161",
+    "application_id": "1297310943885394030",
+    "version": "1373861546123595850",
+    "default_member_permissions": null,
+    "type": 1,
+    "name": "help",
+    "name_localizations": null,
+    "description": "Show all available commands and their descriptions",
+    "description_localizations": null,
+    "dm_permission": true,
+    "contexts": null,
+    "integration_types": [
+      0,
+      1
+    ],
+    "nsfw": false,
+    "category": "Useful"
+  },
+  {
+    "id": "1374885147291418735",
+    "application_id": "1297310943885394030",
+    "version": "1374885147291418736",
+    "default_member_permissions": null,
+    "type": 1,
+    "name": "info",
+    "name_localizations": null,
+    "description": "Information on this bot.",
+    "description_localizations": null,
+    "dm_permission": true,
+    "contexts": null,
+    "integration_types": [
+      0,
+      1
+    ],
+    "nsfw": false,
+    "category": "Useful"
+  },
+  {
+    "id": "1373861545934852163",
+    "application_id": "1297310943885394030",
+    "version": "1373861546123595852",
+    "default_member_permissions": null,
+    "type": 1,
+    "name": "ping",
+    "name_localizations": null,
+    "description": "Check the bot's response time and status",
+    "description_localizations": null,
+    "dm_permission": true,
+    "contexts": null,
+    "integration_types": [
+      0,
+      1
+    ],
+    "nsfw": false,
+    "category": "Useful"
+  },
+  {
+    "id": "1374408466042716194",
+    "application_id": "1297310943885394030",
+    "version": "1374408466168418357",
+    "default_member_permissions": null,
+    "type": 1,
+    "name": "remindme",
+    "name_localizations": null,
+    "description": "Set a personal reminder.",
+    "description_localizations": null,
+    "dm_permission": true,
+    "contexts": null,
+    "integration_types": [
+      0,
+      1
+    ],
+    "options": [
+      {
+        "type": 3,
+        "name": "time",
+        "name_localizations": null,
+        "description": "When to remind you (e.g., 10m, 2h, 1d)",
+        "description_localizations": null,
+        "required": true
+      },
+      {
+        "type": 3,
+        "name": "message",
+        "name_localizations": null,
+        "description": "What should I remind you?",
+        "description_localizations": null,
+        "required": true
+      }
+    ],
+    "nsfw": false,
+    "category": "Useful"
+  },
+  {
+    "id": "1374408466042716195",
+    "application_id": "1297310943885394030",
+    "version": "1374408466168418358",
+    "default_member_permissions": null,
+    "type": 1,
+    "name": "user-info",
+    "name_localizations": null,
+    "description": "Show information about a user.",
+    "description_localizations": null,
+    "dm_permission": true,
+    "contexts": null,
+    "integration_types": [
+      0,
+      1
+    ],
+    "options": [
+      {
+        "type": 6,
+        "name": "user",
+        "name_localizations": null,
+        "description": "User to get info about",
+        "description_localizations": null
+      }
+    ],
+    "nsfw": false,
+    "category": "Useful"
+  }
+]

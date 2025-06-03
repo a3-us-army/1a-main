@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Equipment Inventory</title>
+  <meta content="1A Website" property="og:title" />
+  <meta content="Welcome to 1A!" property="og:description" />
+  <meta content="https://1a75.org/equipment" property="og:url" />
+  <meta content="https://cdn.xanderxx.xyz/1a-logo.png" property="og:image" />
+  <meta content="#4b5a2a" data-react-helmet="true" name="theme-color" />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="/custom.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+  <style>
+    .equipment-card {
+      min-height: 100%;
+      border-radius: 0.7rem;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+      border: 1.5px solid #23272f;
+      background: #23272f;
+      color: #fff;
+    }
+    .equipment-card .card-title {
+      color: #ffe066;
+      font-size: 1.2rem;
+      font-weight: 600;
+      text-shadow: 0 1px 2px #000, 0 0 2px #23272f;
+    }
+    .equipment-card .badge {
+      font-size: 0.95em;
+    }
+    .equipment-card .card-footer {
+      background: transparent;
+      border-top: none;
+    }
+    .equipment-card .btn {
+      font-weight: 500;
+    }
+    .equipment-card .card-text {
+      color: #f1f1f1;
+      text-shadow: 0 1px 2px #000, 0 0 2px #23272f;
+    }
+    .edit-btn {
+      background-color: #ffe066 !important;
+      color: #23272f !important;
+      border: 1.5px solid #ffe066 !important;
+      font-weight: 600;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+      transition: background 0.2s, color 0.2s;
+    }
+    .edit-btn:hover, .edit-btn:focus {
+      background-color: #ffd43b !important;
+      color: #23272f !important;
+      border-color: #ffd43b !important;
+    }
+    .delete-btn {
+      background-color: #dc3545 !important;
+      color: #fff !important;
+      border: 1.5px solid #dc3545 !important;
+      font-weight: 600;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+      transition: background 0.2s, color 0.2s;
+    }
+    .delete-btn:hover, .delete-btn:focus {
+      background-color: #c82333 !important;
+      color: #fff !important;
+      border-color: #c82333 !important;
+    }
+    .add-btn {
+      background-color: #28a745 !important;
+      color: #fff !important;
+      border: 1.5px solid #28a745 !important;
+      font-weight: 600;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+      transition: background 0.2s, color 0.2s;
+    }
+    .add-btn:hover, .add-btn:focus {
+      background-color: #218838 !important;
+      color: #fff !important;
+      border-color: #218838 !important;
+    }
+    @media (max-width: 600px) {
+      .equipment-card {
+        margin-bottom: 1rem;
+      }
+      .search-admin-row {
+        flex-direction: column !important;
+        gap: 0.5rem !important;
+      }
+      .admin-requests-btn, .deployed-btn, .add-btn {
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+<body>
+  <%- include("partials/navbar", { user, active }) %>
+  <div class="container mt-4">
+    <h1 class="mb-3">Equipment Inventory</h1>
+    <% if (alert) { %>
+      <div class="alert alert-success"><%= alert %></div>
+    <% } %>
+    <% if (error) { %>
+      <div class="alert alert-danger"><%= error %></div>
+    <% } %>
+
+    <!-- Admin Add Button, Deployed Button, and Search Bar -->
+    <div class="row mb-3">
+      <div class="col-12">
+        <div class="d-flex search-admin-row align-items-center justify-content-between gap-2">
+          <% if (isAdmin) { %>
+            <button class="btn add-btn me-2" data-bs-toggle="modal" data-bs-target="#addModal">
+              <i class="bi bi-plus-circle"></i> Add Equipment
+            </button>
+          <% } %>
+          <a href="/equipment/out" class="btn deployed-btn me-2">
+            <i class="bi bi-truck"></i> Deployed Equipment
+          </a>
+          <div class="flex-grow-1">
+            <input type="text" class="form-control" id="equipment-search" placeholder="Search equipment by name or description...">
+          </div>
+          <% if (isAdmin) { %>
+            <a href="/equipment/requests" class="btn admin-requests-btn ms-2">
+              <i class="bi bi-list-check"></i> Manage Equipment Requests
+            </a>
+          <% } %>
+        </div>
+      </div>
+    </div>
+
+    <!-- Equipment grouped by category -->
+    <% const groupedEquipment = {}; %>
+    <% equipment.forEach(eq => { %>
+      <% if (!groupedEquipment[eq.category]) groupedEquipment[eq.category] = []; %>
+      <% groupedEquipment[eq.category].push(eq); %>
+    <% }); %>
+    <% Object.keys(groupedEquipment).forEach(category => { %>
+      <h2 class="text-light mt-4"><%= category %></h2>
+      <div class="row g-3">
+        <% groupedEquipment[category].forEach(eq => { %>
+          <div class="col-12 col-md-6 col-lg-4 equipment-card-container">
+            <div class="card equipment-card h-100">
+              <div class="card-body d-flex flex-column">
+                <div class="d-flex justify-content-between align-items-center mb-2">
+                  <span class="card-title"><%= eq.name %></span>
+                </div>
+                <div class="mb-2">
+                  <span class="badge bg-info text-dark me-1">Total: <%= eq.total_quantity %></span>
+                  <span class="badge bg-success me-1">Available: <%= eq.available_quantity %></span>
+                </div>
+                <p class="card-text mb-2"><%= eq.description %></p>
+                <div class="mt-auto">
+                  <% if (user) { %>
+                    <button class="btn btn-sm btn-primary w-100 mb-2"
+                      data-bs-toggle="modal" data-bs-target="#requestModal"
+                      data-eqid="<%= eq.id %>" data-eqname="<%= eq.name %>" data-max="<%= eq.available_quantity %>">
+                      <i class="bi bi-box-arrow-in-down"></i> Request
+                    </button>
+                  <% } else { %>
+                    <span class="text-muted">Login to request</span>
+                  <% } %>
+                  <% if (isAdmin) { %>
+                    <div class="d-flex gap-2">
+                      <button
+                        type="button"
+                        class="btn btn-sm edit-btn"
+                        data-bs-toggle="modal"
+                        data-bs-target="#editModal"
+                        data-eqid="<%= eq.id %>"
+                        data-eqname="<%= eq.name %>"
+                        data-eqcategory="<%= eq.category %>"
+                        data-eqtotal="<%= eq.total_quantity %>"
+                        data-eqavailable="<%= eq.available_quantity %>"
+                        data-eqdesc="<%= eq.description %>"
+                        data-eqstatus="<%= eq.status %>"
+                      >
+                        <i class="bi bi-pencil-square"></i> Edit
+                      </button>
+                      <form action="/equipment/delete/<%= eq.id %>" method="POST" style="display:inline;" onsubmit="return confirm('Delete this equipment?');">
+                        <button type="submit" class="btn btn-sm delete-btn">
+                          <i class="bi bi-trash"></i> Delete
+                        </button>
+                      </form>
+                    </div>
+                  <% } %>
+                </div>
+              </div>
+            </div>
+          </div>
+        <% }); %>
+      </div>
+    <% }); %>
+  </div>
+
+  <!-- Add Equipment Modal -->
+  <div class="modal fade" id="addModal" tabindex="-1" aria-labelledby="addModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <form class="modal-content" method="POST" action="/equipment/add">
+        <div class="modal-header">
+          <h5 class="modal-title" id="addModalLabel">Add Equipment</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <div class="mb-2">
+            <label class="form-label">Name</label>
+            <input type="text" name="name" class="form-control" required>
+          </div>
+          <div class="mb-2">
+            <label class="form-label">Category</label>
+            <select name="category" class="form-select" required>
+              <option value="Vehicles">Vehicles</option>
+              <option value="Weapons">Weapons</option>
+              <option value="Supplies">Supplies</option>
+              <option value="Other">Other</option>
+            </select>
+          </div>
+          <div class="mb-2">
+            <label class="form-label">Total Quantity</label>
+            <input type="number" name="total_quantity" class="form-control" min="1" required>
+          </div>
+          <div class="mb-2">
+            <label class="form-label">Available Quantity</label>
+            <input type="number" name="available_quantity" class="form-control" min="0" required>
+          </div>
+          <div class="mb-2">
+            <label class="form-label">Description</label>
+            <textarea name="description" class="form-control"></textarea>
+          </div>
+          <div class="mb-2">
+            <label class="form-label">Status</label>
+            <select name="status" class="form-select">
+              <option value="available">Available</option>
+              <option value="unavailable">Unavailable</option>
+            </select>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="submit" class="btn btn-primary">Add Equipment</button>
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Request Modal -->
+  <div class="modal fade" id="requestModal" tabindex="-1" aria-labelledby="requestModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <form class="modal-content" method="POST" action="/equipment/request">
+        <div class="modal-header">
+          <h5 class="modal-title" id="requestModalLabel">Request Equipment</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <input type="hidden" name="equipment_id" id="modal-equipment-id">
+          <div class="mb-2">
+            <label class="form-label">Equipment</label>
+            <input type="text" class="form-control" id="modal-equipment-name" readonly>
+          </div>
+          <div class="mb-2">
+            <label class="form-label">Event</label>
+            <select class="form-select" name="event_id" id="modal-event-select" required>
+              <option value="">Select event...</option>
+              <% events.forEach(ev => { %>
+                <option value="<%= ev.id %>" data-utc="<%= ev.time %>">
+                  <%= ev.title %> (UTC)
+                </option>
+              <% }) %>
+            </select>
+          </div>
+          <div class="mb-2">
+            <label class="form-label">Quantity</label>
+            <input type="number" class="form-control" name="quantity" id="modal-quantity" min="1" value="1" required>
+            <small class="text-muted" id="modal-max"></small>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="submit" class="btn btn-primary">Submit Request</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Edit Equipment Modal -->
+  <div class="modal fade" id="editModal" tabindex="-1" aria-labelledby="editModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <form class="modal-content" method="POST" id="edit-equipment-form">
+        <div class="modal-header">
+          <h5 class="modal-title" id="editModalLabel">Edit Equipment</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <input type="hidden" name="id" id="edit-equipment-id">
+          <div class="mb-2">
+            <label class="form-label">Name</label>
+            <input type="text" name="name" id="edit-equipment-name" class="form-control" required>
+          </div>
+          <div class="mb-2">
+            <label class="form-label">Category</label>
+            <select name="category" id="edit-equipment-category" class="form-select" required>
+              <option value="Vehicles">Vehicles</option>
+              <option value="Weapons">Weapons</option>
+              <option value="Supplies">Supplies</option>
+              <option value="Other">Other</option>
+            </select>
+          </div>
+          <div class="mb-2">
+            <label class="form-label">Total Quantity</label>
+            <input type="number" name="total_quantity" id="edit-equipment-total" class="form-control" min="1" required>
+          </div>
+          <div class="mb-2">
+            <label class="form-label">Available Quantity</label>
+            <input type="number" name="available_quantity" id="edit-equipment-available" class="form-control" min="0" required>
+          </div>
+          <div class="mb-2">
+            <label class="form-label">Description</label>
+            <textarea name="description" id="edit-equipment-desc" class="form-control"></textarea>
+          </div>
+          <div class="mb-2">
+            <label class="form-label">Status</label>
+            <select name="status" id="edit-equipment-status" class="form-select">
+              <option value="available">Available</option>
+              <option value="unavailable">Unavailable</option>
+            </select>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="submit" class="btn btn-primary">Save Changes</button>
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+  <script>
+    document.addEventListener("DOMContentLoaded", function() {
+      // Update event dropdown to show local time
+      function updateEventDropdownTimes() {
+        var select = document.getElementById('modal-event-select');
+        if (!select) return;
+        for (var i = 0; i < select.options.length; i++) {
+          var opt = select.options[i];
+          var utc = opt.getAttribute('data-utc');
+          if (utc) {
+            var date = new Date(Number(utc) * 1000);
+            var title = opt.textContent.split(' (')[0];
+            var localStr = date.toLocaleString(undefined, {
+              year: 'numeric',
+              month: 'short',
+              day: 'numeric',
+              hour: '2-digit',
+              minute: '2-digit',
+              hour12: true
+            });
+            opt.textContent = `${title} (${localStr})`;
+          }
+        }
+      }
+      updateEventDropdownTimes();
+
+      // Modal: fill in equipment info
+      var requestModal = document.getElementById('requestModal');
+      if (requestModal) {
+        requestModal.addEventListener('show.bs.modal', function (event) {
+          var button = event.relatedTarget;
+          if (!button) return;
+          var eqid = button.getAttribute('data-eqid');
+          var eqname = button.getAttribute('data-eqname');
+          var max = button.getAttribute('data-max');
+          document.getElementById('modal-equipment-id').value = eqid;
+          document.getElementById('modal-equipment-name').value = eqname;
+          document.getElementById('modal-quantity').max = max;
+          document.getElementById('modal-max').textContent = "Max: " + max;
+        });
+      }
+
+      // Edit modal: fill with equipment info
+      var editModal = document.getElementById('editModal');
+      if (editModal) {
+        editModal.addEventListener('show.bs.modal', function (event) {
+          var button = event.relatedTarget;
+          if (!button) return;
+          var id = button.getAttribute('data-eqid');
+          var name = button.getAttribute('data-eqname');
+          var category = button.getAttribute('data-eqcategory');
+          var total = button.getAttribute('data-eqtotal');
+          var available = button.getAttribute('data-eqavailable');
+          var desc = button.getAttribute('data-eqdesc');
+          var status = button.getAttribute('data-eqstatus');
+
+          document.getElementById('edit-equipment-id').value = id;
+          document.getElementById('edit-equipment-name').value = name;
+          document.getElementById('edit-equipment-category').value = category;
+          document.getElementById('edit-equipment-total').value = total;
+          document.getElementById('edit-equipment-available').value = available;
+          document.getElementById('edit-equipment-desc').value = desc || "";
+          document.getElementById('edit-equipment-status').value = status || "available";
+
+          // Set the form action dynamically
+          document.getElementById('edit-equipment-form').action = "/equipment/edit/" + id;
+        });
+      }
+
+      // Live search for equipment cards
+      var searchInput = document.getElementById('equipment-search');
+      if (searchInput) {
+        searchInput.addEventListener('input', function() {
+          const query = this.value.trim().toLowerCase();
+          document.querySelectorAll('.equipment-card-container').forEach(function(container) {
+            const card = container.querySelector('.equipment-card');
+            const name = card.querySelector('.card-title').textContent.toLowerCase();
+            const desc = card.querySelector('.card-text').textContent.toLowerCase();
+            if (
+              name.includes(query) ||
+              desc.includes(query)
+            ) {
+              container.style.display = '';
+            } else {
+              container.style.display = 'none';
+            }
+          });
+        });
+      }
+    });
+  </script>
+</body>
+</html>

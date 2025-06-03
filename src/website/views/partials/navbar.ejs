@@ -1,0 +1,49 @@
+<nav class="navbar navbar-expand-lg">
+	<div class="container">
+		<a class="navbar-brand" href="/" style="letter-spacing:0.03em;">
+            <img src="https://cdn.xanderxx.xyz/1a-logo.png"
+                 alt="1A Logo"
+                 style="height: 32px; width: 32px; object-fit: cover; border-radius: 0.4rem; margin-right: 0.5rem; vertical-align: middle;">
+            1A Admin
+        </a>
+		<button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#mainNavbar" aria-controls="mainNavbar" aria-expanded="false" aria-label="Toggle navigation">
+			<span class="navbar-toggler-icon"></span>
+		</button>
+		<div class="collapse navbar-collapse" id="mainNavbar">
+			<ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                <li class="nav-item">
+					<a class="nav-link <% if (active === 'about') { %>fw-bold border-bottom border-2 border-white<% } %>" href="/about">
+						<i class="bi bi-info-circle me-1"></i> About
+					</a>
+				</li>
+				<li class="nav-item">
+					<a class="nav-link <% if (active === 'dashboard') { %>fw-bold border-bottom border-2 border-white<% } %>" href="/dashboard">
+						<i class="bi bi-grid-1x2 me-1"></i> Dashboard
+					</a>
+				</li>
+				<li class="nav-item">
+					<a class="nav-link <% if (active === 'application') { %>fw-bold border-bottom border-2 border-white<% } %>" href="/apply">
+						<i class="bi bi-file-earmark-text me-1"></i> Application
+					</a>
+				</li>
+			</ul>
+			<div class="d-flex align-items-center gap-2 mt-3 mt-lg-0 flex-column flex-lg-row">
+				<% if (user) { %>
+					<a href="/profile" class="btn btn-dark d-flex align-items-center px-2 py-1" style="border-radius: 2rem; background: #23272f; color: #fff; font-weight: 500;">
+						<img src="<%= user.avatar ? `https://cdn.discordapp.com/avatars/${user.id}/${user.avatar}.png` : '' %>" width="28" height="28" class="rounded-circle me-2" alt="User Avatar" style="object-fit:cover;">
+						<span><%= user.username %></span>
+					</a>
+					<a href="/logout" class="btn btn-discord btn-sm ms-2 w-100 w-lg-auto">
+						<i class="bi bi-discord" style="font-size: 1.2rem;"></i>
+						Logout
+					</a>
+				<% } else { %>
+					<a href="/login" class="btn btn-discord btn-sm ms-2 w-100 w-lg-auto">
+						<i class="bi bi-discord" style="font-size: 1.2rem;"></i>
+						Login with Discord
+					</a>
+				<% } %>
+			</div>
+		</div>
+	</div>
+</nav>

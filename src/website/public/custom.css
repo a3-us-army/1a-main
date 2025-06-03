@@ -1,0 +1,302 @@
+:root {
+	--ranger-bg: #241d1d; /* Main background */
+	--ranger-card: #2d2d2d; /* Slightly lighter for cards */
+	--ranger-footer: #291e1e; /* Footer background */
+	--ranger-gold: #e1b84c; /* Accent gold */
+	--ranger-red: #b12a2c; /* Danger */
+	--ranger-green: #4b5a2a; /* Success */
+	--ranger-white: #fff;
+	--ranger-gray: #aaa;
+}
+
+/* Base */
+body {
+	background: var(--ranger-bg) !important;
+	color: var(--ranger-white) !important;
+	font-size: 1rem;
+}
+
+/* Cards and Modals */
+.card,
+.modal-content {
+	background: var(--ranger-card) !important;
+	color: var(--ranger-white) !important;
+	border: 2px solid var(--ranger-gold);
+}
+
+/* Table */
+.table,
+.table-dark {
+	background: var(--ranger-card) !important;
+	color: var(--ranger-white) !important;
+}
+.table-dark {
+	background: var(--ranger-gold) !important;
+	color: var(--ranger-bg) !important;
+}
+
+/* Navbar */
+.navbar {
+	background: var(--ranger-gold) !important;
+	box-shadow: 0 2px 8px 0 #0002;
+}
+.navbar-brand {
+	font-size: 1.35rem !important;
+	color: var(--ranger-bg) !important;
+	letter-spacing: 0.03em;
+}
+.nav-link {
+	color: var(--ranger-bg) !important;
+	transition: background 0.15s, color 0.15s;
+	border-radius: 0.4rem;
+}
+
+.nav-link:hover,
+.nav-link:focus {
+	background: var(--ranger-bg);
+	color: var(--ranger-gold) !important;
+}
+
+.nav-link.active,
+.navbar .nav-link.active {
+	background: #000 !important;
+	color: var(--ranger-gold) !important;
+}
+.navbar .btn.active,
+.navbar .btn:active {
+	background: #000 !important;
+	color: var(--ranger-gold) !important;
+	border-color: #000 !important;
+}
+/* Buttons */
+.btn-primary,
+.bg-primary {
+	background: var(--ranger-gold) !important;
+	border-color: var(--ranger-gold) !important;
+	color: #000 !important; /* Use black for best contrast */
+	font-weight: 700;
+}
+.btn-primary:hover,
+.bg-primary:hover {
+	background: #f5d77a !important;
+	border-color: #f5d77a !important;
+	color: #000 !important;
+}
+.btn-outline-primary {
+	color: var(--ranger-gold) !important;
+	border-color: var(--ranger-gold) !important;
+	background: transparent !important;
+}
+.btn-outline-primary:hover {
+	background: var(--ranger-gold) !important;
+	color: var(--ranger-bg) !important;
+}
+.btn-outline-secondary {
+	color: var(--ranger-red) !important;
+	border-color: var(--ranger-red) !important;
+	background: transparent !important;
+}
+.btn-outline-secondary:hover {
+	background: var(--ranger-red) !important;
+	color: var(--ranger-white) !important;
+}
+.btn-outline-success {
+	color: var(--ranger-green) !important;
+	border-color: var(--ranger-green) !important;
+	background: transparent !important;
+}
+.btn-outline-success:hover {
+	background: var(--ranger-green) !important;
+	color: var(--ranger-white) !important;
+}
+.btn-link,
+a {
+	color: var(--ranger-gold) !important;
+}
+
+/* Form labels and controls */
+.form-label {
+	color: var(--ranger-gold);
+	font-weight: 600;
+	font-size: 1rem;
+	letter-spacing: 0.01em;
+}
+.form-control,
+.form-select {
+	background: #232323;
+	color: var(--ranger-white);
+	border: 1.5px solid var(--ranger-gold);
+	border-radius: 0.5rem;
+	font-size: 0.98rem;
+	padding: 0.5rem 0.75rem;
+	transition: border-color 0.2s, box-shadow 0.2s;
+}
+.form-control:focus,
+.form-select:focus {
+	border-color: var(--ranger-gold);
+	box-shadow: 0 0 0 0.12rem #e1b84c88;
+	background: var(--ranger-card);
+	color: var(--ranger-white);
+}
+::placeholder {
+	color: var(--ranger-gray) !important;
+	opacity: 1;
+}
+
+/* Card titles */
+.card-title {
+	font-weight: 700;
+	letter-spacing: 0.3px;
+	font-size: 1.3rem;
+	color: var(--ranger-gold);
+}
+.card {
+	border-radius: 1rem;
+}
+
+/* Status badges */
+.status-badge.bg-success {
+	background: var(--ranger-green) !important;
+}
+.status-badge.bg-warning {
+	background: var(--ranger-gold) !important;
+	color: var(--ranger-bg) !important;
+}
+.status-badge.bg-danger {
+	background: var(--ranger-red) !important;
+}
+
+html,
+body {
+	height: 100%;
+	min-height: 100%;
+}
+
+body {
+	display: flex;
+	flex-direction: column;
+	min-height: 100vh;
+}
+
+.site-footer,
+footer {
+	flex-shrink: 0;
+	background: var(--ranger-footer) !important;
+	color: #bdbdbd;
+}
+.footer-link {
+	color: var(--ranger-white);
+	text-decoration: none;
+	font-size: 1.1rem;
+	margin-bottom: 0.5rem;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	transition: color 0.15s;
+}
+.footer-link i {
+	margin-right: 0.5rem;
+}
+.footer-link:hover {
+	color: var(--ranger-gold);
+	text-decoration: underline;
+}
+.footer-divider {
+	border-top: 1px solid #444;
+	margin: 1.2rem 0 1rem 0;
+}
+
+/* Responsive tweaks */
+@media (max-width: 600px) {
+	.card {
+		padding: 0.3rem;
+	}
+	.card-title {
+		font-size: 1.05rem;
+	}
+	.form-control,
+	.form-select {
+		font-size: 0.95rem;
+	}
+}
+
+.hero {
+	padding: 4rem 0 2rem 0;
+	text-align: center;
+}
+.hero-title {
+	font-size: 2.5rem;
+	font-weight: 800;
+	color: var(--ranger-gold);
+	letter-spacing: 0.02em;
+}
+.hero-desc {
+	font-size: 1.2rem;
+	color: var(--ranger-gray);
+	margin-bottom: 2rem;
+}
+.quick-links {
+	margin-top: 2rem;
+	display: flex;
+	justify-content: center;
+	gap: 1.5rem;
+	flex-wrap: wrap;
+}
+.quick-link {
+	background: var(--ranger-card);
+	color: var(--ranger-white);
+	border-radius: 1rem;
+	padding: 1.2rem 2.2rem;
+	font-size: 1.1rem;
+	font-weight: 600;
+	text-decoration: none;
+	box-shadow: 0 2px 12px #0003;
+	transition: background 0.15s, color 0.15s, box-shadow 0.15s;
+	border: 2px solid var(--ranger-gold);
+}
+.quick-link:hover,
+.quick-link:focus {
+	background: var(--ranger-gold);
+	color: #000 !important;
+	font-weight: 700;
+	text-shadow: 0 1px 2px #fff8;
+	box-shadow: 0 4px 24px #0005;
+	text-decoration: none;
+	border-color: var(--ranger-red);
+}
+
+.btn-discord {
+	background: #5865f2 !important; /* Discord blurple */
+	color: #fff !important;
+	border: none !important;
+	font-weight: 700;
+	display: flex;
+	align-items: center;
+	gap: 0.5rem;
+	transition: background 0.15s, color 0.15s;
+}
+.btn-discord:hover,
+.btn-discord:focus {
+	background: #4752c4 !important;
+	color: #fff !important;
+}
+
+.text-muted,
+.form-text.text-muted {
+	color: #ccc !important;
+	opacity: 1;
+}
+
+@media (max-width: 991.98px) {
+	.navbar .d-flex.align-items-center {
+		justify-content: flex-start;
+		align-items: stretch !important;
+	}
+	.navbar .btn-discord {
+		width: 100%;
+		margin-top: 0.5rem;
+	}
+	.navbar .navbar-text {
+		margin-top: 0.5rem;
+	}
+}

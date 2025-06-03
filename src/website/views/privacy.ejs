@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Privacy Policy | 1A Administration Dashboard</title>
+    <meta content="1A Website" property="og:title" />
+  <meta content="Welcome to 1A!" property="og:description" />
+  <meta content="https://1a75.org/privacy" property="og:url" />
+  <meta content="https://cdn.xanderxx.xyz/1a-logo.png" property="og:image" />
+  <meta content="#4b5a2a" data-react-helmet="true" name="theme-color" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="icon" href="/favicon.ico">
+    <link rel="stylesheet" href="/custom.css">
+    <style>
+        @media (max-width: 600px) {
+            .container {
+                padding-left: 0.7rem;
+                padding-right: 0.7rem;
+            }
+            h1 {
+                font-size: 1.3rem;
+            }
+            h2 {
+                font-size: 1.08rem;
+            }
+            ul, p {
+                font-size: 0.98rem;
+            }
+            .btn {
+                width: 100%;
+                font-size: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <%- include("partials/navbar", { user, active }) %>
+    <div class="container" style="max-width: 800px; margin-top: 3rem;">
+        <h1 class="mb-4" style="color: var(--ranger-gold);">Privacy Policy</h1>
+        <p>Last updated: <%= new Date().toLocaleDateString() %></p>
+        <h2 style="color: var(--ranger-gold);">1. Information We Collect</h2>
+        <ul>
+            <li>Discord user ID, username, and avatar (when you log in).</li>
+            <li>Event and certification data you create or manage.</li>
+            <li>Server and channel IDs for event posting.</li>
+        </ul>
+        <h2 style="color: var(--ranger-gold);">2. How We Use Your Information</h2>
+        <ul>
+            <li>To provide and improve the Service.</li>
+            <li>To manage events, certifications, and Discord integrations.</li>
+            <li>To ensure security and prevent abuse.</li>
+        </ul>
+        <h2 style="color: var(--ranger-gold);">3. Data Sharing</h2>
+        <ul>
+            <li>We do not sell or share your personal information with third parties.</li>
+            <li>Data may be shared with Discord as required for bot functionality.</li>
+        </ul>
+        <h2 style="color: var(--ranger-gold);">4. Data Retention</h2>
+        <p>
+            We retain your data as long as necessary to provide the Service. You may request deletion of your data by contacting us.
+        </p>
+        <h2 style="color: var(--ranger-gold);">5. Cookies</h2>
+        <p>
+            We use session cookies for authentication and security. No tracking or advertising cookies are used.
+        </p>
+        <h2 style="color: var(--ranger-gold);">6. Your Rights</h2>
+        <ul>
+            <li>You may request access to or deletion of your data at any time.</li>
+            <li>Contact us at <a href="mailto:main@xanderxx.xyz">main@xanderxx.xyz</a> for requests.</li>
+        </ul>
+        <h2 style="color: var(--ranger-gold);">7. Changes to This Policy</h2>
+        <p>
+            We may update this Privacy Policy at any time. Changes will be posted on this page.
+        </p>
+        <h2 style="color: var(--ranger-gold);">8. Contact</h2>
+        <p>
+            For questions, contact the server administrators or email: <a href="mailto:main@xanderxx.xyz">main@xanderxx.xyz</a>
+        </p>
+        <p class="mt-5">
+            <a href="/" class="btn btn-outline-primary">Back to Home</a>
+        </p>
+    </div>
+    <%- include("partials/footer") %>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

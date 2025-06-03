@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>About 1A – 1st Battalion, 75th Ranger Regiment</title>
+  <meta content="1A Website" property="og:title" />
+  <meta content="Welcome to 1A!" property="og:description" />
+  <meta content="https://1a75.org/about" property="og:url" />
+  <meta content="https://cdn.xanderxx.xyz/1a-logo.png" property="og:image" />
+  <meta content="#4b5a2a" data-react-helmet="true" name="theme-color" />
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+  <link rel="icon" href="/favicon.ico">
+  <link rel="stylesheet" href="/custom.css">
+  
+  <style>
+    .about-section {
+      background: #23272f !important;
+      color: #f8f6f2 !important;
+      border-radius: 1rem;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.10);
+      padding: 2.5rem 1.5rem 2rem 1.5rem;
+      margin-top: 2rem;
+      margin-bottom: 2.5rem;
+      border: 1.5px solid #ffe066;
+    }
+    .about-title {
+      color: #ffe066 !important;
+      font-weight: 700;
+      font-size: 2rem;
+      margin-bottom: 0.5rem;
+    }
+    .about-subtitle {
+      color: #f8f6f2 !important;
+      font-size: 1.2rem;
+      margin-bottom: 1.5rem;
+    }
+    .about-link {
+      color: #ffe066 !important;
+      font-weight: 500;
+      text-decoration: underline;
+    }
+    .about-link:hover {
+      color: #fffbe6 !important;
+      text-decoration: underline;
+    }
+    .about-section h2, .about-section h3 {
+      color: #ffe066 !important;
+      font-weight: 600;
+      margin-top: 2rem;
+      margin-bottom: 1rem;
+    }
+    .about-section ul {
+      margin-bottom: 1.5rem;
+    }
+    .about-section li {
+      margin-bottom: 0.5rem;
+    }
+    .form-help {
+      color: #bdb76b !important;
+      font-size: 0.97em;
+    }
+    .about-cta {
+      margin-top: 2.5rem;
+      text-align: center;
+    }
+    .about-cta a {
+      font-size: 1.2rem;
+      font-weight: 600;
+      padding: 0.8rem 2rem;
+      border-radius: 0.5rem;
+      background: #ffe066;
+      color: #23272f !important;
+      text-decoration: none;
+      transition: background 0.15s, color 0.15s;
+      display: inline-block;
+      border: none;
+    }
+    .about-cta a:hover {
+      background: #b68900;
+      color: #fffbe6 !important;
+      text-decoration: none;
+    }
+    @media (max-width: 600px) {
+      .about-section {
+        padding: 1.2rem 0.5rem 1rem 0.5rem;
+      }
+      .about-title {
+        font-size: 1.3rem;
+      }
+      .about-subtitle {
+        font-size: 1rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <%- include("partials/navbar", { user, active }) %>
+  <main id="main-content">
+    <div class="container">
+      <div class="about-section mx-auto">
+        <div class="text-center mb-4">
+          <div class="about-title">1A – 1st Battalion, 75th Ranger Regiment, Alpha Company [NEW | NA]</div>
+          <div class="about-subtitle">
+            <strong>Type:</strong> U.S. Army Ranger Milsim<br>
+            <strong>Timezone:</strong> US Central (CST/CDT)<br>
+            <strong>Operations:</strong> Realism-focused, Custom Zeus Operations<br>
+            <strong>Game:</strong> Arma 3<br>
+            <strong>Comms:</strong> TeamSpeak + ACRE2
+          </div>
+        </div>
+        <h2>What We’re About</h2>
+        <p>
+          1A is a MILSIM unit modeled after the 75th Ranger Regiment during the Global War on Terror, specifically around the 2009 era. We emphasize tight coordination, disciplined operations, and high standards without the unnecessary roleplay. This isn’t a "yes sir, no sir" unit — we’ve cut out the formalities to focus on what matters: using Arma 3 to its full tactical potential.
+        </p>
+        <p>
+          <a class="about-link" href="https://docs.google.com/spreadsheets/d/11b5ZnMwxw3qj66q3-PMy0YHFOn5Th_I-NnsJH5cRrF4/edit?usp=sharing" target="_blank">
+            <i class="bi bi-list-task me-1"></i>Click Here To Find Out What Roles are Available!
+          </a>
+        </p>
+        <h2>Schedule</h2>
+        <ul>
+          <li><strong>Main Ops:</strong> Saturday and Sunday Evening (1900 CST)</li>
+          <li><strong>Attendance:</strong> Be present or check in. Communication is expected. Real life comes first, but accountability still matters.</li>
+        </ul>
+        <h2>Requirements</h2>
+        <ul>
+          <li>Arma 3 with required mods (RHS, ACE, ACRE2, etc.)<br>
+            <span class="form-help">Have storage space to install modpack ~76.16 Gb</span>
+          </li>
+          <li>Working mic + headset</li>
+          <li>Ability to follow orders, stay disciplined, and not screw around</li>
+          <li>Must speak and be able to understand fluent English</li>
+        </ul>
+        <h2>How to Join</h2>
+        <p>
+          Jump into our Discord, check out the rules, and submit an application.<br>
+          <a class="about-link" href="https://discord.gg/RAQwxfbu5H" target="_blank">
+            <i class="bi bi-discord me-1"></i>Discord: Click Here!
+          </a>
+        </p>
+        <div class="about-cta">
+          <a href="/apply"><i class="bi bi-file-earmark-text me-1"></i>Submit Your Application</a>
+        </div>
+      </div>
+    </div>
+  </main>
+  <%- include("partials/footer") %>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>1A Website</title>
+    <meta content="1A Website" property="og:title" />
+  <meta content="Welcome to 1A!" property="og:description" />
+  <meta content="https://1a75.org" property="og:url" />
+  <meta content="https://cdn.xanderxx.xyz/1a-logo.png" property="og:image" />
+  <meta content="#4b5a2a" data-react-helmet="true" name="theme-color" />
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+	<link rel="icon" href="/favicon.ico">
+	<link rel="stylesheet" href="/custom.css">
+	<style>
+		body {
+	background: #4B3F36;
+}
+.hero-section {
+	background: #4B3F36;
+	color: #F5F3EE; /* Light warm gray for text */
+	border-radius: 1rem;
+	padding: 2.5rem 1.5rem 2rem 1.5rem;
+	margin-top: 2rem;
+	margin-bottom: 2.5rem;
+	box-shadow: 0 4px 24px rgba(0,0,0,0.06);
+	border: 1.5px solid #ffe066;
+}
+.hero-title {
+	font-size: 2.2rem;
+	font-weight: 700;
+	letter-spacing: 0.01em;
+	color: #ffe066; /* Brighter gold for more contrast */
+}
+.hero-desc {
+	font-size: 1.15rem;
+	font-weight: 400;
+	margin-bottom: 0;
+	color: #F5F3EE; /* Use the same light color for description */
+}
+.quick-link-card {
+	border: none;
+	border-radius: 0.7rem;
+	box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+	transition: transform 0.12s, box-shadow 0.12s;
+	background: #23272f;
+	color: #FFFBE6; /* Lighter text */
+}
+.quick-link-card:hover, .quick-link-card:focus-within {
+	transform: translateY(-2px) scale(1.03);
+	box-shadow: 0 6px 24px rgba(255,224,102,0.18);
+	background: #b68900;
+	color: #fffbe6;
+}
+.quick-link-card .card-body {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	font-size: 1.15rem;
+	font-weight: 500;
+	padding: 1.3rem 1rem;
+}
+.quick-link-card i {
+	font-size: 1.5rem;
+	margin-right: 0.8rem;
+}
+@media (max-width: 600px) {
+	.hero-section {
+		padding: 1.2rem 0.5rem 1rem 0.5rem;
+	}
+	.hero-title {
+		font-size: 1.3rem;
+	}
+	.hero-desc {
+		font-size: 1rem;
+	}
+	.quick-link-card .card-body {
+		font-size: 1rem;
+		padding: 1rem 0.7rem;
+	}
+}
+	</style>
+</head>
+<body>
+	<%- include("partials/navbar", { user, active }) %>
+	<main id="main-content">
+		<div class="container">
+			<div class="hero-section text-center mb-5">
+                <img
+  src="https://cdn.xanderxx.xyz/1a-logo.png"
+  alt="1A Logo"
+  style="
+    height: 128px;
+    width: auto;
+    margin-bottom: 1rem;
+    border-radius: 1rem;
+    border: 3px solid #362f29;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  "
+>
+				<h1 class="hero-title mb-3">Welcome to the 1A Administration Website</h1>
+				<p class="hero-desc mb-0">
+					Manage events, certifications, personnel, and more for 1A.<br>
+					Use the quick links below to get started.
+				</p>
+			</div>
+			<div class="row g-4 justify-content-center">
+				<div class="col-12 col-sm-6 col-md-4 col-lg-3">
+					<a href="/about" class="card quick-link-card text-decoration-none" aria-label="About Us">
+						<div class="card-body">
+							<i class="bi bi-info-circle"></i> About
+						</div>
+					</a>
+				</div>
+				<div class="col-12 col-sm-6 col-md-4 col-lg-3">
+					<a href="/events" class="card quick-link-card text-decoration-none" aria-label="View Events">
+						<div class="card-body">
+							<i class="bi bi-calendar-event"></i> Events
+						</div>
+					</a>
+				</div>
+				<div class="col-12 col-sm-6 col-md-4 col-lg-3">
+					<a href="/certs" class="card quick-link-card text-decoration-none" aria-label="View Certifications">
+						<div class="card-body">
+							<i class="bi bi-patch-check"></i> Certifications
+						</div>
+					</a>
+				</div>
+				<div class="col-12 col-sm-6 col-md-4 col-lg-3">
+					<a href="/personnel" class="card quick-link-card text-decoration-none" aria-label="View All Personnel">
+						<div class="card-body">
+							<i class="bi bi-people"></i> PERSTAT
+						</div>
+					</a>
+				</div>
+				<div class="col-12 col-sm-6 col-md-4 col-lg-3">
+					<a href="/apply" class="card quick-link-card text-decoration-none" aria-label="Application">
+						<div class="card-body">
+							<i class="bi bi-file-earmark-text"></i> Application
+						</div>
+					</a>
+				</div>
+				<% if (user) { %>
+					<div class="col-12 col-sm-6 col-md-4 col-lg-3">
+						<a href="/profile" class="card quick-link-card text-decoration-none" aria-label="Your Profile">
+							<div class="card-body">
+								<i class="bi bi-person-circle"></i> PERSEC
+							</div>
+						</a>
+					</div>
+					<div class="col-12 col-sm-6 col-md-4 col-lg-3">
+						<a href="/my-certs" class="card quick-link-card text-decoration-none" aria-label="Your Certifications">
+							<div class="card-body">
+								<i class="bi bi-award"></i> My Certifications
+							</div>
+						</a>
+					</div>
+				<% } else { %>
+					<div class="col-12 col-sm-6 col-md-4 col-lg-3">
+						<a href="/login" class="card quick-link-card text-decoration-none" aria-label="Login with Discord">
+							<div class="card-body">
+								<i class="bi bi-discord"></i> Login with Discord
+							</div>
+						</a>
+					</div>
+				<% } %>
+			</div>
+		</div>
+	</main>
+	<%- include("partials/footer") %>
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

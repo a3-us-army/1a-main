@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title><%= action %> Event</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+	<link rel="icon" href="/favicon.ico">
+	<link rel="stylesheet" href="/custom.css">
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+	<style>
+		@media (max-width: 600px) {
+			.card {
+				padding: 0.5rem;
+				margin: 0 0.2rem;
+			}
+			.card-title {
+				font-size: 1.2rem;
+			}
+			.form-label {
+				font-size: 1rem;
+			}
+			.form-control, .form-select {
+				font-size: 1rem;
+				padding: 0.6rem 0.7rem;
+			}
+			.d-flex.justify-content-between.align-items-center.mt-3 {
+				flex-direction: column !important;
+				gap: 0.5rem;
+				align-items: stretch !important;
+			}
+			.btn {
+				width: 100%;
+			}
+			.btn + .btn {
+				margin-left: 0 !important;
+			}
+		}
+	</style>
+</head>
+<body>
+	<%- include("partials/navbar", { user, active }) %>
+	<div id="main-content">
+		<div class="container mt-4">
+			<div class="row justify-content-center">
+				<div class="col-12 col-sm-10 col-md-8 col-lg-6 col-xl-5">
+					<div class="card shadow-lg mx-auto">
+						<div class="card-body p-3">
+							<h2 class="card-title mb-3 text-center"><%= action %> Event</h2>
+							<form method="POST" action="<%= event ? '/events/edit/' + event.id : '/events/new' %>">
+								<div class="mb-3">
+									<label class="form-label" for="title">Title</label>
+									<input type="text" id="title" name="title" class="form-control" value="<%= event ? event.title : '' %>" required maxlength="100" placeholder="Event title">
+								</div>
+								<div class="mb-3">
+									<label class="form-label" for="description">Description</label>
+									<textarea id="description" name="description" class="form-control" rows="3" maxlength="500" placeholder="What's this event about?"><%= event ? event.description : '' %></textarea>
+								</div>
+								<div class="mb-3">
+									<label class="form-label" for="time">Date & Time</label>
+									<input type="datetime-local" id="time" name="time" class="form-control" required>
+									<input type="hidden" id="eventTimeUTC" value="<%= event ? event.time : '' %>">
+									<small class="form-text text-muted">This will use your local timezone.</small>
+								</div>
+								<div class="mb-3">
+									<label class="form-label" for="location">Location</label>
+									<input type="text" id="location" name="location" class="form-control" value="<%= event ? event.location : '' %>" maxlength="100" placeholder="Where is it?">
+								</div>
+								<!-- Discord Channel Dropdown with Categories -->
+								<div class="mb-3">
+									<label class="form-label d-flex align-items-center gap-2" for="channelId">
+										<i class="bi bi-hash" style="font-size: 1.1rem; color: #a084e8;"></i>
+										Discord Channel
+									</label>
+									<select class="form-select" id="channelId" name="channelId" required>
+										<option value="">Select a channel</option>
+										<% if (DISCORD_CHANNELS && DISCORD_CHANNELS.categories && DISCORD_CHANNELS.textChannels) { %>
+											<% DISCORD_CHANNELS.categories.forEach(category => { %>
+												<optgroup label="<%= category.name %>">
+													<% DISCORD_CHANNELS.textChannels
+														.filter(ch => ch.parentId === category.id)
+														.forEach(channel => { %>
+															<option value="<%= channel.id %>" <%= event && event.channel_id === channel.id ? 'selected' : '' %>>
+																#<%= channel.name %>
+															</option>
+													<% }) %>
+												</optgroup>
+											<% }) %>
+											<% const uncategorized = DISCORD_CHANNELS.textChannels.filter(ch => !ch.parentId); %>
+											<% if (uncategorized.length) { %>
+												<optgroup label="Other">
+													<% uncategorized.forEach(channel => { %>
+														<option value="<%= channel.id %>" <%= event && event.channel_id === channel.id ? 'selected' : '' %>>
+															#<%= channel.name %>
+														</option>
+													<% }) %>
+												</optgroup>
+											<% } %>
+										<% } else { %>
+											<option value="" disabled>No channels available</option>
+										<% } %>
+									</select>
+									<small class="form-text text-muted" style="color:#e1b84c !important;">
+										Choose the Discord channel where this event will be posted.
+									</small>
+								</div>
+								<div class="d-flex justify-content-between align-items-center mt-3">
+									<button type="submit" class="btn btn-primary"><%= action %> Event</button>
+									<a href="/" class="btn btn-outline-secondary ms-2">Cancel</a>
+								</div>
+							</form>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<%- include("partials/footer") %>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+	<script>
+	document.addEventListener("DOMContentLoaded", function() {
+	  const utcTimestamp = document.getElementById("eventTimeUTC")?.value;
+	  if (utcTimestamp) {
+		const date = new Date(Number(utcTimestamp) * 1000);
+		const pad = n => n.toString().padStart(2, "0");
+		const local = date.getFullYear() + "-" +
+		  pad(date.getMonth() + 1) + "-" +
+		  pad(date.getDate()) + "T" +
+		  pad(date.getHours()) + ":" +
+		  pad(date.getMinutes());
+		document.getElementById("time").value = local;
+	  }
+	});
+	</script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+          // Set the value for editing (as before)
+          const utcTimestamp = document.getElementById("eventTimeUTC")?.value;
+          if (utcTimestamp) {
+            const date = new Date(Number(utcTimestamp) * 1000);
+            const pad = n => n.toString().padStart(2, "0");
+            const local = date.getFullYear() + "-" +
+              pad(date.getMonth() + 1) + "-" +
+              pad(date.getDate()) + "T" +
+              pad(date.getHours()) + ":" +
+              pad(date.getMinutes());
+            document.getElementById("time").value = local;
+          }
+        
+          // On form submit, convert local time to UTC seconds and replace the value
+          const form = document.querySelector("form");
+          if (form) {
+            form.addEventListener("submit", function(e) {
+              const timeInput = document.getElementById("time");
+              if (timeInput && timeInput.value) {
+                // Parse as local time, convert to UTC seconds
+                const localDate = new Date(timeInput.value);
+                const utcSeconds = Math.floor(localDate.getTime() / 1000);
+                // Replace the value with UTC seconds (as a hidden input)
+                let hidden = document.getElementById("utcTimeInput");
+                if (!hidden) {
+                  hidden = document.createElement("input");
+                  hidden.type = "hidden";
+                  hidden.name = "utc_time";
+                  hidden.id = "utcTimeInput";
+                  form.appendChild(hidden);
+                }
+                hidden.value = utcSeconds;
+                // Optionally, remove the original time input so only utc_time is sent
+                timeInput.disabled = true;
+              }
+            });
+          }
+        });
+        </script>
+</body>
+</html>
