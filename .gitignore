@@ -1,7 +1,8 @@
 .env
+events.db 
 node_modules
-events.db
 service-account.json
 sessions.sqlite
 uploads     
 commands-manifest.json
+
