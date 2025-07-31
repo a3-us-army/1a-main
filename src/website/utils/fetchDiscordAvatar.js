@@ -1,4 +1,4 @@
-import { REST, Routes } from "discord.js";
+import { REST, Routes } from 'discord.js';
 
 /**
  * Fetch a user's avatar hash from Discord's API.
@@ -9,7 +9,7 @@ import { REST, Routes } from "discord.js";
 export default async function fetchDiscordAvatar(userId, botToken) {
   if (!userId || !botToken) return null;
   try {
-    const rest = new REST({ version: "10" }).setToken(botToken);
+    const rest = new REST({ version: '10' }).setToken(botToken);
     const user = await rest.get(Routes.user(userId));
     // user.avatar is a hash, user.id is the ID
     if (user && user.avatar) {
@@ -20,7 +20,7 @@ export default async function fetchDiscordAvatar(userId, botToken) {
     }
     return null;
   } catch (e) {
-    console.error("Error fetching Discord avatar:", e);
+    console.error('Error fetching Discord avatar:', e);
     return null;
   }
 }

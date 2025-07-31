@@ -108,7 +108,11 @@
                 emoji: emoji
               });
             %>
-              <option value="<%= role.id %>" data-custom-properties='<%= customProps %>' <%= form.ping_role_id === role.id ? "selected" : "" %>>
+              <option 
+                value="<%= role.id %>" 
+                data-custom-properties='<%= customProps %>' 
+                <%= form.ping_role_id === role.id ? "selected" : "" %>
+              >
                 <%= role.name %>
               </option>
             <% }) %>

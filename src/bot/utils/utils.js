@@ -1,6 +1,6 @@
 // utils.js
 
-import { EmbedBuilder } from "discord.js";
+import { EmbedBuilder } from 'discord.js';
 
 /**
  * Creates a Discord embed with consistent styling
@@ -23,56 +23,56 @@ import { EmbedBuilder } from "discord.js";
  * @returns {EmbedBuilder} The created embed
  */
 export function createEmbed(options = {}) {
-	const embed = new EmbedBuilder();
+  const embed = new EmbedBuilder();
 
-	// Default color - military green
-	const defaultColor = 0x4b5320;
+  // Default color - military green
+  const defaultColor = 0x4b5320;
 
-	// Set basic properties
-	if (options.title) embed.setTitle(options.title);
-	if (options.description) embed.setDescription(options.description);
-	if (options.url) embed.setURL(options.url);
-	embed.setColor(options.color || defaultColor);
+  // Set basic properties
+  if (options.title) embed.setTitle(options.title);
+  if (options.description) embed.setDescription(options.description);
+  if (options.url) embed.setURL(options.url);
+  embed.setColor(options.color || defaultColor);
 
-	// Add fields if provided
-	if (options.fields && Array.isArray(options.fields)) {
-		// biome-ignore lint/complexity/noForEach: <explanation>
-		options.fields.forEach((field) => {
-			if (field.name && field.value) {
-				embed.addFields({
-					name: field.name,
-					value: field.value,
-					inline: field.inline === undefined ? false : field.inline,
-				});
-			}
-		});
-	}
+  // Add fields if provided
+  if (options.fields && Array.isArray(options.fields)) {
+    // biome-ignore lint/complexity/noForEach: <explanation>
+    options.fields.forEach(field => {
+      if (field.name && field.value) {
+        embed.addFields({
+          name: field.name,
+          value: field.value,
+          inline: field.inline === undefined ? false : field.inline,
+        });
+      }
+    });
+  }
 
-	// Set author if provided
-	if (options.author?.name) {
-		embed.setAuthor({
-			name: options.author.name,
-			iconURL: options.author.iconURL,
-			url: options.author.url,
-		});
-	}
+  // Set author if provided
+  if (options.author?.name) {
+    embed.setAuthor({
+      name: options.author.name,
+      iconURL: options.author.iconURL,
+      url: options.author.url,
+    });
+  }
 
-	// Set images if provided
-	if (options.thumbnail) embed.setThumbnail(options.thumbnail);
-	if (options.image) embed.setImage(options.image);
+  // Set images if provided
+  if (options.thumbnail) embed.setThumbnail(options.thumbnail);
+  if (options.image) embed.setImage(options.image);
 
-	// Set footer if provided
-	if (options.footer?.text) {
-		embed.setFooter({
-			text: options.footer.text,
-			iconURL: options.footer.iconURL,
-		});
-	}
+  // Set footer if provided
+  if (options.footer?.text) {
+    embed.setFooter({
+      text: options.footer.text,
+      iconURL: options.footer.iconURL,
+    });
+  }
 
-	// Set timestamp if provided, otherwise use current time
-	embed.setTimestamp(options.timestamp || new Date());
+  // Set timestamp if provided, otherwise use current time
+  embed.setTimestamp(options.timestamp || new Date());
 
-	return embed;
+  return embed;
 }
 
 /**
@@ -81,11 +81,11 @@ export function createEmbed(options = {}) {
  * @returns {EmbedBuilder} The error embed
  */
 export function createErrorEmbed(errorMessage) {
-	return createEmbed({
-		title: "Error",
-		description: errorMessage,
-		color: 0xe74c3c, // Red color for errors
-	});
+  return createEmbed({
+    title: 'Error',
+    description: errorMessage,
+    color: 0xe74c3c, // Red color for errors
+  });
 }
 
 /**
@@ -94,9 +94,9 @@ export function createErrorEmbed(errorMessage) {
  * @returns {EmbedBuilder} The success embed
  */
 export function createSuccessEmbed(message) {
-	return createEmbed({
-		title: "Success",
-		description: message,
-		color: 0x2ecc71, // Green color for success
-	});
+  return createEmbed({
+    title: 'Success',
+    description: message,
+    color: 0x2ecc71, // Green color for success
+  });
 }

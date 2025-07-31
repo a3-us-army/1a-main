@@ -1,23 +1,24 @@
-import { EmbedBuilder } from "discord.js";
+import { EmbedBuilder } from 'discord.js';
 
 export async function appealButtonHandler(interaction, client) {
   // Accept Appeal
-  if (interaction.customId.startsWith("appeal_accept_")) {
+  if (interaction.customId.startsWith('appeal_accept_')) {
     await interaction.deferUpdate();
 
-    const parts = interaction.customId.split("_");
+    const parts = interaction.customId.split('_');
     const userId = parts.slice(-1)[0];
 
     let unbanSuccess = false;
     try {
-      console.log("Attempting to unban user:", userId);
-      await interaction.guild.bans.remove(userId, "Appeal accepted");
+      console.log('Attempting to unban user:', userId);
+      await interaction.guild.bans.remove(userId, 'Appeal accepted');
       unbanSuccess = true;
-      console.log("Unban successful for:", userId);
+      console.log('Unban successful for:', userId);
     } catch (e) {
-      console.error("Unban failed for", userId, e);
+      console.error('Unban failed for', userId, e);
       await interaction.followUp({
-        content: "❌ Failed to unban the user. They may not be banned or the bot lacks permission.",
+        content:
+          '❌ Failed to unban the user. They may not be banned or the bot lacks permission.',
         ephemeral: true,
       });
       return; // Don't proceed if unban failed
@@ -28,11 +29,11 @@ export async function appealButtonHandler(interaction, client) {
     try {
       const user = await client.users.fetch(userId);
       await user.send(
-        "Your ban appeal has been **accepted**! You have been unbanned from the Discord. Welcome back! https://discord.gg/UfbYumx5b9"
+        'Your ban appeal has been **accepted**! You have been unbanned from the Discord. Welcome back! https://discord.gg/UfbYumx5b9'
       );
       dmSuccess = true;
     } catch (e) {
-      console.error("Failed to DM user after unban:", e);
+      console.error('Failed to DM user after unban:', e);
       dmSuccess = false;
     }
 
@@ -42,37 +43,41 @@ export async function appealButtonHandler(interaction, client) {
         embeds: [
           EmbedBuilder.from(interaction.message.embeds[0])
             .setColor(0x2ecc71)
-            .addFields({ name: "Status", value: "✅ Accepted & Unbanned", inline: false })
+            .addFields({
+              name: 'Status',
+              value: '✅ Accepted & Unbanned',
+              inline: false,
+            }),
         ],
         components: [],
       });
     } catch (e) {
-      console.error("Failed to edit message after unban:", e);
+      console.error('Failed to edit message after unban:', e);
     }
 
     await interaction.followUp({
       content: dmSuccess
-        ? "User unbanned and notified via DM."
-        : "User unbanned, but DM failed.",
+        ? 'User unbanned and notified via DM.'
+        : 'User unbanned, but DM failed.',
       ephemeral: true,
     });
   }
 
   // Deny Appeal
-  if (interaction.customId.startsWith("appeal_deny_")) {
+  if (interaction.customId.startsWith('appeal_deny_')) {
     await interaction.deferUpdate();
 
-    const parts = interaction.customId.split("_");
+    const parts = interaction.customId.split('_');
     const userId = parts.slice(-1)[0];
 
     // DM the user about denial
     try {
       const user = await client.users.fetch(userId);
       await user.send(
-        "Your ban appeal has been **denied**. If you have questions, contact staff."
+        'Your ban appeal has been **denied**. If you have questions, contact staff.'
       );
     } catch (e) {
-      console.error("Failed to DM user after denial:", e);
+      console.error('Failed to DM user after denial:', e);
     }
 
     // Update the message
@@ -81,16 +86,16 @@ export async function appealButtonHandler(interaction, client) {
         embeds: [
           EmbedBuilder.from(interaction.message.embeds[0])
             .setColor(0xe74c3c)
-            .addFields({ name: "Status", value: "❌ Denied", inline: false })
+            .addFields({ name: 'Status', value: '❌ Denied', inline: false }),
         ],
         components: [],
       });
     } catch (e) {
-      console.error("Failed to edit message after denial:", e);
+      console.error('Failed to edit message after denial:', e);
     }
 
     await interaction.followUp({
-      content: "Appeal denied.",
+      content: 'Appeal denied.',
       ephemeral: true,
     });
   }

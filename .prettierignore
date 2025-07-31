@@ -1,0 +1,11 @@
+node_modules/
+.git/
+*.min.js
+*.min.css
+package-lock.json
+events.db
+sessions.sqlite
+uploads/
+dist/
+build/
+coverage/ 

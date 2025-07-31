@@ -1,10 +1,10 @@
-import { Router } from "express";
+import { Router } from 'express';
 const router = Router();
 
-router.get("/", (req, res) => {
-  res.render("expired", {
+router.get('/', (req, res) => {
+  res.render('expired', {
     user: req.user,
-    active: null
+    active: null,
   });
 });
 

@@ -79,7 +79,10 @@
 													<% DISCORD_CHANNELS.textChannels
 														.filter(ch => ch.parentId === category.id)
 														.forEach(channel => { %>
-															<option value="<%= channel.id %>" <%= event && event.channel_id === channel.id ? 'selected' : '' %>>
+															<option 
+																value="<%= channel.id %>" 
+																<%= event && event.channel_id === channel.id ? 'selected' : '' %>
+															>
 																#<%= channel.name %>
 															</option>
 													<% }) %>
@@ -89,7 +92,10 @@
 											<% if (uncategorized.length) { %>
 												<optgroup label="Other">
 													<% uncategorized.forEach(channel => { %>
-														<option value="<%= channel.id %>" <%= event && event.channel_id === channel.id ? 'selected' : '' %>>
+														<option 
+															value="<%= channel.id %>" 
+															<%= event && event.channel_id === channel.id ? 'selected' : '' %>
+														>
 															#<%= channel.name %>
 														</option>
 													<% }) %>
