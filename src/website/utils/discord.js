@@ -4,7 +4,6 @@ const ADMIN_CACHE_DURATION = 30 * 60 * 1000; // 30 minutes
 const adminCache = new Map(); // userId -> { isAdmin, expires }
 
 export async function isUserAdmin(userId) {
-	console.log(`[ADMIN CHECK] isUserAdmin called for user: ${userId}`);
 	const guildId = process.env.GUILD_ID;
 	const botToken = process.env.DISCORD_TOKEN;
 	if (!guildId || !botToken) {
@@ -29,14 +28,9 @@ export async function isUserAdmin(userId) {
 				headers: { Authorization: `Bot ${botToken}` },
 			},
 		);
-		console.log(`[ADMIN CHECK] Fetched member, status: ${res.status}`);
 		const text = await res.text();
-		console.log(`[ADMIN CHECK] API response for user ${userId}:`, text);
 
 		if (!res.ok) {
-			console.log(
-				`[ADMIN CHECK] User ${userId} not found in guild or API error.`,
-			);
 			adminCache.set(userId, {
 				isAdmin: false,
 				expires: now + ADMIN_CACHE_DURATION,
@@ -53,23 +47,17 @@ export async function isUserAdmin(userId) {
 				headers: { Authorization: `Bot ${botToken}` },
 			},
 		);
-		console.log(`[ADMIN CHECK] Fetched roles, status: ${rolesRes.status}`);
 		const rolesText = await rolesRes.text();
 		const roles = JSON.parse(rolesText);
 
 		const memberRoleIds = member.roles || [];
-		console.log(`[ADMIN CHECK] User ${userId} roles:`, memberRoleIds);
 
 		for (const roleId of memberRoleIds) {
 			const role = roles.find((r) => r.id === roleId);
 			if (role) {
-				console.log(
-					`[ADMIN CHECK] User ${userId} role ${role.name || role.id} permissions: ${role.permissions}`,
-				);
+				
 				if (BigInt(role.permissions) & BigInt(ADMINISTRATOR)) {
-					console.log(
-						`[ADMIN CHECK] User ${userId} is admin via role ${role.name || role.id}`,
-					);
+					
 					adminCache.set(userId, {
 						isAdmin: true,
 						expires: now + ADMIN_CACHE_DURATION,
@@ -78,7 +66,6 @@ export async function isUserAdmin(userId) {
 				}
 			}
 		}
-		console.log(`[ADMIN CHECK] User ${userId} is not admin`);
 		adminCache.set(userId, {
 			isAdmin: false,
 			expires: now + ADMIN_CACHE_DURATION,
@@ -105,5 +92,32 @@ export async function fetchDiscordAvatar(discord_id, botToken) {
 	} catch (e) {
 		console.error("Failed to fetch Discord avatar:", e);
 		return null;
+	}
+}
+
+/**
+ * Checks if a user is a member of the guild.
+ * @param {string} userId - The Discord user ID.
+ * @returns {Promise<boolean>}
+ */
+export async function isUserInGuild(userId) {
+	const guildId = process.env.GUILD_ID;
+	const botToken = process.env.DISCORD_TOKEN;
+	if (!guildId || !botToken) {
+		console.error("[GUILD CHECK] Missing GUILD_ID or BOT_TOKEN in environment.");
+		return false;
+	}
+
+	try {
+		const res = await fetch(
+			`https://discord.com/api/v10/guilds/${guildId}/members/${userId}`,
+			{
+				headers: { Authorization: `Bot ${botToken}` },
+			}
+		);
+		return res.ok;
+	} catch (err) {
+		console.error("Failed to check guild membership:", err);
+		return false;
 	}
 }

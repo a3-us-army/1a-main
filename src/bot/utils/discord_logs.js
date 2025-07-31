@@ -67,62 +67,90 @@ export function setupFullLogger(client) {
 
 	// --- Member Join (with invite tracking) ---
 	client.on("guildMemberAdd", async (member) => {
-		// Invite tracking
-		const cachedInvites = invitesCache.get(member.guild.id);
-		const newInvites = await member.guild.invites.fetch();
-		invitesCache.set(member.guild.id, newInvites);
-
-		const usedInvite = newInvites.find(
-			(inv) => cachedInvites?.get(inv.code)?.uses < inv.uses,
-		);
-
-		const channel = await getLogChannel(member.guild);
-		if (!channel) return;
-
-		const embed = new EmbedBuilder()
-			.setColor(0x2ecc71)
-			.setTitle("Member Joined")
-			.addFields(
-				{
-					name: "User",
-					value: `${member.username} (<@${member.id}>)`,
-					inline: true,
-				},
-				{ name: "User ID", value: member.id, inline: true },
-				{
-					name: "Account Created",
-					value: `<t:${Math.floor(member.user.createdTimestamp / 1000)}:R>`,
-					inline: true,
-				},
-			)
-			.setFooter({ text: `User ID: ${member.id}` })
-			.setTimestamp();
-
-		if (usedInvite) {
-			embed.addFields({
-				name: "Invite Used",
-				value: `\`${usedInvite.code}\` (by ${usedInvite.inviter?.tag || "Unknown"})`,
-				inline: false,
-			});
-		} else {
-			embed.addFields({
-				name: "Invite Used",
-				value: "Unknown",
-				inline: false,
-			});
-		}
-
-		await channel.send({ embeds: [embed] });
-
-		// Auto-role (optional, comment out if not needed)
-		const roleId = "1363618576895840398";
-		try {
-			await member.roles.add(roleId, "Auto-assigned on join");
-			e;
-		} catch (error) {
-			console.error(`Failed to assign role to ${member.user.tag}:`, error);
-		}
-	});
+        const cachedInvites = invitesCache.get(member.guild.id);
+        const newInvites = await member.guild.invites.fetch();
+        invitesCache.set(member.guild.id, newInvites);
+    
+        const usedInvite = newInvites.find(
+            (inv) => cachedInvites?.get(inv.code)?.uses < inv.uses,
+        );
+    
+        const logChannel = await getLogChannel(member.guild);
+        if (!logChannel) return;
+    
+        const WELCOME_CHANNEL_ID = "1332773894771183656"; // <-- set this!
+        const welcomeChannel = await member.guild.channels.fetch(WELCOME_CHANNEL_ID).catch(() => null);
+    
+        const welcomeMessage = `Welcome to **${member.guild.name}**, <@${member.id}>! To apply to the unit go to https://1a75.org/apply and apply, if you have any questions please feel free to DM me for help! I will connect you to a private channel with the admins!`;
+    
+        // DM the user
+        let dmFailed = false;
+        try {
+            await member.send(welcomeMessage);
+        } catch (e) {
+            dmFailed = true;
+            console.error(`Could not DM ${member.user.tag} (${member.id}):`, e);
+        }
+    
+        // Log embed
+        const embed = new EmbedBuilder()
+            .setColor(0x2ecc71)
+            .setTitle("Member Joined")
+            .addFields(
+                {
+                    name: "User",
+                    value: `${member.user.tag} (<@${member.id}>)`,
+                    inline: true,
+                },
+                { name: "User ID", value: member.id, inline: true },
+                {
+                    name: "Account Created",
+                    value: `<t:${Math.floor(member.user.createdTimestamp / 1000)}:R>`,
+                    inline: true,
+                },
+            )
+            .setFooter({ text: `User ID: ${member.id}` })
+            .setTimestamp();
+    
+        if (usedInvite) {
+            embed.addFields({
+                name: "Invite Used",
+                value: `\`${usedInvite.code}\` (by ${usedInvite.inviter?.tag || "Unknown"})`,
+                inline: false,
+            });
+        } else {
+            embed.addFields({
+                name: "Invite Used",
+                value: "Unknown",
+                inline: false,
+            });
+        }
+    
+        // Send the log embed to the log channel
+        await logChannel.send({ embeds: [embed] });
+    
+        // Ping the user in the welcome channel with the same message
+        if (welcomeChannel && welcomeChannel.isTextBased()) {
+            await welcomeChannel.send({
+                content: `${welcomeMessage}`,
+            });
+        }
+    
+        // Auto-role (optional)
+        const roleId = "1363618576895840398";
+        try {
+            await member.roles.add(roleId, "Auto-assigned on join");
+        } catch (error) {
+            console.error(`Failed to assign role to ${member.user.tag}:`, error);
+        }
+    
+        // Log DM failure if any
+        if (dmFailed) {
+            await logChannel.send({
+                content: `⚠️ Could not DM <@${member.id}> (they may have DMs off).`,
+            });
+        }
+    });
 
 	// --- Member Leave / Kick ---
 	client.on("guildMemberRemove", async (member) => {
@@ -935,42 +963,56 @@ export function setupFullLogger(client) {
 
 	// --- User Update (username, avatar, banner) ---
 	const GUILD_ID = process.env.GUILD_ID;
-	client.on("userUpdate", async (oldUser, newUser) => {
-		const guild = client.guilds.cache.get(GUILD_ID);
-		if (!guild) return;
-		const channel = await getLogChannel(guild);
-		if (!channel) return;
-		const changes = [];
-		if (oldUser.username !== newUser.username) {
-			changes.push({
-				name: "Username",
-				value: `\`${oldUser.username}\` → \`${newUser.username}\``,
-				inline: false,
-			});
-		}
-		if (oldUser.avatar !== newUser.avatar) {
-			changes.push({
-				name: "Avatar Changed",
-				value: `[Old Avatar](${oldUser.displayAvatarURL()}) → [New Avatar](${newUser.displayAvatarURL()})`,
-				inline: false,
-			});
-		}
-		if (oldUser.banner !== newUser.banner) {
-			changes.push({
-				name: "Banner Changed",
-				value: `[Old Banner](${oldUser.bannerURL() || "N/A"}) → [New Banner](${newUser.bannerURL() || "N/A"})`,
-				inline: false,
-			});
-		}
-		if (changes.length === 0) return;
-		const embed = new EmbedBuilder()
-			.setColor(0x3498db)
-			.setTitle("User Updated")
-			.setDescription(`<@${newUser.id}>`)
-			.addFields(...changes)
-			.setTimestamp();
-		await channel.send({ embeds: [embed] });
-	});
+
+client.on("userUpdate", async (oldUser, newUser) => {
+	const guild = client.guilds.cache.get(GUILD_ID);
+	if (!guild) return;
+
+	// Check if the user is a member of the guild
+	let member;
+	try {
+		member = await guild.members.fetch(newUser.id);
+	} catch {
+		member = null;
+	}
+	if (!member) return; // User is not in the guild
+
+	const channel = await getLogChannel(guild);
+	if (!channel) return;
+
+	const changes = [];
+	if (oldUser.username !== newUser.username) {
+		changes.push({
+			name: "Username",
+			value: `\`${oldUser.username}\` → \`${newUser.username}\``,
+			inline: false,
+		});
+	}
+	if (oldUser.avatar !== newUser.avatar) {
+		changes.push({
+			name: "Avatar Changed",
+			value: `[Old Avatar](${oldUser.displayAvatarURL()}) → [New Avatar](${newUser.displayAvatarURL()})`,
+			inline: false,
+		});
+	}
+	if (oldUser.banner !== newUser.banner) {
+		changes.push({
+			name: "Banner Changed",
+			value: `[Old Banner](${oldUser.bannerURL() || "N/A"}) → [New Banner](${newUser.bannerURL() || "N/A"})`,
+			inline: false,
+		});
+	}
+	if (changes.length === 0) return;
+
+	const embed = new EmbedBuilder()
+		.setColor(0x3498db)
+		.setTitle("User Updated")
+		.setDescription(`<@${newUser.id}>`)
+		.addFields(...changes)
+		.setTimestamp();
+
+	await channel.send({ embeds: [embed] });
+});
 
 	// --- Guild Update ---
 	client.on("guildUpdate", async (oldGuild, newGuild) => {

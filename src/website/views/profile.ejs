@@ -43,6 +43,20 @@
     .role-badge:hover {
       filter: brightness(1.1);
     }
+    .botstatus-btn {
+      background-color: #ffe066 !important;
+      color: #23272f !important;
+      font-weight: 600;
+      border: 2px solid #ffd43b !important;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+      transition: background 0.2s, color 0.2s;
+    }
+    .botstatus-btn:hover, .botstatus-btn:focus {
+      background-color: #ffd43b !important;
+      color: #181a1b !important;
+      border-color: #ffe066 !important;
+      text-decoration: none;
+    }
   </style>
 </head>
 <body>
@@ -90,18 +104,26 @@
           </div>
         </div>
         <div class="row mt-4">
-            <div class="col-12 col-md-6 mb-2 mb-md-0">
-              <a href="/my-certs" class="btn btn-primary profile-btn w-100">
-                <i class="bi bi-award"></i> My Certifications
-              </a>
-            </div>
-            <div class="col-12 col-md-6">
-              <a href="/loa" class="btn btn-outline-primary profile-btn w-100">
-                <i class="bi bi-calendar-x"></i> LOA (Leave of Absence)
+          <div class="col-12 col-md-6 mb-2 mb-md-0">
+            <a href="/my-certs" class="btn btn-primary profile-btn w-100">
+              <i class="bi bi-award"></i> My Certifications
+            </a>
+          </div>
+          <div class="col-12 col-md-6">
+            <a href="/loa" class="btn btn-outline-primary profile-btn w-100">
+              <i class="bi bi-calendar-x"></i> LOA (Leave of Absence)
+            </a>
+          </div>
+        </div>
+        <% if (isAdmin) { %>
+          <div class="row mt-3">
+            <div class="col-12">
+              <a href="/botstatus" class="btn botstatus-btn profile-btn w-100">
+                <i class="bi bi-robot"></i> Bot Status
               </a>
             </div>
           </div>
-    </div>
+        <% } %>
       </div>
     </div>
   </div>

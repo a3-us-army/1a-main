@@ -359,4 +359,151 @@ apiApp.post("/api/post-equipment", async (req, res) => {
 		res.status(500).json({ error: "Failed to post to Discord" });
 	}
 });
+
+// --- Secure middleware ---
+function requireBotStatusSecret(req, res, next) {
+	const expected = `Bearer ${process.env.BOT_STATUS_SECRET}`;
+	const authHeader = req.headers.authorization;
+	if (authHeader !== expected) {
+		return res.status(401).json({ error: "Unauthorized" });
+	}
+	next();
+}
+apiApp.post("/api/post-form", async (req, res) => {
+	const authHeader = req.headers.authorization;
+	const expected = `Bearer ${process.env.BOT_API_SECRET}`;
+	if (authHeader !== expected) {
+		return res.status(401).json({ error: "Unauthorized" });
+	}
+	try {
+		const { channelId, embed, pingRole } = req.body;
+		if (!channelId || !embed) {
+			return res.status(400).json({ error: "Missing channelId or embed" });
+		}
+		const channel = await discordClient.channels.fetch(channelId);
+		if (!channel?.isTextBased()) {
+			return res.status(404).json({ error: "Channel not found" });
+		}
+		await channel.send({
+			content: pingRole || "",
+			embeds: [embed],
+		});
+		res.json({ success: true });
+	} catch (err) {
+		console.error("Error posting form to Discord:", err);
+		res.status(500).json({ error: "Failed to post form" });
+	}
+});
+
+// --- Status endpoint ---
+apiApp.get("/api/bot-status", requireBotStatusSecret, (req, res) => {
+	const status = {
+		tag: discordClient.user?.tag || "Unknown",
+		id: discordClient.user?.id || "Unknown",
+		status: discordClient.ws.status === 0 ? "Online" : "Offline",
+		guilds: discordClient.guilds.cache.size,
+		users: discordClient.users.cache.size,
+		uptime: process.uptime(),
+		memoryMB: (process.memoryUsage().rss / 1024 / 1024).toFixed(2),
+		nodeVersion: process.version,
+		lastReady: discordClient.readyAt ? discordClient.readyAt.toISOString() : null,
+	};
+	res.json(status);
+});
+
+// --- Restart endpoint ---
+apiApp.post("/api/bot-restart", requireBotStatusSecret, (req, res) => {
+	res.json({ restarting: true });
+	setTimeout(() => process.exit(0), 500); // PM2/systemd will restart the process
+});
+
+
+apiApp.post("/api/post-appeal", async (req, res) => {
+	const authHeader = req.headers.authorization;
+	const expected = `Bearer ${process.env.BOT_API_SECRET}`;
+	if (authHeader !== expected) {
+		return res.status(401).json({ error: "Unauthorized" });
+	}
+	try {
+		const { channelId, appeal } = req.body;
+		if (!channelId || !appeal) {
+			return res
+				.status(400)
+				.json({ error: "Missing channelId or appeal" });
+		}
+		const channel = await discordClient.channels.fetch(channelId);
+		if (!channel || !channel.isTextBased()) {
+			return res
+				.status(404)
+				.json({ error: "Channel not found or not text-based" });
+		}
+
+		// Fetch ban reason from Discord
+		const GUILD_ID = process.env.GUILD_ID;
+		const BOT_TOKEN = process.env.DISCORD_TOKEN;
+		let banReason = "Unknown or not available.";
+		try {
+			const banRes = await fetch(
+				`https://discord.com/api/v10/guilds/${GUILD_ID}/bans/${appeal.userId}`,
+				{
+					headers: { Authorization: `Bot ${BOT_TOKEN}` },
+				}
+			);
+			if (banRes.status === 200) {
+				const banData = await banRes.json();
+				banReason = banData.reason || "No reason provided.";
+			} else if (banRes.status === 404) {
+				banReason = "User is not currently banned.";
+			}
+		} catch (e) {
+			console.error("Failed to fetch ban reason:", e);
+		}
+
+		const db = getDatabase();
+		const appealId = uuidv4();
+		db.prepare(`
+			INSERT INTO appeals (id, user_id, username, reason, details, submitted_at)
+			VALUES (?, ?, ?, ?, ?, ?)
+		`).run(
+			appealId,
+			appeal.userId,
+			appeal.username,
+			appeal.reason,
+			appeal.details || "",
+			new Date().toISOString()
+		);
+
+		const embed = new EmbedBuilder()
+			.setTitle("New Ban Appeal")
+			.setColor(0xffc107)
+			.addFields(
+				{ name: "User", value: `<@${appeal.userId}> (${appeal.username || "N/A"})`, inline: false },
+				{ name: "Reason", value: appeal.reason, inline: false },
+				{ name: "Details", value: appeal.details || "None", inline: false },
+				{ name: "Original Ban Reason", value: banReason, inline: false }
+			)
+			.setTimestamp();
+
+		const row = new ActionRowBuilder().addComponents(
+			new ButtonBuilder()
+				.setCustomId(`appeal_accept_${appealId}_${appeal.userId}`)
+				.setLabel("Accept")
+				.setStyle(ButtonStyle.Success),
+			new ButtonBuilder()
+				.setCustomId(`appeal_deny_${appealId}_${appeal.userId}`)
+				.setLabel("Deny")
+				.setStyle(ButtonStyle.Danger)
+		);
+
+		const message = await channel.send({
+			embeds: [embed],
+			components: [row],
+		});
+
+		res.json({ messageId: message.id, appealId });
+	} catch (err) {
+		console.error(err);
+		res.status(500).json({ error: "Failed to post appeal" });
+	}
+});
 export default apiApp;

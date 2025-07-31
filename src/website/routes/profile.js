@@ -1,6 +1,7 @@
 import { Router } from "express";
 import ensureAuth from "../middleware/ensureAuth.js";
-import fetch from "node-fetch"; // If using node-fetch v3+, make sure "type": "module" in package.json
+import fetch from "node-fetch";
+import { isUserAdmin } from "../utils/discord.js"; // adjust path as needed
 
 const router = Router();
 
@@ -43,6 +44,9 @@ router.get("/", ensureAuth, async (req, res) => {
 			.filter(Boolean)
 			.sort((a, b) => b.position - a.position);
 
+		// Check admin status
+		const isAdmin = await isUserAdmin(discordId);
+
 		res.render("profile", {
 			user: req.user,
 			active: "profile",
@@ -54,6 +58,7 @@ router.get("/", ensureAuth, async (req, res) => {
 				? `https://cdn.discordapp.com/avatars/${user.id}/${user.avatar}.png?size=256`
 				: "",
 			userRoles,
+			isAdmin, // <-- pass to EJS
 		});
 	} catch (err) {
 		console.error("Failed to fetch Discord profile info:", err);

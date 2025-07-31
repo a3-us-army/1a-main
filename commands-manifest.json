@@ -1,20 +1,15 @@
 [
   {
-    "id": "1375211467770691710",
+    "id": "1400354977137950782",
     "application_id": "1297310943885394030",
-    "version": "1375211467967561863",
+    "version": "1400354979738550285",
     "default_member_permissions": "4",
     "type": 1,
     "name": "ban",
     "name_localizations": null,
     "description": "Ban a member from the server",
     "description_localizations": null,
-    "dm_permission": true,
-    "contexts": null,
-    "integration_types": [
-      0,
-      1
-    ],
+    "guild_id": "1332773894293160039",
     "options": [
       {
         "type": 6,
@@ -36,21 +31,16 @@
     "category": "Admin"
   },
   {
-    "id": "1375211467770691711",
+    "id": "1400354977137950783",
     "application_id": "1297310943885394030",
-    "version": "1375211467967561864",
+    "version": "1400354979738550286",
     "default_member_permissions": "8192",
     "type": 1,
     "name": "clear",
     "name_localizations": null,
     "description": "Bulk delete messages",
     "description_localizations": null,
-    "dm_permission": true,
-    "contexts": null,
-    "integration_types": [
-      0,
-      1
-    ],
+    "guild_id": "1332773894293160039",
     "options": [
       {
         "type": 4,
@@ -65,21 +55,16 @@
     "category": "Admin"
   },
   {
-    "id": "1375211467770691712",
+    "id": "1400354977137950784",
     "application_id": "1297310943885394030",
-    "version": "1375211467967561865",
+    "version": "1400354979738550287",
     "default_member_permissions": "2",
     "type": 1,
     "name": "kick",
     "name_localizations": null,
     "description": "Kick a member from the server",
     "description_localizations": null,
-    "dm_permission": true,
-    "contexts": null,
-    "integration_types": [
-      0,
-      1
-    ],
+    "guild_id": "1332773894293160039",
     "options": [
       {
         "type": 6,
@@ -101,21 +86,16 @@
     "category": "Admin"
   },
   {
-    "id": "1375211467770691713",
+    "id": "1400354977137950785",
     "application_id": "1297310943885394030",
-    "version": "1375211467967561866",
+    "version": "1400354979738550288",
     "default_member_permissions": "1099511627776",
     "type": 1,
     "name": "listwarnings",
     "name_localizations": null,
     "description": "List all warnings for a user",
     "description_localizations": null,
-    "dm_permission": true,
-    "contexts": null,
-    "integration_types": [
-      0,
-      1
-    ],
+    "guild_id": "1332773894293160039",
     "options": [
       {
         "type": 6,
@@ -130,40 +110,68 @@
     "category": "Admin"
   },
   {
-    "id": "1375211467770691714",
+    "id": "1400354977137950787",
     "application_id": "1297310943885394030",
-    "version": "1375211467967561867",
+    "version": "1400354979738550289",
     "default_member_permissions": "16",
     "type": 1,
     "name": "lockdown",
     "name_localizations": null,
     "description": "Lock the current channel (prevent @everyone from sending messages)",
     "description_localizations": null,
-    "dm_permission": true,
-    "contexts": null,
-    "integration_types": [
-      0,
-      1
+    "guild_id": "1332773894293160039",
+    "nsfw": false,
+    "category": "Admin"
+  },
+  {
+    "id": "1400354977137950788",
+    "application_id": "1297310943885394030",
+    "version": "1400354979738550290",
+    "default_member_permissions": "8192",
+    "type": 1,
+    "name": "massdm",
+    "name_localizations": null,
+    "description": "DM multiple users or all users in a role",
+    "description_localizations": null,
+    "guild_id": "1332773894293160039",
+    "options": [
+      {
+        "type": 3,
+        "name": "message",
+        "name_localizations": null,
+        "description": "Message to send",
+        "description_localizations": null,
+        "required": true
+      },
+      {
+        "type": 8,
+        "name": "role",
+        "name_localizations": null,
+        "description": "Role to DM",
+        "description_localizations": null
+      },
+      {
+        "type": 3,
+        "name": "users",
+        "name_localizations": null,
+        "description": "User mentions or IDs, separated by spaces or commas",
+        "description_localizations": null
+      }
     ],
     "nsfw": false,
     "category": "Admin"
   },
   {
-    "id": "1375211467770691716",
+    "id": "1400354977137950789",
     "application_id": "1297310943885394030",
-    "version": "1375211467967561868",
+    "version": "1400354979738550291",
     "default_member_permissions": "1099511627776",
     "type": 1,
     "name": "mute",
     "name_localizations": null,
     "description": "Timeout a member (mute)",
     "description_localizations": null,
-    "dm_permission": true,
-    "contexts": null,
-    "integration_types": [
-      0,
-      1
-    ],
+    "guild_id": "1332773894293160039",
     "options": [
       {
         "type": 6,
@@ -193,21 +201,16 @@
     "category": "Admin"
   },
   {
-    "id": "1375211467770691717",
+    "id": "1400354977649524829",
     "application_id": "1297310943885394030",
-    "version": "1375211468060102716",
+    "version": "1400354979738550292",
     "default_member_permissions": "134217728",
     "type": 1,
     "name": "nick",
     "name_localizations": null,
     "description": "Change a user's nickname",
     "description_localizations": null,
-    "dm_permission": true,
-    "contexts": null,
-    "integration_types": [
-      0,
-      1
-    ],
+    "guild_id": "1332773894293160039",
     "options": [
       {
         "type": 6,
@@ -230,21 +233,16 @@
     "category": "Admin"
   },
   {
-    "id": "1375211467770691718",
+    "id": "1400354977649524830",
     "application_id": "1297310943885394030",
-    "version": "1375211468060102717",
+    "version": "1400354979738550293",
     "default_member_permissions": "16",
     "type": 1,
     "name": "slowmode",
     "name_localizations": null,
     "description": "Set channel slowmode (seconds)",
     "description_localizations": null,
-    "dm_permission": true,
-    "contexts": null,
-    "integration_types": [
-      0,
-      1
-    ],
+    "guild_id": "1332773894293160039",
     "options": [
       {
         "type": 4,
@@ -259,21 +257,16 @@
     "category": "Admin"
   },
   {
-    "id": "1375211467770691719",
+    "id": "1400354977649524831",
     "application_id": "1297310943885394030",
-    "version": "1375211468060102718",
+    "version": "1400354979813916712",
     "default_member_permissions": "4",
     "type": 1,
     "name": "unban",
     "name_localizations": null,
     "description": "Unban a user by ID or name",
     "description_localizations": null,
-    "dm_permission": true,
-    "contexts": null,
-    "integration_types": [
-      0,
-      1
-    ],
+    "guild_id": "1332773894293160039",
     "options": [
       {
         "type": 3,
@@ -289,40 +282,30 @@
     "category": "Admin"
   },
   {
-    "id": "1375211467967561859",
+    "id": "1400354977649524832",
     "application_id": "1297310943885394030",
-    "version": "1375211468060102719",
+    "version": "1400354979813916713",
     "default_member_permissions": "16",
     "type": 1,
     "name": "unlock",
     "name_localizations": null,
     "description": "Unlock the current channel (allow @everyone to send messages)",
     "description_localizations": null,
-    "dm_permission": true,
-    "contexts": null,
-    "integration_types": [
-      0,
-      1
-    ],
+    "guild_id": "1332773894293160039",
     "nsfw": false,
     "category": "Admin"
   },
   {
-    "id": "1375211467967561860",
+    "id": "1400354977649524833",
     "application_id": "1297310943885394030",
-    "version": "1375211468060102720",
+    "version": "1400354979813916714",
     "default_member_permissions": "1099511627776",
     "type": 1,
     "name": "unmute",
     "name_localizations": null,
     "description": "Remove timeout from a member (unmute)",
     "description_localizations": null,
-    "dm_permission": true,
-    "contexts": null,
-    "integration_types": [
-      0,
-      1
-    ],
+    "guild_id": "1332773894293160039",
     "options": [
       {
         "type": 3,
@@ -338,21 +321,16 @@
     "category": "Admin"
   },
   {
-    "id": "1375211467967561861",
+    "id": "1400354977649524834",
     "application_id": "1297310943885394030",
-    "version": "1375211468060102721",
+    "version": "1400354979813916715",
     "default_member_permissions": "1099511627776",
     "type": 1,
     "name": "unwarn",
     "name_localizations": null,
     "description": "Remove a warning from a user (by warning ID)",
     "description_localizations": null,
-    "dm_permission": true,
-    "contexts": null,
-    "integration_types": [
-      0,
-      1
-    ],
+    "guild_id": "1332773894293160039",
     "options": [
       {
         "type": 6,
@@ -376,21 +354,16 @@
     "category": "Admin"
   },
   {
-    "id": "1375211467967561862",
+    "id": "1400354977649524835",
     "application_id": "1297310943885394030",
-    "version": "1375211468060102722",
+    "version": "1400354979813916716",
     "default_member_permissions": "1099511627776",
     "type": 1,
     "name": "warn",
     "name_localizations": null,
     "description": "Warn a user",
     "description_localizations": null,
-    "dm_permission": true,
-    "contexts": null,
-    "integration_types": [
-      0,
-      1
-    ],
+    "guild_id": "1332773894293160039",
     "options": [
       {
         "type": 6,
@@ -412,247 +385,16 @@
     "category": "Admin"
   },
   {
-    "id": "1373861545729069069",
+    "id": "1400354977649524836",
     "application_id": "1297310943885394030",
-    "version": "1373861545934852164",
-    "default_member_permissions": null,
-    "type": 1,
-    "name": "cert-requests",
-    "name_localizations": null,
-    "description": "List all pending certification requests (admin only)",
-    "description_localizations": null,
-    "dm_permission": true,
-    "contexts": null,
-    "integration_types": [
-      0,
-      1
-    ],
-    "nsfw": false,
-    "category": "Certification"
-  },
-  {
-    "id": "1373861545729069070",
-    "application_id": "1297310943885394030",
-    "version": "1373861545934852165",
-    "default_member_permissions": null,
-    "type": 1,
-    "name": "create-cert",
-    "name_localizations": null,
-    "description": "Create a new certification (admin only)",
-    "description_localizations": null,
-    "dm_permission": true,
-    "contexts": null,
-    "integration_types": [
-      0,
-      1
-    ],
-    "options": [
-      {
-        "type": 3,
-        "name": "name",
-        "name_localizations": null,
-        "description": "Certification name",
-        "description_localizations": null,
-        "required": true
-      },
-      {
-        "type": 3,
-        "name": "description",
-        "name_localizations": null,
-        "description": "Certification description",
-        "description_localizations": null
-      }
-    ],
-    "nsfw": false,
-    "category": "Certification"
-  },
-  {
-    "id": "1373861545729069071",
-    "application_id": "1297310943885394030",
-    "version": "1373861546047836161",
-    "default_member_permissions": null,
-    "type": 1,
-    "name": "delete-cert",
-    "name_localizations": null,
-    "description": "Delete a certification (admin only)",
-    "description_localizations": null,
-    "dm_permission": true,
-    "contexts": null,
-    "integration_types": [
-      0,
-      1
-    ],
-    "options": [
-      {
-        "type": 3,
-        "name": "certification",
-        "name_localizations": null,
-        "description": "Certification to delete",
-        "description_localizations": null,
-        "required": true,
-        "autocomplete": true
-      }
-    ],
-    "nsfw": false,
-    "category": "Certification"
-  },
-  {
-    "id": "1373861545729069072",
-    "application_id": "1297310943885394030",
-    "version": "1373861546047836162",
-    "default_member_permissions": null,
-    "type": 1,
-    "name": "edit-cert",
-    "name_localizations": null,
-    "description": "Edit a certification (admin only)",
-    "description_localizations": null,
-    "dm_permission": true,
-    "contexts": null,
-    "integration_types": [
-      0,
-      1
-    ],
-    "options": [
-      {
-        "type": 3,
-        "name": "certification",
-        "name_localizations": null,
-        "description": "Certification to edit",
-        "description_localizations": null,
-        "required": true,
-        "autocomplete": true
-      },
-      {
-        "type": 3,
-        "name": "name",
-        "name_localizations": null,
-        "description": "New name",
-        "description_localizations": null
-      },
-      {
-        "type": 3,
-        "name": "description",
-        "name_localizations": null,
-        "description": "New description",
-        "description_localizations": null
-      }
-    ],
-    "nsfw": false,
-    "category": "Certification"
-  },
-  {
-    "id": "1373861545729069073",
-    "application_id": "1297310943885394030",
-    "version": "1373861546047836163",
-    "default_member_permissions": null,
-    "type": 1,
-    "name": "list-certs",
-    "name_localizations": null,
-    "description": "List all available certifications you can request",
-    "description_localizations": null,
-    "dm_permission": true,
-    "contexts": null,
-    "integration_types": [
-      0,
-      1
-    ],
-    "nsfw": false,
-    "category": "Certification"
-  },
-  {
-    "id": "1373861545729069074",
-    "application_id": "1297310943885394030",
-    "version": "1373861546047836164",
-    "default_member_permissions": null,
-    "type": 1,
-    "name": "my-certs",
-    "name_localizations": null,
-    "description": "List your approved certifications",
-    "description_localizations": null,
-    "dm_permission": true,
-    "contexts": null,
-    "integration_types": [
-      0,
-      1
-    ],
-    "nsfw": false,
-    "category": "Certification"
-  },
-  {
-    "id": "1373861545729069075",
-    "application_id": "1297310943885394030",
-    "version": "1373861546047836165",
-    "default_member_permissions": null,
-    "type": 1,
-    "name": "request-cert",
-    "name_localizations": null,
-    "description": "Request a certification",
-    "description_localizations": null,
-    "dm_permission": true,
-    "contexts": null,
-    "integration_types": [
-      0,
-      1
-    ],
-    "options": [
-      {
-        "type": 3,
-        "name": "certification",
-        "name_localizations": null,
-        "description": "Certification to request",
-        "description_localizations": null,
-        "required": true,
-        "autocomplete": true
-      }
-    ],
-    "nsfw": false,
-    "category": "Certification"
-  },
-  {
-    "id": "1373861545729069076",
-    "application_id": "1297310943885394030",
-    "version": "1373861546047836166",
-    "default_member_permissions": null,
-    "type": 1,
-    "name": "user-certs",
-    "name_localizations": null,
-    "description": "List another user's approved certifications",
-    "description_localizations": null,
-    "dm_permission": true,
-    "contexts": null,
-    "integration_types": [
-      0,
-      1
-    ],
-    "options": [
-      {
-        "type": 6,
-        "name": "user",
-        "name_localizations": null,
-        "description": "The user whose certifications you want to view",
-        "description_localizations": null,
-        "required": true
-      }
-    ],
-    "nsfw": false,
-    "category": "Certification"
-  },
-  {
-    "id": "1374885496802513027",
-    "application_id": "1297310943885394030",
-    "version": "1374885496802513032",
+    "version": "1400354979813916717",
     "default_member_permissions": null,
     "type": 1,
     "name": "add-equipment",
     "name_localizations": null,
     "description": "Add new equipment to the inventory",
     "description_localizations": null,
-    "dm_permission": true,
-    "contexts": null,
-    "integration_types": [
-      0,
-      1
-    ],
+    "guild_id": "1332773894293160039",
     "options": [
       {
         "type": 3,
@@ -708,21 +450,16 @@
     "category": "Equipment"
   },
   {
-    "id": "1374885496802513028",
+    "id": "1400354977649524837",
     "application_id": "1297310943885394030",
-    "version": "1374885496802513033",
+    "version": "1400354979813916718",
     "default_member_permissions": null,
     "type": 1,
     "name": "edit-equipment",
     "name_localizations": null,
     "description": "Edit equipment in the inventory",
     "description_localizations": null,
-    "dm_permission": true,
-    "contexts": null,
-    "integration_types": [
-      0,
-      1
-    ],
+    "guild_id": "1332773894293160039",
     "options": [
       {
         "type": 3,
@@ -799,242 +536,30 @@
     "category": "Equipment"
   },
   {
-    "id": "1374885496802513029",
+    "id": "1400354977649524838",
     "application_id": "1297310943885394030",
-    "version": "1374885496802513034",
+    "version": "1400354979813916719",
     "default_member_permissions": null,
     "type": 1,
     "name": "equipment-deployed",
     "name_localizations": null,
     "description": "Show what approved equipment is deployed and how much in each upcoming event, grouped by location",
     "description_localizations": null,
-    "dm_permission": true,
-    "contexts": null,
-    "integration_types": [
-      0,
-      1
-    ],
+    "guild_id": "1332773894293160039",
     "nsfw": false,
     "category": "Equipment"
   },
   {
-    "id": "1374885496802513030",
+    "id": "1400354978110902352",
     "application_id": "1297310943885394030",
-    "version": "1374885496802513035",
-    "default_member_permissions": null,
-    "type": 1,
-    "name": "equipment-request",
-    "name_localizations": null,
-    "description": "Manage equipment requests for events",
-    "description_localizations": null,
-    "dm_permission": true,
-    "contexts": null,
-    "integration_types": [
-      0,
-      1
-    ],
-    "options": [
-      {
-        "type": 1,
-        "name": "add",
-        "name_localizations": null,
-        "description": "Request equipment for an event",
-        "description_localizations": null,
-        "options": [
-          {
-            "type": 3,
-            "name": "event-id",
-            "name_localizations": null,
-            "description": "The ID of the event",
-            "description_localizations": null,
-            "required": true,
-            "autocomplete": true
-          },
-          {
-            "type": 3,
-            "name": "equipment-id",
-            "name_localizations": null,
-            "description": "The ID of the equipment",
-            "description_localizations": null,
-            "required": true,
-            "autocomplete": true
-          },
-          {
-            "type": 4,
-            "name": "quantity",
-            "name_localizations": null,
-            "description": "Quantity of equipment needed",
-            "description_localizations": null,
-            "required": true,
-            "min_value": 1
-          },
-          {
-            "type": 7,
-            "name": "channel",
-            "name_localizations": null,
-            "description": "Channel to post the equipment request (defaults to configured channel)",
-            "description_localizations": null,
-            "channel_types": [
-              0
-            ]
-          }
-        ]
-      },
-      {
-        "type": 1,
-        "name": "remove",
-        "name_localizations": null,
-        "description": "Remove equipment from an event",
-        "description_localizations": null,
-        "options": [
-          {
-            "type": 3,
-            "name": "event-id",
-            "name_localizations": null,
-            "description": "The ID of the event",
-            "description_localizations": null,
-            "required": true,
-            "autocomplete": true
-          },
-          {
-            "type": 3,
-            "name": "equipment-id",
-            "name_localizations": null,
-            "description": "The ID of the equipment",
-            "description_localizations": null,
-            "required": true,
-            "autocomplete": true
-          }
-        ]
-      },
-      {
-        "type": 1,
-        "name": "list",
-        "name_localizations": null,
-        "description": "List all equipment for an event",
-        "description_localizations": null,
-        "options": [
-          {
-            "type": 3,
-            "name": "event-id",
-            "name_localizations": null,
-            "description": "The ID of the event",
-            "description_localizations": null,
-            "required": true,
-            "autocomplete": true
-          },
-          {
-            "type": 7,
-            "name": "channel",
-            "name_localizations": null,
-            "description": "Channel to post the equipment list (defaults to current channel)",
-            "description_localizations": null,
-            "channel_types": [
-              0
-            ]
-          }
-        ]
-      },
-      {
-        "type": 1,
-        "name": "approve",
-        "name_localizations": null,
-        "description": "Approve an equipment request",
-        "description_localizations": null,
-        "options": [
-          {
-            "type": 3,
-            "name": "event-id",
-            "name_localizations": null,
-            "description": "The ID of the event",
-            "description_localizations": null,
-            "required": true,
-            "autocomplete": true
-          },
-          {
-            "type": 3,
-            "name": "equipment-id",
-            "name_localizations": null,
-            "description": "The ID of the equipment",
-            "description_localizations": null,
-            "required": true,
-            "autocomplete": true
-          }
-        ]
-      },
-      {
-        "type": 1,
-        "name": "deny",
-        "name_localizations": null,
-        "description": "Deny an equipment request",
-        "description_localizations": null,
-        "options": [
-          {
-            "type": 3,
-            "name": "event-id",
-            "name_localizations": null,
-            "description": "The ID of the event",
-            "description_localizations": null,
-            "required": true,
-            "autocomplete": true
-          },
-          {
-            "type": 3,
-            "name": "equipment-id",
-            "name_localizations": null,
-            "description": "The ID of the equipment",
-            "description_localizations": null,
-            "required": true,
-            "autocomplete": true
-          },
-          {
-            "type": 3,
-            "name": "reason",
-            "name_localizations": null,
-            "description": "Reason for denial",
-            "description_localizations": null
-          }
-        ]
-      },
-      {
-        "type": 1,
-        "name": "pending",
-        "name_localizations": null,
-        "description": "List all pending equipment requests",
-        "description_localizations": null,
-        "options": [
-          {
-            "type": 7,
-            "name": "channel",
-            "name_localizations": null,
-            "description": "Channel to post the pending requests (defaults to current channel)",
-            "description_localizations": null,
-            "channel_types": [
-              0
-            ]
-          }
-        ]
-      }
-    ],
-    "nsfw": false,
-    "category": "Equipment"
-  },
-  {
-    "id": "1374885870745817088",
-    "application_id": "1297310943885394030",
-    "version": "1374885870745817090",
+    "version": "1400354979813916720",
     "default_member_permissions": null,
     "type": 1,
     "name": "inventory",
     "name_localizations": null,
     "description": "List all available equipment",
     "description_localizations": null,
-    "dm_permission": true,
-    "contexts": null,
-    "integration_types": [
-      0,
-      1
-    ],
+    "guild_id": "1332773894293160039",
     "options": [
       {
         "type": 7,
@@ -1051,21 +576,16 @@
     "category": "Equipment"
   },
   {
-    "id": "1374885870745817089",
+    "id": "1400354978110902354",
     "application_id": "1297310943885394030",
-    "version": "1374885870745817091",
+    "version": "1400354979813916721",
     "default_member_permissions": null,
     "type": 1,
     "name": "remove-equipment",
     "name_localizations": null,
     "description": "Remove equipment from the inventory",
     "description_localizations": null,
-    "dm_permission": true,
-    "contexts": null,
-    "integration_types": [
-      0,
-      1
-    ],
+    "guild_id": "1332773894293160039",
     "options": [
       {
         "type": 3,
@@ -1081,40 +601,55 @@
     "category": "Equipment"
   },
   {
-    "id": "1373861545842446460",
+    "id": "1400354978110902355",
     "application_id": "1297310943885394030",
-    "version": "1373861546098294924",
+    "version": "1400354979843412058",
     "default_member_permissions": null,
     "type": 1,
     "name": "reset-inventory",
     "name_localizations": null,
     "description": "Reset the entire equipment inventory (all equipment fully available)",
     "description_localizations": null,
-    "dm_permission": true,
-    "contexts": null,
-    "integration_types": [
-      0,
-      1
-    ],
+    "guild_id": "1332773894293160039",
     "nsfw": false,
     "category": "Equipment"
   },
   {
-    "id": "1374885496802513031",
+    "id": "1400354978110902356",
     "application_id": "1297310943885394030",
-    "version": "1374885496802513036",
+    "version": "1400354979843412059",
+    "default_member_permissions": "8",
+    "type": 1,
+    "name": "accountability",
+    "name_localizations": null,
+    "description": "See who has NOT RSVP'd to an event",
+    "description_localizations": null,
+    "guild_id": "1332773894293160039",
+    "options": [
+      {
+        "type": 3,
+        "name": "id",
+        "name_localizations": null,
+        "description": "The ID of the event to check",
+        "description_localizations": null,
+        "required": true,
+        "autocomplete": true
+      }
+    ],
+    "nsfw": false,
+    "category": "Events"
+  },
+  {
+    "id": "1400354978110902357",
+    "application_id": "1297310943885394030",
+    "version": "1400354979843412060",
     "default_member_permissions": null,
     "type": 1,
     "name": "attendance",
     "name_localizations": null,
     "description": "Show the attendance for an event",
     "description_localizations": null,
-    "dm_permission": true,
-    "contexts": null,
-    "integration_types": [
-      0,
-      1
-    ],
+    "guild_id": "1332773894293160039",
     "options": [
       {
         "type": 3,
@@ -1130,40 +665,30 @@
     "category": "Events"
   },
   {
-    "id": "1373861545842446461",
+    "id": "1400354978110902359",
     "application_id": "1297310943885394030",
-    "version": "1373861546098294925",
+    "version": "1400354979843412061",
     "default_member_permissions": null,
     "type": 1,
     "name": "create-event",
     "name_localizations": null,
     "description": "Create a new event.",
     "description_localizations": null,
-    "dm_permission": true,
-    "contexts": null,
-    "integration_types": [
-      0,
-      1
-    ],
+    "guild_id": "1332773894293160039",
     "nsfw": false,
     "category": "Events"
   },
   {
-    "id": "1373861545842446462",
+    "id": "1400354978110902360",
     "application_id": "1297310943885394030",
-    "version": "1373861546098294926",
+    "version": "1400354979843412062",
     "default_member_permissions": null,
     "type": 1,
     "name": "delete-event",
     "name_localizations": null,
     "description": "Delete an event by its ID",
     "description_localizations": null,
-    "dm_permission": true,
-    "contexts": null,
-    "integration_types": [
-      0,
-      1
-    ],
+    "guild_id": "1332773894293160039",
     "options": [
       {
         "type": 3,
@@ -1179,21 +704,16 @@
     "category": "Events"
   },
   {
-    "id": "1373861545842446463",
+    "id": "1400354978110902361",
     "application_id": "1297310943885394030",
-    "version": "1373861546098294927",
+    "version": "1400354979843412063",
     "default_member_permissions": null,
     "type": 1,
     "name": "event-history",
     "name_localizations": null,
     "description": "Show past events with attendance statistics",
     "description_localizations": null,
-    "dm_permission": true,
-    "contexts": null,
-    "integration_types": [
-      0,
-      1
-    ],
+    "guild_id": "1332773894293160039",
     "options": [
       {
         "type": 4,
@@ -1209,21 +729,16 @@
     "category": "Events"
   },
   {
-    "id": "1373861545842446464",
+    "id": "1400354978404630619",
     "application_id": "1297310943885394030",
-    "version": "1373861546098294928",
+    "version": "1400354979843412064",
     "default_member_permissions": null,
     "type": 1,
     "name": "event-info",
     "name_localizations": null,
     "description": "Get detailed information about a specific event",
     "description_localizations": null,
-    "dm_permission": true,
-    "contexts": null,
-    "integration_types": [
-      0,
-      1
-    ],
+    "guild_id": "1332773894293160039",
     "options": [
       {
         "type": 3,
@@ -1239,21 +754,16 @@
     "category": "Events"
   },
   {
-    "id": "1373861545842446465",
+    "id": "1400354978404630620",
     "application_id": "1297310943885394030",
-    "version": "1373861546098294929",
+    "version": "1400354979843412065",
     "default_member_permissions": null,
     "type": 1,
     "name": "list-events",
     "name_localizations": null,
     "description": "List all upcoming events.",
     "description_localizations": null,
-    "dm_permission": true,
-    "contexts": null,
-    "integration_types": [
-      0,
-      1
-    ],
+    "guild_id": "1332773894293160039",
     "options": [
       {
         "type": 3,
@@ -1268,21 +778,16 @@
     "category": "Events"
   },
   {
-    "id": "1373861545842446466",
+    "id": "1400354978404630621",
     "application_id": "1297310943885394030",
-    "version": "1374406836727320696",
+    "version": "1400354979843412066",
     "default_member_permissions": null,
     "type": 1,
     "name": "remind-event",
     "name_localizations": null,
     "description": "Create a new event.",
     "description_localizations": null,
-    "dm_permission": true,
-    "contexts": null,
-    "integration_types": [
-      0,
-      1
-    ],
+    "guild_id": "1332773894293160039",
     "options": [
       {
         "type": 3,
@@ -1298,21 +803,16 @@
     "category": "Events"
   },
   {
-    "id": "1374406023799902268",
+    "id": "1400354978404630623",
     "application_id": "1297310943885394030",
-    "version": "1374406023980384257",
+    "version": "1400354979843412067",
     "default_member_permissions": null,
     "type": 1,
     "name": "8ball",
     "name_localizations": null,
     "description": "Ask the magic 8-ball a question.",
     "description_localizations": null,
-    "dm_permission": true,
-    "contexts": null,
-    "integration_types": [
-      0,
-      1
-    ],
+    "guild_id": "1332773894293160039",
     "options": [
       {
         "type": 3,
@@ -1327,78 +827,58 @@
     "category": "Fun"
   },
   {
-    "id": "1374408466042716191",
+    "id": "1400354978404630625",
     "application_id": "1297310943885394030",
-    "version": "1374408466042716197",
+    "version": "1400354979872768090",
     "default_member_permissions": null,
     "type": 1,
     "name": "callmedic",
     "name_localizations": null,
     "description": "Call for a medic (sends a meme).",
     "description_localizations": null,
-    "dm_permission": true,
-    "contexts": null,
-    "integration_types": [
-      0,
-      1
-    ],
+    "guild_id": "1332773894293160039",
     "nsfw": false,
     "category": "Fun"
   },
   {
-    "id": "1374406154393878549",
+    "id": "1400354978404630626",
     "application_id": "1297310943885394030",
-    "version": "1374406154393878554",
+    "version": "1400354979872768091",
     "default_member_permissions": null,
     "type": 1,
     "name": "cat",
     "name_localizations": null,
     "description": "Get a random cat picture!",
     "description_localizations": null,
-    "dm_permission": true,
-    "contexts": null,
-    "integration_types": [
-      0,
-      1
-    ],
+    "guild_id": "1332773894293160039",
     "nsfw": false,
     "category": "Fun"
   },
   {
-    "id": "1374406023799902269",
+    "id": "1400354978404630627",
     "application_id": "1297310943885394030",
-    "version": "1374406023980384258",
+    "version": "1400354979872768092",
     "default_member_permissions": null,
     "type": 1,
     "name": "coinflip",
     "name_localizations": null,
     "description": "Flip a coin!",
     "description_localizations": null,
-    "dm_permission": true,
-    "contexts": null,
-    "integration_types": [
-      0,
-      1
-    ],
+    "guild_id": "1332773894293160039",
     "nsfw": false,
     "category": "Fun"
   },
   {
-    "id": "1374406023799902270",
+    "id": "1400354978404630628",
     "application_id": "1297310943885394030",
-    "version": "1374406023980384259",
+    "version": "1400354979872768093",
     "default_member_permissions": null,
     "type": 1,
     "name": "compliment",
     "name_localizations": null,
     "description": "Give a user a random compliment.",
     "description_localizations": null,
-    "dm_permission": true,
-    "contexts": null,
-    "integration_types": [
-      0,
-      1
-    ],
+    "guild_id": "1332773894293160039",
     "options": [
       {
         "type": 6,
@@ -1413,78 +893,58 @@
     "category": "Fun"
   },
   {
-    "id": "1374406154393878550",
+    "id": "1400354978924859412",
     "application_id": "1297310943885394030",
-    "version": "1374406154393878555",
+    "version": "1400354979872768094",
     "default_member_permissions": null,
     "type": 1,
     "name": "dadjoke",
     "name_localizations": null,
     "description": "Get a random dad joke!",
     "description_localizations": null,
-    "dm_permission": true,
-    "contexts": null,
-    "integration_types": [
-      0,
-      1
-    ],
+    "guild_id": "1332773894293160039",
     "nsfw": false,
     "category": "Fun"
   },
   {
-    "id": "1374406154393878551",
+    "id": "1400354978924859413",
     "application_id": "1297310943885394030",
-    "version": "1374406154393878556",
+    "version": "1400354979872768095",
     "default_member_permissions": null,
     "type": 1,
     "name": "dog",
     "name_localizations": null,
     "description": "Get a random dog picture!",
     "description_localizations": null,
-    "dm_permission": true,
-    "contexts": null,
-    "integration_types": [
-      0,
-      1
-    ],
+    "guild_id": "1332773894293160039",
     "nsfw": false,
     "category": "Fun"
   },
   {
-    "id": "1374406154393878552",
+    "id": "1400354978924859414",
     "application_id": "1297310943885394030",
-    "version": "1374406154393878557",
+    "version": "1400354979872768096",
     "default_member_permissions": null,
     "type": 1,
     "name": "fox",
     "name_localizations": null,
     "description": "Get a random fox picture!",
     "description_localizations": null,
-    "dm_permission": true,
-    "contexts": null,
-    "integration_types": [
-      0,
-      1
-    ],
+    "guild_id": "1332773894293160039",
     "nsfw": false,
     "category": "Fun"
   },
   {
-    "id": "1374407342720028714",
+    "id": "1400354978924859415",
     "application_id": "1297310943885394030",
-    "version": "1374407342720028715",
+    "version": "1400354979872768097",
     "default_member_permissions": null,
     "type": 1,
     "name": "hack",
     "name_localizations": null,
     "description": "Pretend to hack a user (for fun!)",
     "description_localizations": null,
-    "dm_permission": true,
-    "contexts": null,
-    "integration_types": [
-      0,
-      1
-    ],
+    "guild_id": "1332773894293160039",
     "options": [
       {
         "type": 6,
@@ -1499,21 +959,16 @@
     "category": "Fun"
   },
   {
-    "id": "1374406023799902271",
+    "id": "1400354978924859416",
     "application_id": "1297310943885394030",
-    "version": "1374406023980384260",
+    "version": "1400354979872768098",
     "default_member_permissions": null,
     "type": 1,
     "name": "insult",
     "name_localizations": null,
     "description": "Send a random (mild) insult.",
     "description_localizations": null,
-    "dm_permission": true,
-    "contexts": null,
-    "integration_types": [
-      0,
-      1
-    ],
+    "guild_id": "1332773894293160039",
     "options": [
       {
         "type": 6,
@@ -1528,21 +983,16 @@
     "category": "Fun"
   },
   {
-    "id": "1373861545842446467",
+    "id": "1400354978924859417",
     "application_id": "1297310943885394030",
-    "version": "1373861546098294931",
+    "version": "1400354979872768099",
     "default_member_permissions": null,
     "type": 1,
     "name": "nuke",
     "name_localizations": null,
     "description": "Nuke someplace!",
     "description_localizations": null,
-    "dm_permission": true,
-    "contexts": null,
-    "integration_types": [
-      0,
-      1
-    ],
+    "guild_id": "1332773894293160039",
     "options": [
       {
         "type": 3,
@@ -1557,21 +1007,16 @@
     "category": "Fun"
   },
   {
-    "id": "1374406023799902272",
+    "id": "1400354978924859418",
     "application_id": "1297310943885394030",
-    "version": "1374406023980384261",
+    "version": "1400354979906191370",
     "default_member_permissions": null,
     "type": 1,
     "name": "poll",
     "name_localizations": null,
     "description": "Create a quick poll.",
     "description_localizations": null,
-    "dm_permission": true,
-    "contexts": null,
-    "integration_types": [
-      0,
-      1
-    ],
+    "guild_id": "1332773894293160039",
     "options": [
       {
         "type": 3,
@@ -1602,40 +1047,30 @@
     "category": "Fun"
   },
   {
-    "id": "1374408466042716192",
+    "id": "1400354978924859419",
     "application_id": "1297310943885394030",
-    "version": "1374408466042716198",
+    "version": "1400354979906191371",
     "default_member_permissions": null,
     "type": 1,
     "name": "quote",
     "name_localizations": null,
     "description": "Get a random inspirational or funny quote.",
     "description_localizations": null,
-    "dm_permission": true,
-    "contexts": null,
-    "integration_types": [
-      0,
-      1
-    ],
+    "guild_id": "1332773894293160039",
     "nsfw": false,
     "category": "Fun"
   },
   {
-    "id": "1373861545934852156",
+    "id": "1400354978924859420",
     "application_id": "1297310943885394030",
-    "version": "1373861546098294932",
+    "version": "1400354979906191372",
     "default_member_permissions": null,
     "type": 1,
     "name": "rate",
     "name_localizations": null,
     "description": "Get a totally real and totally accurate rating of something.",
     "description_localizations": null,
-    "dm_permission": true,
-    "contexts": null,
-    "integration_types": [
-      0,
-      1
-    ],
+    "guild_id": "1332773894293160039",
     "options": [
       {
         "type": 3,
@@ -1658,21 +1093,16 @@
     "category": "Fun"
   },
   {
-    "id": "1374406023799902273",
+    "id": "1400354978924859421",
     "application_id": "1297310943885394030",
-    "version": "1374406023980384262",
+    "version": "1400354979906191373",
     "default_member_permissions": null,
     "type": 1,
     "name": "reverse",
     "name_localizations": null,
     "description": "Reverse your text!",
     "description_localizations": null,
-    "dm_permission": true,
-    "contexts": null,
-    "integration_types": [
-      0,
-      1
-    ],
+    "guild_id": "1332773894293160039",
     "options": [
       {
         "type": 3,
@@ -1687,21 +1117,16 @@
     "category": "Fun"
   },
   {
-    "id": "1374406023799902274",
+    "id": "1400354979251753083",
     "application_id": "1297310943885394030",
-    "version": "1374406023980384263",
+    "version": "1400354979906191374",
     "default_member_permissions": null,
     "type": 1,
     "name": "roll",
     "name_localizations": null,
     "description": "Roll a die or dice.",
     "description_localizations": null,
-    "dm_permission": true,
-    "contexts": null,
-    "integration_types": [
-      0,
-      1
-    ],
+    "guild_id": "1332773894293160039",
     "options": [
       {
         "type": 4,
@@ -1725,21 +1150,16 @@
     "category": "Fun"
   },
   {
-    "id": "1374406023799902275",
+    "id": "1400354979251753084",
     "application_id": "1297310943885394030",
-    "version": "1374406023980384264",
+    "version": "1400354979906191375",
     "default_member_permissions": null,
     "type": 1,
     "name": "say",
     "name_localizations": null,
     "description": "Make the bot say something.",
     "description_localizations": null,
-    "dm_permission": true,
-    "contexts": null,
-    "integration_types": [
-      0,
-      1
-    ],
+    "guild_id": "1332773894293160039",
     "options": [
       {
         "type": 3,
@@ -1754,21 +1174,16 @@
     "category": "Fun"
   },
   {
-    "id": "1374406023799902276",
+    "id": "1400354979251753085",
     "application_id": "1297310943885394030",
-    "version": "1374406023980384265",
+    "version": "1400354979906191376",
     "default_member_permissions": null,
     "type": 1,
     "name": "ship",
     "name_localizations": null,
     "description": "Ship two users and see their compatibility!",
     "description_localizations": null,
-    "dm_permission": true,
-    "contexts": null,
-    "integration_types": [
-      0,
-      1
-    ],
+    "guild_id": "1332773894293160039",
     "options": [
       {
         "type": 6,
@@ -1791,21 +1206,16 @@
     "category": "Fun"
   },
   {
-    "id": "1374406023799902277",
+    "id": "1400354979251753087",
     "application_id": "1297310943885394030",
-    "version": "1374406024018264186",
+    "version": "1400354979906191377",
     "default_member_permissions": null,
     "type": 1,
     "name": "simprate",
     "name_localizations": null,
     "description": "How much of a simp is someone?",
     "description_localizations": null,
-    "dm_permission": true,
-    "contexts": null,
-    "integration_types": [
-      0,
-      1
-    ],
+    "guild_id": "1332773894293160039",
     "options": [
       {
         "type": 6,
@@ -1820,21 +1230,16 @@
     "category": "Fun"
   },
   {
-    "id": "1374406154393878553",
+    "id": "1400354979251753088",
     "application_id": "1297310943885394030",
-    "version": "1374406154507255918",
+    "version": "1400354979906191378",
     "default_member_permissions": null,
     "type": 1,
     "name": "urban",
     "name_localizations": null,
     "description": "Look up a word on Urban Dictionary.",
     "description_localizations": null,
-    "dm_permission": true,
-    "contexts": null,
-    "integration_types": [
-      0,
-      1
-    ],
+    "guild_id": "1332773894293160039",
     "options": [
       {
         "type": 3,
@@ -1849,97 +1254,365 @@
     "category": "Fun"
   },
   {
-    "id": "1373861545934852157",
+    "id": "1400354979251753089",
     "application_id": "1297310943885394030",
-    "version": "1373861546098294933",
+    "version": "1400354979906191379",
+    "default_member_permissions": "8192",
+    "type": 1,
+    "name": "add-snippet",
+    "name_localizations": null,
+    "description": "Add a new canned response",
+    "description_localizations": null,
+    "guild_id": "1332773894293160039",
+    "options": [
+      {
+        "type": 3,
+        "name": "name",
+        "name_localizations": null,
+        "description": "Snippet name",
+        "description_localizations": null,
+        "required": true
+      },
+      {
+        "type": 3,
+        "name": "content",
+        "name_localizations": null,
+        "description": "Snippet content",
+        "description_localizations": null,
+        "required": true
+      }
+    ],
+    "nsfw": false,
+    "category": "Modmail"
+  },
+  {
+    "id": "1400354979251753090",
+    "application_id": "1297310943885394030",
+    "version": "1400354979931492372",
+    "default_member_permissions": "8192",
+    "type": 1,
+    "name": "block",
+    "name_localizations": null,
+    "description": "Block a user from using modmail",
+    "description_localizations": null,
+    "guild_id": "1332773894293160039",
+    "options": [
+      {
+        "type": 6,
+        "name": "user",
+        "name_localizations": null,
+        "description": "User to block",
+        "description_localizations": null,
+        "required": true
+      }
+    ],
+    "nsfw": false,
+    "category": "Modmail"
+  },
+  {
+    "id": "1400354979432239205",
+    "application_id": "1297310943885394030",
+    "version": "1400354979931492373",
+    "default_member_permissions": "8192",
+    "type": 1,
+    "name": "close",
+    "name_localizations": null,
+    "description": "Close this modmail thread and log it",
+    "description_localizations": null,
+    "guild_id": "1332773894293160039",
+    "options": [
+      {
+        "type": 3,
+        "name": "reason",
+        "name_localizations": null,
+        "description": "Reason for closing",
+        "description_localizations": null
+      }
+    ],
+    "nsfw": false,
+    "category": "Modmail"
+  },
+  {
+    "id": "1400354979432239206",
+    "application_id": "1297310943885394030",
+    "version": "1400354979931492374",
+    "default_member_permissions": "8192",
+    "type": 1,
+    "name": "delete-snippet",
+    "name_localizations": null,
+    "description": "Delete a canned response",
+    "description_localizations": null,
+    "guild_id": "1332773894293160039",
+    "options": [
+      {
+        "type": 3,
+        "name": "name",
+        "name_localizations": null,
+        "description": "Snippet name",
+        "description_localizations": null,
+        "required": true,
+        "autocomplete": true
+      }
+    ],
+    "nsfw": false,
+    "category": "Modmail"
+  },
+  {
+    "id": "1400354979432239207",
+    "application_id": "1297310943885394030",
+    "version": "1400354979931492375",
+    "default_member_permissions": "8192",
+    "type": 1,
+    "name": "edit-snippet",
+    "name_localizations": null,
+    "description": "Edit a canned response",
+    "description_localizations": null,
+    "guild_id": "1332773894293160039",
+    "options": [
+      {
+        "type": 3,
+        "name": "name",
+        "name_localizations": null,
+        "description": "Snippet name",
+        "description_localizations": null,
+        "required": true,
+        "autocomplete": true
+      },
+      {
+        "type": 3,
+        "name": "content",
+        "name_localizations": null,
+        "description": "New snippet content",
+        "description_localizations": null,
+        "required": true
+      }
+    ],
+    "nsfw": false,
+    "category": "Modmail"
+  },
+  {
+    "id": "1400354979432239208",
+    "application_id": "1297310943885394030",
+    "version": "1400354979931492376",
+    "default_member_permissions": "8192",
+    "type": 1,
+    "name": "list-snippets",
+    "name_localizations": null,
+    "description": "List all canned responses",
+    "description_localizations": null,
+    "guild_id": "1332773894293160039",
+    "nsfw": false,
+    "category": "Modmail"
+  },
+  {
+    "id": "1400354979432239209",
+    "application_id": "1297310943885394030",
+    "version": "1400354979931492377",
+    "default_member_permissions": "8192",
+    "type": 1,
+    "name": "note",
+    "name_localizations": null,
+    "description": "Add an internal note to this modmail thread",
+    "description_localizations": null,
+    "guild_id": "1332773894293160039",
+    "options": [
+      {
+        "type": 3,
+        "name": "note",
+        "name_localizations": null,
+        "description": "Note content",
+        "description_localizations": null,
+        "required": true
+      }
+    ],
+    "nsfw": false,
+    "category": "Modmail"
+  },
+  {
+    "id": "1400354979432239210",
+    "application_id": "1297310943885394030",
+    "version": "1400354979931492378",
+    "default_member_permissions": "8192",
+    "type": 1,
+    "name": "reply",
+    "name_localizations": null,
+    "description": "Reply to the user in this modmail thread",
+    "description_localizations": null,
+    "guild_id": "1332773894293160039",
+    "options": [
+      {
+        "type": 3,
+        "name": "message",
+        "name_localizations": null,
+        "description": "Message to send",
+        "description_localizations": null,
+        "required": true
+      },
+      {
+        "type": 5,
+        "name": "anonymous",
+        "name_localizations": null,
+        "description": "Send anonymously?",
+        "description_localizations": null
+      }
+    ],
+    "nsfw": false,
+    "category": "Modmail"
+  },
+  {
+    "id": "1400354979432239211",
+    "application_id": "1297310943885394030",
+    "version": "1400354979931492379",
+    "default_member_permissions": "8192",
+    "type": 1,
+    "name": "snippet",
+    "name_localizations": null,
+    "description": "Send a canned response",
+    "description_localizations": null,
+    "guild_id": "1332773894293160039",
+    "options": [
+      {
+        "type": 3,
+        "name": "name",
+        "name_localizations": null,
+        "description": "Snippet name",
+        "description_localizations": null,
+        "required": true,
+        "autocomplete": true
+      }
+    ],
+    "nsfw": false,
+    "category": "Modmail"
+  },
+  {
+    "id": "1400354979432239212",
+    "application_id": "1297310943885394030",
+    "version": "1400354979931492380",
+    "default_member_permissions": "8192",
+    "type": 1,
+    "name": "tag",
+    "name_localizations": null,
+    "description": "Tag this modmail thread",
+    "description_localizations": null,
+    "guild_id": "1332773894293160039",
+    "options": [
+      {
+        "type": 3,
+        "name": "tag",
+        "name_localizations": null,
+        "description": "Tag to add",
+        "description_localizations": null,
+        "required": true
+      }
+    ],
+    "nsfw": false,
+    "category": "Modmail"
+  },
+  {
+    "id": "1400354979432239213",
+    "application_id": "1297310943885394030",
+    "version": "1400354979931492381",
+    "default_member_permissions": "8192",
+    "type": 1,
+    "name": "transcript",
+    "name_localizations": null,
+    "description": "Export and upload a transcript of this modmail thread",
+    "description_localizations": null,
+    "guild_id": "1332773894293160039",
+    "nsfw": false,
+    "category": "Modmail"
+  },
+  {
+    "id": "1400354979432239214",
+    "application_id": "1297310943885394030",
+    "version": "1400354979948007547",
+    "default_member_permissions": "8192",
+    "type": 1,
+    "name": "unblock",
+    "name_localizations": null,
+    "description": "Unblock a user from using modmail",
+    "description_localizations": null,
+    "guild_id": "1332773894293160039",
+    "options": [
+      {
+        "type": 6,
+        "name": "user",
+        "name_localizations": null,
+        "description": "User to unblock",
+        "description_localizations": null,
+        "required": true
+      }
+    ],
+    "nsfw": false,
+    "category": "Modmail"
+  },
+  {
+    "id": "1400354979654668348",
+    "application_id": "1297310943885394030",
+    "version": "1400354979948007548",
     "default_member_permissions": null,
     "type": 1,
     "name": "event-times",
     "name_localizations": null,
     "description": "Our op times.",
     "description_localizations": null,
-    "dm_permission": true,
-    "contexts": null,
-    "integration_types": [
-      0,
-      1
-    ],
+    "guild_id": "1332773894293160039",
     "nsfw": false,
     "category": "Tag"
   },
   {
-    "id": "1373861545934852158",
+    "id": "1400354979654668349",
     "application_id": "1297310943885394030",
-    "version": "1373861546123595847",
+    "version": "1400354979948007549",
     "default_member_permissions": null,
     "type": 1,
     "name": "recruitment-message",
     "name_localizations": null,
-    "description": "The recruitment message.",
+    "description": "Displays the unit's recruitment message.",
     "description_localizations": null,
-    "dm_permission": true,
-    "contexts": null,
-    "integration_types": [
-      0,
-      1
-    ],
+    "guild_id": "1332773894293160039",
     "nsfw": false,
     "category": "Tag"
   },
   {
-    "id": "1373861545934852159",
+    "id": "1400354979654668350",
     "application_id": "1297310943885394030",
-    "version": "1373861546123595848",
+    "version": "1400354979948007550",
     "default_member_permissions": null,
     "type": 1,
     "name": "server-info",
     "name_localizations": null,
     "description": "ArmA-3 server info + Other useful information.",
     "description_localizations": null,
-    "dm_permission": true,
-    "contexts": null,
-    "integration_types": [
-      0,
-      1
-    ],
+    "guild_id": "1332773894293160039",
     "nsfw": false,
     "category": "Tag"
   },
   {
-    "id": "1373861545934852160",
+    "id": "1400354979654668351",
     "application_id": "1297310943885394030",
-    "version": "1373861546123595849",
+    "version": "1400354979948007551",
     "default_member_permissions": null,
     "type": 1,
     "name": "socials",
     "name_localizations": null,
     "description": "The US Army social media accounts.",
     "description_localizations": null,
-    "dm_permission": true,
-    "contexts": null,
-    "integration_types": [
-      0,
-      1
-    ],
+    "guild_id": "1332773894293160039",
     "nsfw": false,
     "category": "Tag"
   },
   {
-    "id": "1374408466042716193",
+    "id": "1400354979654668352",
     "application_id": "1297310943885394030",
-    "version": "1374408466042716199",
+    "version": "1400354979948007552",
     "default_member_permissions": null,
     "type": 1,
     "name": "avatar",
     "name_localizations": null,
     "description": "Show a user's avatar.",
     "description_localizations": null,
-    "dm_permission": true,
-    "contexts": null,
-    "integration_types": [
-      0,
-      1
-    ],
+    "guild_id": "1332773894293160039",
     "options": [
       {
         "type": 6,
@@ -1953,21 +1626,16 @@
     "category": "Useful"
   },
   {
-    "id": "1374409305578799124",
+    "id": "1400354979654668353",
     "application_id": "1297310943885394030",
-    "version": "1374409305578799125",
+    "version": "1400354979948007553",
     "default_member_permissions": null,
     "type": 1,
     "name": "generate-mention",
     "name_localizations": null,
     "description": "Generate a mention for any slash command",
     "description_localizations": null,
-    "dm_permission": true,
-    "contexts": null,
-    "integration_types": [
-      0,
-      1
-    ],
+    "guild_id": "1332773894293160039",
     "options": [
       {
         "type": 3,
@@ -1999,78 +1667,58 @@
     "category": "Useful"
   },
   {
-    "id": "1373861545934852161",
+    "id": "1400354979654668354",
     "application_id": "1297310943885394030",
-    "version": "1373861546123595850",
+    "version": "1400354979948007554",
     "default_member_permissions": null,
     "type": 1,
     "name": "help",
     "name_localizations": null,
     "description": "Show all available commands and their descriptions",
     "description_localizations": null,
-    "dm_permission": true,
-    "contexts": null,
-    "integration_types": [
-      0,
-      1
-    ],
+    "guild_id": "1332773894293160039",
     "nsfw": false,
     "category": "Useful"
   },
   {
-    "id": "1374885147291418735",
+    "id": "1400354979654668355",
     "application_id": "1297310943885394030",
-    "version": "1374885147291418736",
+    "version": "1400354979948007555",
     "default_member_permissions": null,
     "type": 1,
     "name": "info",
     "name_localizations": null,
     "description": "Information on this bot.",
     "description_localizations": null,
-    "dm_permission": true,
-    "contexts": null,
-    "integration_types": [
-      0,
-      1
-    ],
+    "guild_id": "1332773894293160039",
     "nsfw": false,
     "category": "Useful"
   },
   {
-    "id": "1373861545934852163",
+    "id": "1400354979654668356",
     "application_id": "1297310943885394030",
-    "version": "1373861546123595852",
+    "version": "1400354979948007556",
     "default_member_permissions": null,
     "type": 1,
     "name": "ping",
     "name_localizations": null,
     "description": "Check the bot's response time and status",
     "description_localizations": null,
-    "dm_permission": true,
-    "contexts": null,
-    "integration_types": [
-      0,
-      1
-    ],
+    "guild_id": "1332773894293160039",
     "nsfw": false,
     "category": "Useful"
   },
   {
-    "id": "1374408466042716194",
+    "id": "1400354979654668357",
     "application_id": "1297310943885394030",
-    "version": "1374408466168418357",
+    "version": "1400354979985887294",
     "default_member_permissions": null,
     "type": 1,
     "name": "remindme",
     "name_localizations": null,
     "description": "Set a personal reminder.",
     "description_localizations": null,
-    "dm_permission": true,
-    "contexts": null,
-    "integration_types": [
-      0,
-      1
-    ],
+    "guild_id": "1332773894293160039",
     "options": [
       {
         "type": 3,
@@ -2093,21 +1741,16 @@
     "category": "Useful"
   },
   {
-    "id": "1374408466042716195",
+    "id": "1400354979738550284",
     "application_id": "1297310943885394030",
-    "version": "1374408466168418358",
+    "version": "1400354979985887295",
     "default_member_permissions": null,
     "type": 1,
     "name": "user-info",
     "name_localizations": null,
     "description": "Show information about a user.",
     "description_localizations": null,
-    "dm_permission": true,
-    "contexts": null,
-    "integration_types": [
-      0,
-      1
-    ],
+    "guild_id": "1332773894293160039",
     "options": [
       {
         "type": 6,

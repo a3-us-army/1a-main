@@ -4,7 +4,7 @@ import path from "path";
 
 const contributersRaw = JSON.parse(
 	fs.readFileSync(
-		path.join(process.cwd(), "src/bot/config/contributors.json"),
+		path.join(process.cwd(), "./src/bot/config/contributors.json"),
 		"utf8",
 	),
 );

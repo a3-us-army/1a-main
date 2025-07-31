@@ -1,0 +1,67 @@
+hardbanned<!DOCTYPE html>
+<html>
+<head>
+  <title>Banned from Discord</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta content="#e74c3c" name="theme-color" />
+  <link rel="icon" href="/favicon.ico">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
+  <link rel="stylesheet" href="/custom.css">
+  <style>
+    body { background: #23272a; color: #fff; font-family: 'Segoe UI', Arial, sans-serif; }
+    .banned-container {
+      min-height: 80vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .banned-box {
+      background: #2c2f33;
+      padding: 2.5rem 2.5rem 2rem 2.5rem;
+      border-radius: 12px;
+      box-shadow: 0 2px 16px #0008;
+      text-align: center;
+      max-width: 420px;
+      width: 100%;
+      margin: 2rem auto;
+    }
+    .banned-box h1 {
+      color: #e74c3c;
+      font-size: 2.2rem;
+      margin-bottom: 0.5rem;
+      font-weight: 700;
+      letter-spacing: 1px;
+    }
+    .banned-box .icon {
+      font-size: 3.5rem;
+      margin-bottom: 0.5rem;
+      color: #e74c3c;
+    }
+    .banned-box p {
+      color: #b5bac1;
+      font-size: 1.15rem;
+      margin-bottom: 1.5rem;
+    }
+    .banned-box a.btn {
+      margin-top: 1rem;
+    }
+  </style>
+</head>
+<body>
+  <%- include("partials/navbar", { user, active }) %>
+  <div class="banned-container">
+    <div class="banned-box">
+      <div class="icon">🚫</div>
+      <h1>Banned</h1>
+      <p>
+        You are hard banned from the Discord.<br>
+        Please stop trying to login to our site.
+      </p>
+      <a href="/" class="btn btn-outline-light">
+        <i class="bi bi-arrow-left"></i> Back to Home
+      </a>
+    </div>
+  </div>
+  <%- include("partials/footer") %>
+</body>
+</html>

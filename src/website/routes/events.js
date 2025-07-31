@@ -2,9 +2,11 @@ import { Router } from "express";
 import ensureAdmin from "../middleware/ensureAdmin.js";
 import { getDatabase } from "../../bot/utils/database.js";
 import fetchDiscordChannels from "../utils/fetchChannels.js";
+import { v4 as uuidv4 } from "uuid";
 const router = Router();
 
 const db = getDatabase();
+const eventId = uuidv4();
 
 router.get("/", async (req, res) => {
 	let isAdmin = false;
@@ -73,7 +75,7 @@ router.post("/new", ensureAdmin, async (req, res) => {
 			? description.trim()
 			: "No description provided.";
 		const event = {
-			id,
+			id: eventId,
 			title,
 			description: safeDescription,
 			time: eventTime,

@@ -1,4 +1,3 @@
-// registerCommandsManually.js
 import dotenv from "dotenv";
 import { registerCommands } from "./utils/commandRegistration.js";
 

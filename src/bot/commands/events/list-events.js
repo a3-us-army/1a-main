@@ -11,7 +11,8 @@ export const data = new SlashCommandBuilder()
 			.setDescription("Filter events by location")
 			.setRequired(false)
 			.setAutocomplete(true),
-	);
+	)
+    .setContexts(0,1,2);
 
 // Command execution
 export async function execute(interaction) {

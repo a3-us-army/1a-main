@@ -12,3 +12,6 @@ const result = db
 console.log(
 	`Deleted ${result.changes} Application for user ID: ${userIdToDelete}`,
 );
+
+db.prepare("DELETE FROM applications WHERE id IS NULL").run();
+console.log("Deleted all applications with id = NULL");

@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Bot Status</title>
+  <meta content="1A Website" property="og:title" />
+  <meta content="Welcome to 1A!" property="og:description" />
+  <meta content="https://1a75.org/botstatus" property="og:url" />
+  <meta content="https://cdn.xanderxx.xyz/1a-logo.png" property="og:image" />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="/custom.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+  <style>
+    .status-table th, .status-table td { color: #fff; background: #23272f; }
+    .status-table th { background: #181a1b; }
+    .status-online { color: #27ae60; font-weight: bold; }
+    .status-offline { color: #e74c3c; font-weight: bold; }
+    .restart-btn { min-width: 140px; }
+  </style>
+</head>
+<body>
+  <%- include("partials/navbar", { user, active }) %>
+  <div class="container mt-5">
+    <h2 class="mb-4 text-center">
+      <i class="bi bi-robot me-2"></i>Bot Status
+    </h2>
+    <div id="status-container" class="d-flex justify-content-center">
+      <div>
+        <table class="table table-dark table-bordered status-table w-100 mx-auto" style="max-width: 600px;">
+          <tbody>
+            <tr>
+              <th>Bot</th>
+              <td id="bot-tag">Loading...</td>
+            </tr>
+            <tr>
+              <th>Status</th>
+              <td id="bot-status">Loading...</td>
+            </tr>
+            <tr>
+              <th>Guilds</th>
+              <td id="bot-guilds">Loading...</td>
+            </tr>
+            <tr>
+              <th>Users (cached)</th>
+              <td id="bot-users">Loading...</td>
+            </tr>
+            <tr>
+              <th>Uptime</th>
+              <td id="bot-uptime">Loading...</td>
+            </tr>
+            <tr>
+              <th>Memory Usage</th>
+              <td id="bot-memory">Loading...</td>
+            </tr>
+            <tr>
+              <th>Node.js Version</th>
+              <td id="bot-node">Loading...</td>
+            </tr>
+            <tr>
+              <th>Last Ready</th>
+              <td id="bot-ready">Loading...</td>
+            </tr>
+          </tbody>
+        </table>
+        <div class="d-flex justify-content-center mt-4">
+          <button id="restartBtn" class="btn btn-danger restart-btn">
+            <i class="bi bi-arrow-repeat"></i> Restart Bot
+          </button>
+        </div>
+        <div id="restart-status" class="text-center mt-2"></div>
+      </div>
+    </div>
+  </div>
+  <%- include("partials/footer") %>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+  <script>
+    async function fetchStatus() {
+      try {
+        const res = await fetch("/botstatus/api");
+        if (!res.ok) throw new Error("Failed to fetch status");
+        const status = await res.json();
+        document.getElementById("bot-tag").textContent = `${status.tag} (${status.id})`;
+        document.getElementById("bot-status").innerHTML =
+          `<span class="status-${status.status.toLowerCase()}">
+            <i class="bi bi-circle-fill me-1"></i>${status.status}
+          </span>`;
+        document.getElementById("bot-guilds").textContent = status.guilds;
+        document.getElementById("bot-users").textContent = status.users;
+        document.getElementById("bot-uptime").textContent = formatUptime(status.uptime);
+        document.getElementById("bot-memory").textContent = status.memoryMB + " MB";
+        document.getElementById("bot-node").textContent = status.nodeVersion;
+        document.getElementById("bot-ready").textContent = status.lastReady || "N/A";
+      } catch (e) {
+        document.getElementById("status-container").innerHTML =
+          '<div class="alert alert-danger text-center">Bot is offline or unreachable.</div>';
+      }
+    }
+
+    function formatUptime(seconds) {
+      seconds = Math.floor(seconds);
+      const h = Math.floor(seconds / 3600);
+      const m = Math.floor((seconds % 3600) / 60);
+      const s = seconds % 60;
+      return `${h}h ${m}m ${s}s`;
+    }
+
+    // Live update every 5 seconds
+    fetchStatus();
+    setInterval(fetchStatus, 5000);
+
+    // Restart button
+    document.getElementById("restartBtn").onclick = async function() {
+      if (!confirm("Are you sure you want to restart the bot?")) return;
+      document.getElementById("restart-status").textContent = "Restarting...";
+      try {
+        const res = await fetch("/botstatus/api/restart", {
+          method: "POST"
+        });
+        if (res.ok) {
+          document.getElementById("restart-status").textContent = "Restart command sent!";
+        } else {
+          document.getElementById("restart-status").textContent = "Failed to restart bot.";
+        }
+      } catch (e) {
+        document.getElementById("restart-status").textContent = "Failed to restart bot.";
+      }
+    };
+  </script>
+</body>
+</html>

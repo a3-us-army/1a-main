@@ -10,7 +10,8 @@ export const data = new SlashCommandBuilder()
 			.setDescription("The ID of the event")
 			.setRequired(true)
 			.setAutocomplete(true),
-	);
+	)
+    .setContexts(0,1,2);
 
 export async function execute(interaction) {
 	const eventId = interaction.options.getString("event-id");

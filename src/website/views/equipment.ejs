@@ -149,14 +149,14 @@
                 </div>
                 <p class="card-text mb-2"><%= eq.description %></p>
                 <div class="mt-auto">
-                  <% if (user) { %>
+                  <% if (isAdmin) { %>
                     <button class="btn btn-sm btn-primary w-100 mb-2"
                       data-bs-toggle="modal" data-bs-target="#requestModal"
                       data-eqid="<%= eq.id %>" data-eqname="<%= eq.name %>" data-max="<%= eq.available_quantity %>">
                       <i class="bi bi-box-arrow-in-down"></i> Request
                     </button>
                   <% } else { %>
-                    <span class="text-muted">Login to request</span>
+                    <span class="text-muted">Must be admin to click</span>
                   <% } %>
                   <% if (isAdmin) { %>
                     <div class="d-flex gap-2">

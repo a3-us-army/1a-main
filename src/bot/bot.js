@@ -13,6 +13,8 @@ import { setupReminderSystem } from "./utils/reminderSystem.js";
 import { sendStartupLog } from "./utils/logger.js";
 import { setupFullLogger } from "./utils/discord_logs.js";
 import { handleButtonInteraction } from "./handlers/buttonHandler.js";
+import modmailHandler from "./handlers/modmail.js";
+
 
 dotenv.config();
 
@@ -23,8 +25,6 @@ const client = new Client({
 	intents: [
 		GatewayIntentBits.Guilds,
 		GatewayIntentBits.GuildMembers,
-		GatewayIntentBits.GuildBans,
-		GatewayIntentBits.GuildEmojisAndStickers,
 		GatewayIntentBits.GuildIntegrations,
 		GatewayIntentBits.GuildWebhooks,
 		GatewayIntentBits.GuildInvites,
@@ -36,6 +36,9 @@ const client = new Client({
 		GatewayIntentBits.GuildScheduledEvents,
 		GatewayIntentBits.GuildMessageTyping,
 		GatewayIntentBits.GuildModeration,
+		GatewayIntentBits.DirectMessages,
+		GatewayIntentBits.DirectMessageReactions,
+		GatewayIntentBits.DirectMessageTyping
 	],
 	partials: [
 		Partials.Message,
@@ -47,6 +50,7 @@ const client = new Client({
 });
 
 setupFullLogger(client);
+modmailHandler(client);
 
 client.once("ready", async () => {
 	console.log(`✅ Logged in as ${client.user.tag}`);
@@ -160,7 +164,12 @@ client.on("interactionCreate", async (interaction) => {
 					"./handlers/buttonHandler.js"
 				);
 				await handleModalSubmit(interaction);
-			}
+			} else if (interaction.customId.startsWith("app_approve_modal_")) {
+                const { handleApplicationButton } = await import(
+                  "./handlers/applicationButtonHandler.js"
+                );
+                await handleApplicationButton(interaction);
+              }
 		} catch (error) {
 			console.error("Error handling modal submit:", error);
 			if (!interaction.replied && !interaction.deferred) {
@@ -183,6 +192,11 @@ client.on("interactionCreate", async (interaction) => {
 				interaction.customId.startsWith("cert_deny_")
 			) {
 				await handleButtonInteraction(interaction, client);
+			} else if (interaction.customId.startsWith("appeal_accept_")|| interaction.customId.startsWith("appeal_deny_")) {
+				const { appealButtonHandler } = await import(
+					"./handlers/appealButtonHandler.js"
+				);
+				await appealButtonHandler(interaction, client);
 			} else if (
 				interaction.customId.startsWith("app_eq_") ||
 				interaction.customId.startsWith("den_eq_")
@@ -239,6 +253,7 @@ function findCommandFile(commandsDir, commandName) {
 	}
 	return null;
 }
+
 
 // --- Error logging ---
 process.on("unhandledRejection", (error) => {

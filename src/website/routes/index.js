@@ -12,6 +12,9 @@ import profileRoutes from "./profile.js";
 import myCertRoutes from "./my-certs.js";
 import equipmentRoutes from "./equipment.js";
 import expiredRoutes from "./expired.js";
+import botStatusRoutes from "./botstatus.js";
+import formsRoutes from "./forms.js"
+import appealRouter from "./appeals.js";
 
 const router = Router();
 
@@ -28,5 +31,8 @@ router.use("/profile", profileRoutes);
 router.use("/my-certs", myCertRoutes);
 router.use("/equipment", equipmentRoutes);
 router.use("/expired", expiredRoutes);
+router.use("/botstatus", botStatusRoutes);
+router.use("/forms", formsRoutes)
+router.use("/appeal", appealRouter);
 
 export default router;

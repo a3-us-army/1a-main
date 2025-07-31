@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Ban Appeal | 1A Website</title>
+  <meta content="1A Website" property="og:title" />
+  <meta content="Ban Appeal for 1A Discord" property="og:description" />
+  <meta content="https://1a75.org/appeal" property="og:url" />
+  <meta content="https://cdn.xanderxx.xyz/1a-logo.png" property="og:image" />
+  <meta content="#4b5a2a" name="theme-color" />
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+  <link rel="icon" href="/favicon.ico">
+  <link rel="stylesheet" href="/custom.css">
+  <style>
+    body {
+      background: #4B3F36;
+      color: #F5F3EE;
+    }
+    .appeal-section {
+      background: #23272f;
+      color: #F5F3EE;
+      border-radius: 1rem;
+      padding: 2.5rem 1.5rem 2rem 1.5rem;
+      margin-top: 2.5rem;
+      margin-bottom: 2.5rem;
+      box-shadow: 0 4px 24px rgba(0,0,0,0.10);
+      border: 1.5px solid #ffe066;
+      max-width: 540px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    .appeal-title {
+      font-size: 2rem;
+      font-weight: 700;
+      color: #ffe066;
+      margin-bottom: 0.5rem;
+      letter-spacing: 0.01em;
+    }
+    .appeal-desc {
+      font-size: 1.1rem;
+      color: #F5F3EE;
+      margin-bottom: 1.5rem;
+    }
+    .form-label {
+      color: #ffe066;
+      font-weight: 500;
+    }
+    .form-control, .form-select {
+      background: #2c2f33;
+      color: #fffbe6;
+      border: 1.5px solid #ffe066;
+      border-radius: 0.5rem;
+    }
+    .form-control:focus {
+      border-color: #b68900;
+      box-shadow: 0 0 0 0.15rem #ffe06655;
+      background: #23272f;
+      color: #fffbe6;
+    }
+    .btn-primary {
+      background: #ffe066;
+      color: #4B3F36;
+      border: none;
+      font-weight: 600;
+      letter-spacing: 0.01em;
+      border-radius: 0.5rem;
+      transition: background 0.15s;
+    }
+    .btn-primary:hover, .btn-primary:focus {
+      background: #b68900;
+      color: #fffbe6;
+    }
+    .alert-success, .alert-danger {
+      border-radius: 0.5rem;
+      font-size: 1rem;
+      margin-bottom: 1.2rem;
+    }
+    @media (max-width: 600px) {
+      .appeal-section {
+        padding: 1.2rem 0.5rem 1rem 0.5rem;
+      }
+      .appeal-title {
+        font-size: 1.3rem;
+      }
+      .appeal-desc {
+        font-size: 1rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <%- include("partials/navbar", { user, active }) %>
+  <main id="main-content">
+    <div class="container">
+      <div class="appeal-section">
+        <div class="text-center mb-4">
+          <img
+            src="https://cdn.xanderxx.xyz/1a-logo.png"
+            alt="1A Logo"
+            style="height: 80px; width: auto; margin-bottom: 0.5rem; border-radius: 0.7rem; border: 2px solid #362f29; box-shadow: 0 2px 8px rgba(0,0,0,0.08);"
+          >
+          <h1 class="appeal-title">Ban Appeal</h1>
+          <div class="appeal-desc">
+            If you believe your ban was a mistake or wish to appeal, please fill out the form below.<br>
+            Staff will review your appeal as soon as possible.<br>
+            Please join our <a href="https://discord.gg/4HmpWpTsWJ">ban appeal discord</a> to be notified of what happens to your application.
+          </div>
+        </div>
+        <% if (query && query.alert) { %>
+          <div class="alert alert-success"><%= query.alert %></div>
+        <% } %>
+        <% if (query && query.error) { %>
+          <div class="alert alert-danger"><%= query.error %></div>
+        <% } %>
+        <form method="POST" action="/appeal" autocomplete="off">
+          <div class="mb-3">
+            <label class="form-label" for="username">Discord Username</label>
+            <input type="text" id="username" name="username" class="form-control" required value="<%= user ? user.username : '' %>">
+          </div>
+          <div class="mb-3">
+            <label class="form-label" for="user_id">Discord User ID</label>
+            <input type="text" id="user_id" name="user_id" class="form-control" required value="<%= user ? user.id : '' %>">
+            <div class="form-text" style="color:#ffe066;">You can get your User ID from Discord settings.</div>
+          </div>
+          <div class="mb-3">
+            <label class="form-label" for="reason">Why should your ban be lifted?</label>
+            <textarea id="reason" name="reason" class="form-control" rows="3" required></textarea>
+          </div>
+          <div class="mb-3">
+            <label class="form-label" for="details">Additional Details (optional)</label>
+            <textarea id="details" name="details" class="form-control" rows="2"></textarea>
+          </div>
+          <button type="submit" class="btn btn-primary w-100">
+            <i class="bi bi-envelope-paper-heart me-1"></i>Submit Appeal
+          </button>
+        </form>
+      </div>
+    </div>
+  </main>
+  <%- include("partials/footer") %>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

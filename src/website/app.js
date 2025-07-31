@@ -1,18 +1,22 @@
+import path from "path";
+import dotenv from "dotenv";
+import { fileURLToPath } from "url";
 import express from "express";
 import session from "express-session";
-import path from "node:path";
-import { fileURLToPath } from "node:url";
-import dotenv from "dotenv";
 import fs from "node:fs";
 import connectSqlite3 from "connect-sqlite3";
 import { setupDatabase, getDatabase } from "../bot/utils/database.js";
 import passport from "./middleware/passport.js";
 import routes from "./routes/index.js";
 
-dotenv.config();
-
+// ESM __dirname and __filename
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
+
+// Load .env from project root (two levels up)
+const envPath = path.join(__dirname, "../../.env");
+dotenv.config({ path: envPath });
+
 const dbPath = path.join(__dirname, "../../events.db");
 const SQLiteStore = connectSqlite3(session);
 

@@ -23,6 +23,18 @@ export function setupDatabase() {
         )
       `).run();
 
+      db.prepare(`
+        CREATE TABLE IF NOT EXISTS custom_forms (
+          id INTEGER PRIMARY KEY AUTOINCREMENT,
+          title TEXT NOT NULL,
+          description TEXT,
+          fields TEXT NOT NULL, -- JSON string of field definitions
+          ping_role_id TEXT,
+          created_by TEXT,
+          created_at TEXT
+        )
+      `).run();
+
 	// Ensure the events table has the necessary columns
 	db.prepare(`
     CREATE TABLE IF NOT EXISTS events (
@@ -59,6 +71,11 @@ export function setupDatabase() {
       denial_reason TEXT
     )
   `).run();
+  // Remove any rows with id = NULL before adding the unique index
+db.prepare("DELETE FROM applications WHERE id IS NULL").run();
+
+// Now add the unique index
+db.prepare("CREATE UNIQUE INDEX IF NOT EXISTS idx_applications_user_id ON applications(user_id)").run();
 
 	// Ensure warnings table exists
 	db.prepare(`
@@ -100,6 +117,30 @@ export function setupDatabase() {
       uploaded_at TEXT NOT NULL
     );
   `).run();
+  db.prepare(`
+  CREATE TABLE IF NOT EXISTS snippets (
+    id TEXT PRIMARY KEY,
+    name TEXT UNIQUE,
+    content TEXT NOT NULL,
+    created_by TEXT,
+    created_at TEXT
+  )
+`).run();
+
+db.prepare(`
+  CREATE TABLE IF NOT EXISTS appeals (
+    id TEXT PRIMARY KEY,
+    user_id TEXT NOT NULL,
+    username TEXT NOT NULL,
+    reason TEXT NOT NULL,
+    details TEXT,
+    status TEXT DEFAULT 'pending',
+    submitted_at TEXT NOT NULL,
+    reviewed_by TEXT,
+    reviewed_at TEXT,
+    review_notes TEXT
+  )
+`).run();
 
 	// Auto-migrate: Ensure required columns exist in the 'events' table
 	const requiredColumns = {
@@ -892,4 +933,45 @@ export function getUserCertRequestStatus(userId, certId) {
 			"SELECT status FROM certification_requests WHERE user_id = ? AND cert_id = ? ORDER BY requested_at DESC LIMIT 1",
 		)
 		.get(userId, certId);
+}
+export function createSnippet({ name, content, created_by }) {
+	const db = getDatabase();
+	const id = uuidv4();
+	const created_at = new Date().toISOString();
+	db.prepare(`
+		INSERT INTO snippets (id, name, content, created_by, created_at)
+		VALUES (?, ?, ?, ?, ?)
+	`).run(id, name, content, created_by, created_at);
+	return id;
+}
+
+// Get a snippet by name
+export function getSnippetByName(name) {
+	const db = getDatabase();
+	return db.prepare("SELECT * FROM snippets WHERE name = ?").get(name);
+}
+
+// Get all snippets
+export function getAllSnippets() {
+	const db = getDatabase();
+	return db.prepare("SELECT * FROM snippets ORDER BY name").all();
+}
+
+// Delete a snippet by name
+export function deleteSnippetByName(name) {
+	const db = getDatabase();
+	return db.prepare("DELETE FROM snippets WHERE name = ?").run(name);
+}
+
+// Edit a snippet by name
+export function editSnippetByName(name, newContent) {
+	const db = getDatabase();
+	return db.prepare("UPDATE snippets SET content = ? WHERE name = ?").run(newContent, name);
+}
+// For autocomplete: get snippet names matching a prefix
+export function findSnippetNames(prefix) {
+	const db = getDatabase();
+	return db
+		.prepare("SELECT name FROM snippets WHERE name LIKE ? ORDER BY name LIMIT 25")
+		.all(`${prefix}%`);
 }

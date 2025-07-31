@@ -11,7 +11,8 @@ export const data = new SlashCommandBuilder()
 			.setDescription("The ID of the event to view")
 			.setRequired(true)
 			.setAutocomplete(true),
-	);
+	)
+    .setContexts(0,1,2);
 
 // Command execution
 export async function execute(interaction) {
