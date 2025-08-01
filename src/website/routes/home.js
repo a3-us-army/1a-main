@@ -1,5 +1,8 @@
 import { Router } from 'express';
+import { getDatabase } from '../../bot/utils/database.js';
+
 const router = Router();
+const db = getDatabase();
 
 router.get('/', (req, res) => {
   res.render('home', {
@@ -16,7 +19,14 @@ router.get('/dashboard', (req, res) => {
 });
 
 router.get('/about', (req, res) => {
-  res.render('about', { user: req.user, active: 'about' });
+  // Get gallery images for the about page
+  const galleryImages = db.prepare('SELECT * FROM gallery_images ORDER BY display_order ASC').all();
+  
+  res.render('about', {
+    user: req.user,
+    active: 'about',
+    galleryImages: galleryImages
+  });
 });
 
 router.get('/tos', (req, res) => {

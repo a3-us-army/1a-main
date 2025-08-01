@@ -162,6 +162,20 @@ export function setupDatabase() {
 `
   ).run();
 
+  // Create gallery_images table
+  db.prepare(`
+    CREATE TABLE IF NOT EXISTS gallery_images (
+      id TEXT PRIMARY KEY,
+      filename TEXT NOT NULL,
+      original_name TEXT NOT NULL,
+      description TEXT,
+      uploaded_by TEXT NOT NULL,
+      uploaded_at TEXT NOT NULL,
+      display_order INTEGER DEFAULT 0,
+      file_size INTEGER DEFAULT 0
+    )
+  `).run();
+
   // Auto-migrate: Ensure required columns exist in the 'events' table
   const requiredColumns = {
     id: 'TEXT PRIMARY KEY',

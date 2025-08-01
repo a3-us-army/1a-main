@@ -15,6 +15,7 @@ import expiredRoutes from './expired.js';
 import botStatusRoutes from './botstatus.js';
 import formsRoutes from './forms.js';
 import appealRouter from './appeals.js';
+import galleryAdminRoutes from './gallery-admin.js';
 
 const router = Router();
 
@@ -34,5 +35,6 @@ router.use('/expired', expiredRoutes);
 router.use('/botstatus', botStatusRoutes);
 router.use('/forms', formsRoutes);
 router.use('/appeal', appealRouter);
+router.use('/gallery-admin', galleryAdminRoutes);
 
 export default router;

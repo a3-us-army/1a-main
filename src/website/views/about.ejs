@@ -101,6 +101,197 @@
           font-size: 1rem;
         }
       }
+
+      /* Gallery Styles */
+      .gallery-section {
+        margin-top: 3rem;
+        margin-bottom: 3rem;
+      }
+
+      .gallery-title {
+        color: #ffe066 !important;
+        font-weight: 700;
+        font-size: 2rem;
+        text-align: center;
+        margin-bottom: 2rem;
+      }
+
+      .gallery-main-container {
+        position: relative;
+        max-width: 800px;
+        margin: 0 auto;
+        background: rgba(44, 49, 58, 0.8);
+        border-radius: 16px;
+        padding: 2rem;
+        box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
+      }
+
+      .gallery-main-image-container {
+        position: relative;
+        margin-bottom: 1rem;
+      }
+
+      .gallery-main-image {
+        width: 100%;
+        height: 400px;
+        object-fit: cover;
+        border-radius: 12px;
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+      }
+
+      .gallery-nav-btn {
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        background: rgba(255, 224, 102, 0.9);
+        border: none;
+        color: #23272f;
+        font-size: 1.5rem;
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        z-index: 10;
+      }
+
+      .gallery-nav-btn:hover {
+        background: rgba(255, 224, 102, 1);
+        transform: translateY(-50%) scale(1.1);
+      }
+
+      .gallery-nav-btn.prev {
+        left: -25px;
+      }
+
+      .gallery-nav-btn.next {
+        right: -25px;
+      }
+
+      .gallery-thumbnails {
+        display: flex;
+        gap: 0.5rem;
+        justify-content: center;
+        flex-wrap: wrap;
+        margin-top: 1rem;
+      }
+
+      .gallery-thumbnail {
+        width: 80px;
+        height: 60px;
+        object-fit: cover;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        border: 2px solid transparent;
+      }
+
+      .gallery-thumbnail:hover {
+        transform: scale(1.05);
+        border-color: #ffe066;
+      }
+
+      .gallery-thumbnail.active {
+        border-color: #ffe066;
+        box-shadow: 0 0 10px rgba(255, 224, 102, 0.5);
+      }
+
+      /* Image Modal */
+      .image-modal {
+        display: none;
+        position: fixed;
+        z-index: 1000;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.9);
+        backdrop-filter: blur(5px);
+      }
+
+      .image-modal-content {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        max-width: 80%;
+        max-height: 80%;
+        background: linear-gradient(135deg, #2c313a 0%, #3a3f4a 100%);
+        border-radius: 16px;
+        padding: 2rem;
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+      }
+
+      .image-modal img {
+        width: auto;
+        max-width: 100%;
+        max-height: 60vh;
+        object-fit: contain;
+        border-radius: 12px;
+        margin-bottom: 1rem;
+      }
+
+      .image-modal-description {
+        color: #ffffff;
+        font-size: 1.1rem;
+        line-height: 1.6;
+        text-align: center;
+        max-width: 600px;
+        word-wrap: break-word;
+      }
+
+      .image-modal-close {
+        position: absolute;
+        top: 1rem;
+        right: 1rem;
+        background: rgba(255, 224, 102, 0.9);
+        border: none;
+        color: #23272f;
+        font-size: 1.5rem;
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        cursor: pointer;
+        transition: all 0.3s ease;
+      }
+
+      .image-modal-close:hover {
+        background: rgba(255, 224, 102, 1);
+        transform: scale(1.1);
+      }
+
+      @media (max-width: 768px) {
+        .gallery-nav-btn {
+          width: 40px;
+          height: 40px;
+          font-size: 1.2rem;
+        }
+
+        .gallery-nav-btn.prev {
+          left: -20px;
+        }
+
+        .gallery-nav-btn.next {
+          right: -20px;
+        }
+
+        .gallery-main-image {
+          height: 300px;
+        }
+
+        .gallery-thumbnail {
+          width: 60px;
+          height: 45px;
+        }
+
+                 .image-modal-content {
+           max-width: 95%;
+           padding: 1rem;
+         }
+       }
     </style>
   </head>
   <body>
@@ -185,8 +376,151 @@
           </div>
         </div>
       </div>
+
+      <!-- Photo Gallery Section -->
+      <% if (galleryImages && galleryImages.length > 0) { %>
+      <div class="gallery-section">
+        <h2 class="gallery-title">
+          <i class="bi bi-images me-2"></i>Photo Gallery
+        </h2>
+        
+        <div class="gallery-main-container">
+          <div class="gallery-main-image-container">
+            <img id="mainImage" src="/uploads/gallery/<%= galleryImages[0].filename %>" alt="<%= galleryImages[0].original_name %>" class="gallery-main-image" onclick="openImageModal(0)">
+            <button class="gallery-nav-btn prev" onclick="previousImage()">
+              <i class="bi bi-chevron-left"></i>
+            </button>
+            <button class="gallery-nav-btn next" onclick="nextImage()">
+              <i class="bi bi-chevron-right"></i>
+            </button>
+          </div>
+          
+          <div class="gallery-thumbnails">
+            <% galleryImages.forEach((image, index) => { %>
+              <img src="/uploads/gallery/<%= image.filename %>" 
+                   alt="<%= image.original_name %>" 
+                   class="gallery-thumbnail <%= index === 0 ? 'active' : '' %>"
+                   onclick="showImage(<%= index %>)"
+                   data-index="<%= index %>">
+            <% }) %>
+          </div>
+        </div>
+      </div>
+      <% } %>
+
+      <!-- Image Modal -->
+      <div id="imageModal" class="image-modal" onclick="closeImageModal()">
+        <div class="image-modal-content" onclick="event.stopPropagation()">
+          <button class="image-modal-close" onclick="closeImageModal()">
+            <i class="bi bi-x"></i>
+          </button>
+          <img id="modalImage" src="" alt="">
+          <div id="modalDescription" class="image-modal-description"></div>
+        </div>
+      </div>
     </main>
     <%- include("partials/footer") %>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <script>
+      // Gallery functionality
+      let currentImageIndex = 0;
+      let autoRotateInterval;
+      const galleryImages = <%- JSON.stringify(galleryImages || []) %>;
+      
+      function showImage(index) {
+        if (index < 0 || index >= galleryImages.length) return;
+        
+        currentImageIndex = index;
+        const image = galleryImages[index];
+        
+        // Update main image
+        document.getElementById('mainImage').src = `/uploads/gallery/${image.filename}`;
+        document.getElementById('mainImage').alt = image.original_name;
+        
+        // Update thumbnails
+        document.querySelectorAll('.gallery-thumbnail').forEach((thumb, i) => {
+          thumb.classList.toggle('active', i === index);
+        });
+        
+        // Update main image onclick
+        document.getElementById('mainImage').onclick = () => openImageModal(index);
+      }
+      
+      function nextImage() {
+        const nextIndex = (currentImageIndex + 1) % galleryImages.length;
+        showImage(nextIndex);
+      }
+      
+      function previousImage() {
+        const prevIndex = currentImageIndex === 0 ? galleryImages.length - 1 : currentImageIndex - 1;
+        showImage(prevIndex);
+      }
+      
+      function openImageModal(index) {
+        const image = galleryImages[index];
+        document.getElementById('modalImage').src = `/uploads/gallery/${image.filename}`;
+        document.getElementById('modalImage').alt = image.original_name;
+        document.getElementById('modalDescription').textContent = image.description || '';
+        document.getElementById('imageModal').style.display = 'block';
+        stopAutoRotate();
+      }
+      
+      function closeImageModal() {
+        document.getElementById('imageModal').style.display = 'none';
+        startAutoRotate();
+      }
+      
+      function startAutoRotate() {
+        if (galleryImages.length > 1) {
+          autoRotateInterval = setInterval(nextImage, 5000);
+        }
+      }
+      
+      function stopAutoRotate() {
+        if (autoRotateInterval) {
+          clearInterval(autoRotateInterval);
+          autoRotateInterval = null;
+        }
+      }
+      
+      function restartAutoRotate() {
+        stopAutoRotate();
+        startAutoRotate();
+      }
+      
+      // Setup image click handlers
+      function setupImageClick() {
+        document.querySelectorAll('.gallery-thumbnail').forEach((thumb, index) => {
+          thumb.onclick = () => showImage(index);
+        });
+      }
+      
+      // Initialize gallery
+      if (galleryImages.length > 0) {
+        setupImageClick();
+        startAutoRotate();
+        
+        // Pause auto-rotation on hover
+        const mainContainer = document.querySelector('.gallery-main-container');
+        if (mainContainer) {
+          mainContainer.addEventListener('mouseenter', stopAutoRotate);
+          mainContainer.addEventListener('mouseleave', startAutoRotate);
+        }
+      }
+      
+      // Keyboard navigation
+      document.addEventListener('keydown', (e) => {
+        if (document.getElementById('imageModal').style.display === 'block') {
+          if (e.key === 'Escape') {
+            closeImageModal();
+          } else if (e.key === 'ArrowLeft') {
+            previousImage();
+          } else if (e.key === 'ArrowRight') {
+            nextImage();
+          }
+        }
+      });
+    </script>
   </body>
 </html>

@@ -57,30 +57,51 @@
         class="d-flex align-items-center gap-2 mt-3 mt-lg-0 flex-column flex-lg-row"
       >
         <% if (user) { %>
-        <a
-          href="/profile"
-          class="btn btn-dark d-flex align-items-center px-2 py-1"
-          style="
-            border-radius: 2rem;
-            background: #23272f;
-            color: #fff;
-            font-weight: 500;
-          "
-        >
-          <img
-            src="<%= user.avatar ? `https://cdn.discordapp.com/avatars/${user.id}/${user.avatar}.png` : '' %>"
-            width="28"
-            height="28"
-            class="rounded-circle me-2"
-            alt="User Avatar"
-            style="object-fit: cover"
-          />
-          <span><%= user.username %></span>
-        </a>
-        <a href="/logout" class="btn btn-discord btn-sm ms-2 w-100 w-lg-auto">
-          <i class="bi bi-discord" style="font-size: 1.2rem"></i>
-          Logout
-        </a>
+        <div class="d-flex align-items-center gap-2">
+          <a
+            href="/profile"
+            class="btn btn-dark d-flex align-items-center px-2 py-1"
+            style="
+              border-radius: 2rem;
+              background: #23272f;
+              color: #fff;
+              font-weight: 500;
+            "
+          >
+            <img
+              src="<%= user.avatar ? `https://cdn.discordapp.com/avatars/${user.id}/${user.avatar}.png` : '' %>"
+              width="28"
+              height="28"
+              class="rounded-circle me-2"
+              alt="User Avatar"
+              style="object-fit: cover"
+            />
+            <span><%= user.username %></span>
+          </a>
+          
+          <% if (user.isAdmin) { %>
+          <div class="dropdown">
+            <button class="btn btn-warning btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+              <i class="bi bi-gear me-1"></i>Admin
+            </button>
+            <ul class="dropdown-menu">
+              <li><a class="dropdown-item" href="/dashboard"><i class="bi bi-grid-1x2 me-2"></i>Dashboard</a></li>
+              <li><a class="dropdown-item" href="/personnel"><i class="bi bi-people me-2"></i>Personnel</a></li>
+              <li><a class="dropdown-item" href="/events"><i class="bi bi-calendar-event me-2"></i>Events</a></li>
+              <li><a class="dropdown-item" href="/equipment"><i class="bi bi-tools me-2"></i>Equipment</a></li>
+              <li><a class="dropdown-item" href="/certs"><i class="bi bi-award me-2"></i>Certifications</a></li>
+              <li><a class="dropdown-item" href="/forms"><i class="bi bi-file-earmark-text me-2"></i>Forms</a></li>
+              <li><a class="dropdown-item" href="/gallery-admin"><i class="bi bi-images me-2"></i>Gallery Admin</a></li>
+              <li><a class="dropdown-item" href="/botstatus"><i class="bi bi-robot me-2"></i>Bot Status</a></li>
+            </ul>
+          </div>
+          <% } %>
+          
+          <a href="/logout" class="btn btn-discord btn-sm w-100 w-lg-auto">
+            <i class="bi bi-discord" style="font-size: 1.2rem"></i>
+            Logout
+          </a>
+        </div>
         <% } else { %>
         <a href="/login" class="btn btn-discord btn-sm ms-2 w-100 w-lg-auto">
           <i class="bi bi-discord" style="font-size: 1.2rem"></i>
