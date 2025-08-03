@@ -6,7 +6,6 @@ import { v4 as uuidv4 } from 'uuid';
 const router = Router();
 
 const db = getDatabase();
-const eventId = uuidv4();
 
 router.get('/', async (req, res) => {
   let isAdmin = false;
@@ -65,7 +64,7 @@ router.post('/new', ensureAdmin, async (req, res) => {
   if (!title || !utc_time || !channelId)
     return res.redirect('/events?error=Title, time, and channel required');
 
-  const id = Date.now().toString();
+  const id = uuidv4(); // Use UUID instead of timestamp
   const eventTime = Number(utc_time); // Already UTC seconds from frontend
 
   // --- POST TO DISCORD BOT API ---
@@ -75,12 +74,13 @@ router.post('/new', ensureAdmin, async (req, res) => {
       ? description.trim()
       : 'No description provided.';
     const event = {
-      id: eventId,
+      id: id, // Use the UUID we just generated
       title,
       description: safeDescription,
       time: eventTime,
       location,
       image: null,
+      creator_id: req.user.id, // Add creator_id
     };
     const response = await fetch(process.env.BOT_API_URL, {
       method: 'POST',
@@ -101,19 +101,8 @@ router.post('/new', ensureAdmin, async (req, res) => {
     return res.redirect('/events?error=Failed to post event to Discord.');
   }
 
-  // Store event in DB, including channelId and messageId
-  db.prepare(
-    'INSERT INTO events (id, title, description, time, location, creator_id, channel_id, message_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?)'
-  ).run(
-    id,
-    title,
-    description,
-    eventTime,
-    location,
-    req.user.id,
-    channelId,
-    messageId
-  );
+  // Event is now stored in DB by the bot API
+  // No need to duplicate the insertion here
 
   res.redirect('/events?alert=Event created!');
 });

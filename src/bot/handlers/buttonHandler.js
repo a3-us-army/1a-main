@@ -65,14 +65,72 @@ async function handleRSVPButton(interaction) {
   const [, eventId, status] = interaction.customId.split('_');
   const userId = interaction.user.id;
 
+  console.log(`RSVP Button clicked - Event ID: ${eventId}, Status: ${status}, User: ${userId}`);
+
   try {
+    // Get the event before updating RSVP to check timing
+    const event = getEvent(eventId);
+    
+    console.log(`Event lookup result:`, event ? `Found event: ${event.title}` : `No event found for ID: ${eventId}`);
+    
+    // Check if event exists before proceeding
+    if (!event) {
+      console.error(`Event not found for ID: ${eventId}`);
+      
+      // Debug: List all events in database
+      const db = getDatabase();
+      const allEvents = db.prepare('SELECT id, title FROM events ORDER BY time DESC LIMIT 10').all();
+      console.log('Available events in database:', allEvents);
+      
+      await interaction.reply({
+        content: 'Event not found. Please try again or contact an administrator.',
+        ephemeral: true,
+      });
+      return;
+    }
+    
+    // Check if event is within an hour of starting
+    const currentTime = Math.floor(Date.now() / 1000);
+    const eventTime = Math.floor(Number(event.time));
+    const oneHourInSeconds = 60 * 60;
+    const isWithinHour = (eventTime - currentTime) <= oneHourInSeconds && (eventTime - currentTime) > 0;
+    
+    // Get previous RSVP status if it exists
+    const db = getDatabase();
+    const previousRSVP = db.prepare('SELECT status FROM rsvps WHERE event_id = ? AND user_id = ?').get(eventId, userId);
+    
     updateRSVP(eventId, userId, status);
+
+    // Log the change if within an hour of event start
+    if (isWithinHour && previousRSVP && previousRSVP.status !== status) {
+      try {
+        const logChannel = interaction.client.channels.cache.get('1401397250483028008');
+        if (logChannel) {
+          const user = interaction.user;
+          const embed = new EmbedBuilder()
+            .setColor(0xff6b35)
+            .setTitle('🚨 Last-Minute RSVP Change')
+            .setDescription(`**<@${userId}>** changed their RSVP for an upcoming event`)
+            .addFields(
+              { name: 'Event', value: event.title, inline: true },
+              { name: 'Previous Status', value: previousRSVP.status, inline: true },
+              { name: 'New Status', value: status, inline: true },
+              { name: 'Event Time', value: `<t:${eventTime}:F> (<t:${eventTime}:R>)`, inline: false },
+              { name: 'Time Until Event', value: `<t:${eventTime}:R>`, inline: false }
+            )
+            .setTimestamp()
+            .setFooter({ text: `User ID: ${userId}` });
+          
+          await logChannel.send({ embeds: [embed] });
+        }
+      } catch (logError) {
+        console.error('Error logging RSVP change:', logError);
+      }
+    }
 
     const goingUsers = getRSVPs(eventId, 'yes');
     const notGoingUsers = getRSVPs(eventId, 'no');
     const maybeUsers = getRSVPs(eventId, 'maybe');
-
-    const event = getEvent(eventId);
 
     // --- ENSURE DESCRIPTION IS NON-EMPTY ---
     if (!event.description || !event.description.trim()) {

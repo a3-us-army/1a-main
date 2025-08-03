@@ -46,6 +46,27 @@ apiApp.post('/api/post-event', async (req, res) => {
       embeds: [embed],
       components,
     });
+    
+    // Store event in database if it doesn't already exist
+    try {
+      const { createEvent } = await import('./utils/database.js');
+      createEvent({
+        id: event.id,
+        creator_id: event.creator_id || 'website',
+        title: event.title,
+        description: event.description,
+        time: event.time,
+        location: event.location,
+        image: event.image,
+        message_id: message.id,
+        channel_id: channelId,
+      });
+      console.log(`Event stored in database with ID: ${event.id}`);
+    } catch (dbError) {
+      console.error('Error storing event in database:', dbError);
+      // Don't fail the request if DB storage fails
+    }
+    
     res.json({ messageId: message.id });
   } catch (err) {
     console.error(err);
