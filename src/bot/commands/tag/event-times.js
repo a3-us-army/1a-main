@@ -9,6 +9,6 @@ export const data = new SlashCommandBuilder()
 
 export async function execute(interaction) {
   await interaction.reply(
-    '**Saturday:** <t:1747699200:t>\n\n**Sunday:** <t:1747699200:t> \n\n *All of these are your timezone*'
+    '**Saturday:** 8 PM EST | <t:1747699200:t>\n\n**Sunday:** 8 PM EST | <t:1747699200:t>'
   );
 }

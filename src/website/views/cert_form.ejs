@@ -62,6 +62,16 @@
                   <textarea id="description" name="description" class="form-control" rows="3" placeholder="Describe the certification..."><%= cert ? cert.description : '' %></textarea>
                 </div>
                 <div class="mb-3">
+                  <label class="form-label" for="category">Category</label>
+                  <select id="category" name="category" class="form-control" required>
+                    <option value="">Select a category</option>
+                    <option value="160th Soar" <%= cert && cert.category === '160th Soar' ? 'selected' : '' %>>160th Soar</option>
+                    <option value="Avteg" <%= cert && cert.category === 'Avteg' ? 'selected' : '' %>>Avteg</option>
+                    <option value="Infantry" <%= cert && cert.category === 'Infantry' ? 'selected' : '' %>>Infantry</option>
+                  </select>
+                  <small class="form-text text-muted">Select the category this certification belongs to.</small>
+                </div>
+                <div class="mb-3">
                   <label class="form-label" for="required_mos">Required MOS</label>
                   <select id="required_mos" name="required_mos" class="form-control" multiple size="4" required>
                     <% if (availableRoles && availableRoles.length > 0) { %>

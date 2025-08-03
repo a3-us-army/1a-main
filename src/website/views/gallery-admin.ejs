@@ -14,12 +14,19 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     <style>
         /* Modern Gallery Admin Styles */
+        body {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            background: linear-gradient(135deg, #1a1d24 0%, #23272f 100%);
+        }
+
         .gallery-admin-container {
             max-width: 1400px;
             margin: 0 auto;
             padding: 2rem 1.5rem;
-            background: linear-gradient(135deg, #1a1d24 0%, #23272f 100%);
-            min-height: 100vh;
+            flex: 1;
+            width: 100%;
         }
 
         .admin-header {
@@ -500,6 +507,21 @@
                 font-size: 2.5rem;
             }
         }
+
+        /* Footer positioning fixes */
+        .site-footer {
+            position: relative;
+            z-index: 10;
+            background: linear-gradient(135deg, #1a1d24 0%, #23272f 100%);
+            margin-top: auto;
+            border-top: 1px solid rgba(255, 224, 102, 0.1);
+            padding: 2rem 0;
+        }
+
+        .gallery-grid {
+            position: relative;
+            z-index: 1;
+        }
     </style>
 </head>
 <body>
@@ -613,7 +635,7 @@
                     </h5>
                     <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
                 </div>
-                <form id="uploadForm" method="POST" enctype="multipart/form-data">
+                <form id="uploadForm" method="POST" action="/gallery-admin/upload" enctype="multipart/form-data">
                     <div class="modal-body">
                         <div class="mb-3">
                             <label for="uploadImage" class="form-label">Select Image</label>
@@ -645,7 +667,7 @@
                     </h5>
                     <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
                 </div>
-                <form id="editForm" method="POST">
+                <form id="editForm" method="POST" action="">
                     <div class="modal-body">
                         <div class="mb-3">
                             <label for="editDescription" class="form-label">Description</label>
@@ -793,13 +815,206 @@
         }
 
         function toggleBulkSelect() {
-            // Implementation for bulk select functionality
-            alert('Bulk select functionality coming soon!');
+            const items = document.querySelectorAll('.gallery-item');
+            const isBulkMode = document.querySelector('.bulk-select-mode');
+            
+            if (!isBulkMode) {
+                // Enable bulk select mode
+                items.forEach(item => {
+                    const checkbox = document.createElement('input');
+                    checkbox.type = 'checkbox';
+                    checkbox.className = 'bulk-checkbox';
+                    checkbox.style.cssText = 'position: absolute; top: 10px; left: 10px; z-index: 10; transform: scale(1.5);';
+                    item.style.position = 'relative';
+                    item.appendChild(checkbox);
+                });
+                
+                // Add bulk actions
+                const bulkActions = document.createElement('div');
+                bulkActions.className = 'bulk-actions alert alert-warning';
+                bulkActions.innerHTML = `
+                    <div class="d-flex justify-content-between align-items-center">
+                        <span>Bulk Select Mode - Select images to delete</span>
+                        <div>
+                            <button class="btn btn-danger btn-sm me-2" onclick="bulkDelete()">
+                                <i class="bi bi-trash me-1"></i>Delete Selected
+                            </button>
+                            <button class="btn btn-secondary btn-sm" onclick="exitBulkMode()">
+                                <i class="bi bi-x me-1"></i>Exit
+                            </button>
+                        </div>
+                    </div>
+                `;
+                bulkActions.classList.add('bulk-select-mode');
+                document.querySelector('.action-buttons').after(bulkActions);
+                
+                // Update button text
+                event.target.innerHTML = '<i class="bi bi-check2-square me-2"></i>Exit Bulk Select';
+            } else {
+                exitBulkMode();
+            }
+        }
+        
+        function exitBulkMode() {
+            // Remove checkboxes
+            document.querySelectorAll('.bulk-checkbox').forEach(checkbox => checkbox.remove());
+            
+            // Remove bulk actions
+            const bulkActions = document.querySelector('.bulk-actions');
+            if (bulkActions) bulkActions.remove();
+            
+            // Reset button text
+            event.target.innerHTML = '<i class="bi bi-check2-square me-2"></i>Bulk Select';
+        }
+        
+        function bulkDelete() {
+            const selectedIds = Array.from(document.querySelectorAll('.bulk-checkbox:checked'))
+                .map(checkbox => checkbox.closest('.gallery-item').dataset.id);
+            
+            if (selectedIds.length === 0) {
+                alert('No images selected');
+                return;
+            }
+            
+            if (confirm(`Are you sure you want to delete ${selectedIds.length} image(s)?`)) {
+                const form = document.createElement('form');
+                form.method = 'POST';
+                form.action = '/gallery-admin/bulk-delete';
+                
+                const input = document.createElement('input');
+                input.type = 'hidden';
+                input.name = 'imageIds';
+                input.value = JSON.stringify(selectedIds);
+                form.appendChild(input);
+                
+                document.body.appendChild(form);
+                form.submit();
+            }
         }
 
         function openReorderModal() {
-            // Implementation for reorder functionality
-            alert('Reorder functionality coming soon!');
+            const images = Array.from(document.querySelectorAll('.gallery-item'));
+            let modalContent = `
+                <div class="modal fade" id="reorderModal" tabindex="-1">
+                    <div class="modal-dialog modal-lg">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title">
+                                    <i class="bi bi-arrow-down-up me-2"></i>Reorder Images
+                                </h5>
+                                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                            </div>
+                            <div class="modal-body">
+                                <p class="text-muted mb-3">Drag and drop images to reorder them:</p>
+                                <div id="reorderList" class="list-group">
+            `;
+            
+            images.forEach((item, index) => {
+                const imgSrc = item.querySelector('.gallery-image').src;
+                const title = item.querySelector('.gallery-title').textContent;
+                modalContent += `
+                    <div class="list-group-item d-flex align-items-center" data-id="${item.dataset.id}" data-order="${index}">
+                        <i class="bi bi-grip-vertical me-3" style="cursor: move;"></i>
+                        <img src="${imgSrc}" alt="${title}" style="width: 50px; height: 50px; object-fit: cover; margin-right: 15px;">
+                        <span>${title}</span>
+                        <span class="ms-auto badge bg-secondary">${index + 1}</span>
+                    </div>
+                `;
+            });
+            
+            modalContent += `
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                                <button type="button" class="btn btn-primary" onclick="saveReorder()">
+                                    <i class="bi bi-check me-2"></i>Save Order
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            // Remove existing modal if any
+            const existingModal = document.getElementById('reorderModal');
+            if (existingModal) existingModal.remove();
+            
+            // Add new modal
+            document.body.insertAdjacentHTML('beforeend', modalContent);
+            
+            // Initialize sortable
+            const reorderList = document.getElementById('reorderList');
+            if (reorderList) {
+                // Simple drag and drop implementation
+                let draggedItem = null;
+                
+                reorderList.addEventListener('dragstart', (e) => {
+                    draggedItem = e.target;
+                    e.target.style.opacity = '0.5';
+                });
+                
+                reorderList.addEventListener('dragend', (e) => {
+                    e.target.style.opacity = '1';
+                });
+                
+                reorderList.addEventListener('dragover', (e) => {
+                    e.preventDefault();
+                });
+                
+                reorderList.addEventListener('drop', (e) => {
+                    e.preventDefault();
+                    if (draggedItem && e.target.closest('.list-group-item')) {
+                        const targetItem = e.target.closest('.list-group-item');
+                        if (draggedItem !== targetItem) {
+                            const allItems = Array.from(reorderList.children);
+                            const draggedIndex = allItems.indexOf(draggedItem);
+                            const targetIndex = allItems.indexOf(targetItem);
+                            
+                            if (draggedIndex < targetIndex) {
+                                targetItem.parentNode.insertBefore(draggedItem, targetItem.nextSibling);
+                            } else {
+                                targetItem.parentNode.insertBefore(draggedItem, targetItem);
+                            }
+                            
+                            // Update order numbers
+                            allItems.forEach((item, index) => {
+                                item.dataset.order = index;
+                                item.querySelector('.badge').textContent = index + 1;
+                            });
+                        }
+                    }
+                });
+                
+                // Make items draggable
+                reorderList.querySelectorAll('.list-group-item').forEach(item => {
+                    item.draggable = true;
+                });
+            }
+            
+            const modal = new bootstrap.Modal(document.getElementById('reorderModal'));
+            modal.show();
+        }
+        
+        function saveReorder() {
+            const items = Array.from(document.getElementById('reorderList').children);
+            const orderData = items.map((item, index) => ({
+                id: item.dataset.id,
+                order: index
+            }));
+            
+            const form = document.createElement('form');
+            form.method = 'POST';
+            form.action = '/gallery-admin/reorder';
+            
+            const input = document.createElement('input');
+            input.type = 'hidden';
+            input.name = 'orderData';
+            input.value = JSON.stringify(orderData);
+            form.appendChild(input);
+            
+            document.body.appendChild(form);
+            form.submit();
         }
 
         // Initialize

@@ -75,17 +75,113 @@ export function setupDatabase() {
       approved_at TEXT,
       denied_by TEXT,
       denied_at TEXT,
-      denial_reason TEXT
+      denial_reason TEXT,
+      notes TEXT,
+      updated_at TEXT,
+      updated_by TEXT
     )
   `
   ).run();
-  // Remove any rows with id = NULL before adding the unique index
+
+  // Add missing columns if they don't exist (for existing databases)
+  try {
+    db.prepare('ALTER TABLE applications ADD COLUMN notes TEXT').run();
+  } catch (e) {
+    // Column already exists
+  }
+  
+  try {
+    db.prepare('ALTER TABLE applications ADD COLUMN updated_at TEXT').run();
+  } catch (e) {
+    // Column already exists
+  }
+  
+  try {
+    db.prepare('ALTER TABLE applications ADD COLUMN updated_by TEXT').run();
+  } catch (e) {
+    // Column already exists
+  }
+  // Remove any rows with id = NULL
   db.prepare('DELETE FROM applications WHERE id IS NULL').run();
 
-  // Now add the unique index
+  // Create application_config table for form configuration
   db.prepare(
-    'CREATE UNIQUE INDEX IF NOT EXISTS idx_applications_user_id ON applications(user_id)'
+    `
+    CREATE TABLE IF NOT EXISTS application_config (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      questions TEXT NOT NULL,
+      updated_by TEXT,
+      created_at TEXT
+    )
+  `
   ).run();
+
+  // Insert default form configuration if none exists
+  const existingConfig = db.prepare('SELECT COUNT(*) as count FROM application_config').get();
+  if (existingConfig.count === 0) {
+    const defaultQuestions = JSON.stringify([
+      {
+        "id": "foundUnit",
+        "label": "How did you find the unit?",
+        "type": "text",
+        "required": true,
+        "placeholder": "e.g., Discord, Reddit, Friend, etc."
+      },
+      {
+        "id": "steam64",
+        "label": "What is your Steam64 ID?",
+        "type": "text",
+        "required": true,
+        "placeholder": "https://steamcommunity.com/profiles/76561198...",
+        "help": "You can find your Steam64 ID at https://steamidfinder.com/"
+      },
+      {
+        "id": "unitName",
+        "label": "The first initial, followed by the last name you would like to use within the unit",
+        "type": "text",
+        "required": true,
+        "placeholder": "e.g., J.Smith"
+      },
+      {
+        "id": "age",
+        "label": "How old are you?",
+        "type": "number",
+        "required": true,
+        "min": 13,
+        "max": 100
+      },
+      {
+        "id": "experience",
+        "label": "List any prior experience with MILSIM",
+        "type": "textarea",
+        "required": false,
+        "rows": 4,
+        "placeholder": "Describe your experience with MILSIM units, games, etc."
+      },
+      {
+        "id": "mos",
+        "label": "What is your desired MOS/AFSC?",
+        "type": "select",
+        "required": true,
+        "options": [
+          {"value": "", "label": "Select an MOS/AFSC", "disabled": true},
+          {"value": "11B", "label": "11B - Infantryman"},
+          {"value": "11C", "label": "11C - Indirect Fire Infantryman"},
+          {"value": "68W", "label": "68W - Combat Medic"},
+          {"value": "25B", "label": "25B - Information Technology Specialist"},
+          {"value": "25C", "label": "25C - Radio Operator-Maintainer"},
+          {"value": "25U", "label": "25U - Signal Support Systems Specialist"}
+        ]
+      }
+    ]);
+    
+    db.prepare(
+      `
+      INSERT INTO application_config (questions, updated_by, created_at)
+      VALUES (?, ?, DATETIME('now'))
+    `
+    ).run(defaultQuestions, 'system');
+  }
 
   // Ensure warnings table exists
   db.prepare(
@@ -175,6 +271,37 @@ export function setupDatabase() {
       file_size INTEGER DEFAULT 0
     )
   `).run();
+
+  // Auto-migrate: Ensure required columns exist in the 'gallery_images' table
+  const galleryRequiredColumns = {
+    id: 'TEXT PRIMARY KEY',
+    filename: 'TEXT NOT NULL',
+    original_name: 'TEXT NOT NULL',
+    description: 'TEXT',
+    uploaded_by: 'TEXT NOT NULL',
+    uploaded_at: 'TEXT NOT NULL',
+    display_order: 'INTEGER DEFAULT 0',
+    file_size: 'INTEGER DEFAULT 0'
+  };
+
+  // Get current columns in the gallery_images table
+  let galleryExistingColumns = db
+    .prepare('PRAGMA table_info(gallery_images)')
+    .all()
+    .map(col => col.name);
+
+  // Add missing columns to gallery_images table
+  for (const [column, type] of Object.entries(galleryRequiredColumns)) {
+    if (!galleryExistingColumns.includes(column)) {
+      console.log(`Adding missing column '${column}' to 'gallery_images' table...`);
+      try {
+        db.prepare(`ALTER TABLE gallery_images ADD COLUMN ${column} ${type}`).run();
+        galleryExistingColumns.push(column);
+      } catch (e) {
+        console.log(`Column '${column}' already exists or cannot be added:`, e.message);
+      }
+    }
+  }
 
   // Auto-migrate: Ensure required columns exist in the 'events' table
   const requiredColumns = {
@@ -857,7 +984,8 @@ export function setupCertificationTables() {
 			id TEXT PRIMARY KEY,
 			name TEXT NOT NULL,
 			description TEXT,
-			required_mos TEXT
+			required_mos TEXT,
+			category TEXT
 		)
 	`
   ).run();
@@ -865,6 +993,13 @@ export function setupCertificationTables() {
   // Add required_mos column if it doesn't exist (for existing databases)
   try {
     db.prepare('ALTER TABLE certifications ADD COLUMN required_mos TEXT').run();
+  } catch (err) {
+    // Column already exists, ignore error
+  }
+
+  // Add category column if it doesn't exist (for existing databases)
+  try {
+    db.prepare('ALTER TABLE certifications ADD COLUMN category TEXT').run();
   } catch (err) {
     // Column already exists, ignore error
   }
@@ -892,12 +1027,12 @@ export function setupCertificationTables() {
 setupCertificationTables();
 
 // Certification operations
-export function addCertification({ id, name, description, required_mos }) {
+export function addCertification({ id, name, description, required_mos, category }) {
   return getDatabase()
     .prepare(
-      'INSERT INTO certifications (id, name, description, required_mos) VALUES (?, ?, ?, ?)'
+      'INSERT INTO certifications (id, name, description, required_mos, category) VALUES (?, ?, ?, ?, ?)'
     )
-    .run(id, name, description, required_mos);
+    .run(id, name, description, required_mos, category);
 }
 
 export function getAllCertifications() {
@@ -997,12 +1132,13 @@ export function editCertification(
   certId,
   newName,
   newDescription,
-  newRequiredMos
+  newRequiredMos,
+  newCategory
 ) {
   const db = getDatabase();
   db.prepare(
-    'UPDATE certifications SET name = ?, description = ?, required_mos = ? WHERE id = ?'
-  ).run(newName, newDescription, newRequiredMos, certId);
+    'UPDATE certifications SET name = ?, description = ?, required_mos = ?, category = ? WHERE id = ?'
+  ).run(newName, newDescription, newRequiredMos, newCategory, certId);
 }
 
 export function deleteCertification(certId) {

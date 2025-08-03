@@ -48,6 +48,10 @@ export async function handleButtonInteraction(interaction) {
   // Handle certification denial button (show modal)
   else if (customId.startsWith('cert_deny_')) {
     await handleCertDenialButton(interaction);
+  }
+  // Handle certification request button
+  else if (customId.startsWith('cert_request_')) {
+    await handleCertRequestButton(interaction);
   } else if (
     interaction.customId.startsWith('loa_approve_') ||
     interaction.customId.startsWith('loa_deny_')
@@ -357,6 +361,114 @@ async function handleCertDenialButton(interaction) {
     console.error('Error showing cert denial modal:', error);
     await interaction.reply({
       content: `Error: ${error.message}`,
+      ephemeral: true,
+    });
+  }
+}
+
+async function handleCertRequestButton(interaction) {
+  const certId = interaction.customId.replace('cert_request_', '');
+  const userId = interaction.user.id;
+
+  try {
+    // Get the certification
+    const cert = getDatabase()
+      .prepare('SELECT * FROM certifications WHERE id = ?')
+      .get(certId);
+
+    if (!cert) {
+      return interaction.reply({
+        content: 'Certification not found.',
+        ephemeral: true,
+      });
+    }
+
+    // Check if user already has a pending or approved request
+    const existing = getDatabase()
+      .prepare(
+        "SELECT * FROM certification_requests WHERE user_id = ? AND cert_id = ? AND status IN ('pending', 'approved')"
+      )
+      .get(userId, certId);
+
+    if (existing) {
+      return interaction.reply({
+        content: `You already have a certification request for **${cert.name}** that is ${existing.status}.`,
+        ephemeral: true,
+      });
+    }
+
+    // Create the request
+    const requestId = Date.now().toString();
+    getDatabase()
+      .prepare(
+        'INSERT INTO certification_requests (id, user_id, cert_id, requested_at) VALUES (?, ?, ?, ?)'
+      )
+      .run(requestId, userId, certId, new Date().toISOString());
+
+    // Post to Discord channel
+    const channelId = process.env.CERT_CHANNEL_ID || '1400616901440307230';
+    const channel = await interaction.client.channels.fetch(channelId);
+    
+    if (channel?.isTextBased()) {
+      const embed = new EmbedBuilder()
+        .setTitle('Certification Request')
+        .setDescription(`User: <@${userId}>`)
+        .addFields(
+          { name: 'Certification', value: cert.name, inline: true },
+          {
+            name: 'Description',
+            value: cert.description || 'No description',
+            inline: false,
+          },
+          {
+            name: 'Requested At',
+            value: `<t:${Math.floor(Date.now() / 1000)}:F>`,
+            inline: true,
+          },
+          { name: 'Request ID', value: requestId, inline: true }
+        )
+        .setColor(0xffa500);
+
+      const approveBtn = new ButtonBuilder()
+        .setCustomId(`cert_approve_${requestId}`)
+        .setLabel('Approve')
+        .setStyle(ButtonStyle.Success);
+      
+      const denyBtn = new ButtonBuilder()
+        .setCustomId(`cert_deny_${requestId}`)
+        .setLabel('Deny')
+        .setStyle(ButtonStyle.Danger);
+      
+      const row = new ActionRowBuilder().addComponents(approveBtn, denyBtn);
+      const message = await channel.send({ embeds: [embed], components: [row] });
+
+      // Update the database with the Discord message ID
+      getDatabase()
+        .prepare(
+          'UPDATE certification_requests SET discord_message_id = ? WHERE id = ?'
+        )
+        .run(message.id, requestId);
+    }
+
+    // Update the button to show requested status
+    const newButton = new ButtonBuilder()
+      .setCustomId(`cert_requested_${certId}`)
+      .setLabel('Requested')
+      .setStyle(ButtonStyle.Secondary)
+      .setDisabled(true);
+
+    const row = new ActionRowBuilder().addComponents(newButton);
+    
+    await interaction.update({
+      content: `Your request for **${cert.name}** has been submitted and is pending admin review.`,
+      components: [row],
+      ephemeral: true,
+    });
+
+  } catch (error) {
+    console.error('Error handling cert request button:', error);
+    await interaction.reply({
+      content: 'There was an error processing your request.',
       ephemeral: true,
     });
   }

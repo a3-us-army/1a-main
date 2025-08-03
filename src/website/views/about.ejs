@@ -161,11 +161,11 @@
       }
 
       .gallery-nav-btn.prev {
-        left: -25px;
+        left: 10px;
       }
 
       .gallery-nav-btn.next {
-        right: -25px;
+        right: 10px;
       }
 
       .gallery-thumbnails {
@@ -271,11 +271,11 @@
         }
 
         .gallery-nav-btn.prev {
-          left: -20px;
+          left: 5px;
         }
 
         .gallery-nav-btn.next {
-          right: -20px;
+          right: 5px;
         }
 
         .gallery-main-image {
@@ -324,7 +324,7 @@
           <p>
             <a
               class="about-link"
-              href="https://docs.google.com/spreadsheets/d/11b5ZnMwxw3qj66q3-PMy0YHFOn5Th_I-NnsJH5cRrF4/edit?usp=sharing"
+              href="https://1a75.org/personnel"
               target="_blank"
             >
               <i class="bi bi-list-task me-1"></i>Click Here To Find Out What
@@ -450,11 +450,15 @@
       function nextImage() {
         const nextIndex = (currentImageIndex + 1) % galleryImages.length;
         showImage(nextIndex);
+        // Restart auto-rotation after manual navigation
+        restartAutoRotate();
       }
       
       function previousImage() {
         const prevIndex = currentImageIndex === 0 ? galleryImages.length - 1 : currentImageIndex - 1;
         showImage(prevIndex);
+        // Restart auto-rotation after manual navigation
+        restartAutoRotate();
       }
       
       function openImageModal(index) {
@@ -473,6 +477,8 @@
       
       function startAutoRotate() {
         if (galleryImages.length > 1) {
+          // Clear any existing interval first
+          stopAutoRotate();
           autoRotateInterval = setInterval(nextImage, 5000);
         }
       }
@@ -505,7 +511,12 @@
         const mainContainer = document.querySelector('.gallery-main-container');
         if (mainContainer) {
           mainContainer.addEventListener('mouseenter', stopAutoRotate);
-          mainContainer.addEventListener('mouseleave', startAutoRotate);
+          mainContainer.addEventListener('mouseleave', () => {
+            // Only restart if we're not in the modal
+            if (document.getElementById('imageModal').style.display === 'none') {
+              startAutoRotate();
+            }
+          });
         }
       }
       

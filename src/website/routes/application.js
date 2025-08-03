@@ -169,4 +169,158 @@ router.post('/admin/edit', ensureAuth, ensureAdmin, (req, res) => {
   }
 });
 
+// Admin: View individual application
+router.get('/admin/view/:id', ensureAuth, ensureAdmin, (req, res) => {
+  try {
+    const application = db
+      .prepare('SELECT * FROM applications WHERE id = ?')
+      .get(req.params.id);
+
+    if (!application) {
+      return res.redirect('/apply?error=Application not found');
+    }
+
+    // Get form configuration to display questions properly
+    const formConfig = db
+      .prepare(
+        'SELECT questions FROM application_config ORDER BY id DESC LIMIT 1'
+      )
+      .get();
+    const questions = formConfig ? JSON.parse(formConfig.questions) : [];
+
+    res.render('apply_admin_view', {
+      user: req.user,
+      active: 'application',
+      application,
+      questions,
+      query: req.query,
+    });
+  } catch (err) {
+    console.error('Error viewing application:', err);
+    res.redirect('/apply?error=Failed to load application');
+  }
+});
+
+// Admin: Edit individual application
+router.get('/admin/edit/:id', ensureAuth, ensureAdmin, (req, res) => {
+  try {
+    const application = db
+      .prepare('SELECT * FROM applications WHERE id = ?')
+      .get(req.params.id);
+
+    if (!application) {
+      return res.redirect('/apply?error=Application not found');
+    }
+
+    // Get form configuration
+    const formConfig = db
+      .prepare(
+        'SELECT questions FROM application_config ORDER BY id DESC LIMIT 1'
+      )
+      .get();
+    const questions = formConfig ? JSON.parse(formConfig.questions) : [];
+
+    res.render('apply_admin_edit_application', {
+      user: req.user,
+      active: 'application',
+      application,
+      questions,
+      query: req.query,
+    });
+  } catch (err) {
+    console.error('Error loading application for edit:', err);
+    res.redirect('/apply?error=Failed to load application');
+  }
+});
+
+// Admin: Update individual application
+router.post('/admin/edit/:id', ensureAuth, ensureAdmin, (req, res) => {
+  try {
+    const { status, notes } = req.body;
+    
+    // Validate status
+    const validStatuses = ['pending', 'approved', 'denied'];
+    if (!validStatuses.includes(status)) {
+      return res.redirect(`/apply/admin/edit/${req.params.id}?error=Invalid status`);
+    }
+
+    // Update application
+    db.prepare(`
+      UPDATE applications 
+      SET status = ?, notes = ?, updated_at = DATETIME('now'), updated_by = ?
+      WHERE id = ?
+    `).run(status, notes || null, req.user.id, req.params.id);
+
+    res.redirect(`/apply/admin/edit/${req.params.id}?alert=Application updated successfully`);
+  } catch (err) {
+    console.error('Error updating application:', err);
+    res.redirect(`/apply/admin/edit/${req.params.id}?error=Failed to update application`);
+  }
+});
+
+// Admin: Delete individual application
+router.delete('/admin/delete/:id', ensureAuth, ensureAdmin, (req, res) => {
+  try {
+    const application = db
+      .prepare('SELECT * FROM applications WHERE id = ?')
+      .get(req.params.id);
+
+    if (!application) {
+      return res.status(404).json({ success: false, error: 'Application not found' });
+    }
+
+    // Delete the application
+    db.prepare('DELETE FROM applications WHERE id = ?').run(req.params.id);
+
+    res.json({ success: true, message: 'Application deleted successfully' });
+  } catch (err) {
+    console.error('Error deleting application:', err);
+    res.status(500).json({ success: false, error: 'Failed to delete application' });
+  }
+});
+
+// Admin: Bulk actions
+router.post('/admin/bulk-action', ensureAuth, ensureAdmin, (req, res) => {
+  try {
+    const { action, applicationIds } = req.body;
+
+    if (!Array.isArray(applicationIds) || applicationIds.length === 0) {
+      return res.status(400).json({ success: false, error: 'No applications selected' });
+    }
+
+    switch (action) {
+      case 'approve':
+        db.prepare(`
+          UPDATE applications 
+          SET status = 'approved', updated_at = DATETIME('now'), updated_by = ?
+          WHERE id IN (${applicationIds.map(() => '?').join(',')})
+        `).run(req.user.id, ...applicationIds);
+        break;
+      
+      case 'deny':
+        db.prepare(`
+          UPDATE applications 
+          SET status = 'denied', updated_at = DATETIME('now'), updated_by = ?
+          WHERE id IN (${applicationIds.map(() => '?').join(',')})
+        `).run(req.user.id, ...applicationIds);
+        break;
+      
+      case 'delete':
+        db.prepare(`
+          DELETE FROM applications 
+          WHERE id IN (${applicationIds.map(() => '?').join(',')})
+        `).run(...applicationIds);
+        break;
+      
+      default:
+        return res.status(400).json({ success: false, error: 'Invalid action' });
+    }
+
+    res.json({ success: true, message: `Bulk action '${action}' completed successfully` });
+  } catch (err) {
+    console.error('Error performing bulk action:', err);
+    res.status(500).json({ success: false, error: 'Failed to perform bulk action' });
+  }
+});
+
 export default router;

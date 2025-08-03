@@ -130,6 +130,8 @@ apiApp.post('/api/post-application', async (req, res) => {
       components: [row],
     });
 
+    const db = getDatabase();
+
     // Update the database with the Discord message ID
     db.prepare(
       'UPDATE applications SET discord_message_id = ? WHERE id = ?'

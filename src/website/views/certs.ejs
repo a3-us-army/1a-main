@@ -92,6 +92,16 @@
       .expand-btn:hover {
         color: #0056b3;
       }
+      .category-header {
+        color: #4b5a2a;
+        border-bottom: 2px solid #4b5a2a;
+        padding-bottom: 0.5rem;
+        margin-bottom: 1.5rem;
+        font-weight: 600;
+      }
+      .category-header i {
+        color: #b68900;
+      }
     </style>
   </head>
   <body>
@@ -115,101 +125,123 @@
           >
           <% } %>
         </div>
-        <div class="row">
-          <% if (certs.length === 0) { %>
-          <div class="col-12">
-            <div class="alert alert-info text-center">
-              No certifications available yet.
-            </div>
+        <% if (certs.length === 0) { %>
+        <div class="col-12">
+          <div class="alert alert-info text-center">
+            No certifications available yet.
           </div>
-          <% } %>
-          <% certs.forEach((cert, index) => { const req = userRequests.find(r =>
-          r.cert_id === cert.id && (r.status === 'pending' || r.status ===
-          'approved') ); const description = cert.description || "No description
-          provided."; %>
-          <div class="col-12 col-md-6 col-lg-4">
-            <div class="card cert-card shadow-sm mb-3">
-              <div class="card-body p-3">
-                <div class="cert-title mb-2">
-                  <h5><%= cert.name %></h5>
-                  <% if (req) { %>
-                  <span
-                    class="badge status-badge <%= req.status === 'approved' ? 'bg-success' : 'bg-warning text-dark' %>"
-                  >
-                    <%= req.status.charAt(0).toUpperCase() + req.status.slice(1)
-                    %>
-                  </span>
-                  <% } %>
-                </div>
-                <div class="cert-meta mb-1">
-                  <div
-                    class="cert-description truncated"
-                    id="cert-desc-<%= index %>"
-                  >
-                    <%= description %>
-                  </div>
-                  <button
-                    class="expand-btn"
-                    onclick="toggleDescription(<%= index %>)"
-                    id="expand-btn-<%= index %>"
-                  >
-                    Show more
-                  </button>
-                </div>
-                <div class="cert-id mb-2">
-                  <small
-                    >Cert ID: <code><%= cert.id %></code></small
-                  >
-                  <% if (cert.required_mos) { %>
-                  <br /><small class="text-muted"
-                    >Required MOS:
-                    <% let mosDisplay = []; try { const mosArray
-                    = JSON.parse(cert.required_mos); mosDisplay =
-                    Array.isArray(mosArray) ? mosArray : [cert.required_mos]; }
-                    catch(e) { mosDisplay = [cert.required_mos]; } %>
-                    <% mosDisplay.forEach((mos, index) => { %>
-                    <span class="badge bg-secondary me-1"><%= mos %></span>
-                    <% }) %>
-                  </small>
-                  <% } %>
-                </div>
-                <% if (user && isAdmin) { %>
-                <div class="d-flex flex-wrap gap-2">
-                  <a
-                    href="/certs/edit/<%= cert.id %>"
-                    class="btn btn-sm btn-primary d-flex align-items-center"
-                    style="font-weight: 500"
-                  >
-                    <i class="bi bi-pencil-square me-1"></i> Edit
-                  </a>
-                  <form
-                    action="/certs/delete/<%= cert.id %>"
-                    method="POST"
-                    style="display: inline"
-                    onsubmit="return confirm('Delete this certification?');"
-                  >
-                    <button type="submit" class="btn btn-sm btn-outline-danger">
-                      Delete
-                    </button>
-                  </form>
-                </div>
-                <% } %>
-                <% if (user && !req) { %>
-                <form
-                  action="/certs/request/<%= cert.id %>"
-                  method="POST"
-                  style="display: inline"
-                >
-                  <button type="submit" class="btn btn-success request-btn">
-                    <i class="bi bi-patch-check me-2"></i> Request
-                  </button>
-                </form>
-                <% } %>
-              </div>
-            </div>
-          </div>
-          <% }) %>
         </div>
+        <% } else { %>
+          <% 
+            // Group certifications by category
+            const categories = {};
+            certs.forEach(cert => {
+              const category = cert.category || 'Uncategorized';
+              if (!categories[category]) {
+                categories[category] = [];
+              }
+              categories[category].push(cert);
+            });
+          %>
+          
+          <% Object.keys(categories).forEach(category => { %>
+          <div class="col-12 mb-4">
+            <h3 class="fw-bold mb-3 category-header">
+              <i class="bi bi-collection me-2"></i><%= category %>
+            </h3>
+            <div class="row">
+              <% categories[category].forEach((cert, index) => { 
+                const req = userRequests.find(r => r.cert_id === cert.id && (r.status === 'pending' || r.status === 'approved')); 
+                const description = cert.description || "No description provided."; 
+              %>
+              <div class="col-12 col-md-6 col-lg-4">
+                <div class="card cert-card shadow-sm mb-3">
+                  <div class="card-body p-3">
+                    <div class="cert-title mb-2">
+                      <h5><%= cert.name %></h5>
+                      <% if (req) { %>
+                      <span
+                        class="badge status-badge <%= req.status === 'approved' ? 'bg-success' : 'bg-warning text-dark' %>"
+                      >
+                        <%= req.status.charAt(0).toUpperCase() + req.status.slice(1) %>
+                      </span>
+                      <% } %>
+                    </div>
+                    <div class="cert-meta mb-1">
+                      <div
+                        class="cert-description truncated"
+                        id="cert-desc-<%= category.replace(/\s+/g, '-') %>-<%= index %>"
+                      >
+                        <%= description %>
+                      </div>
+                      <button
+                        class="expand-btn"
+                        onclick="toggleDescription('<%= category.replace(/\s+/g, '-') %>-<%= index %>')"
+                        id="expand-btn-<%= category.replace(/\s+/g, '-') %>-<%= index %>"
+                      >
+                        Show more
+                      </button>
+                    </div>
+                    <div class="cert-id mb-2">
+                      <small
+                        >Cert ID: <code><%= cert.id %></code></small
+                      >
+                      <% if (cert.required_mos) { %>
+                      <br /><small class="text-muted"
+                        >Required MOS:
+                        <% 
+                          let mosDisplay = []; 
+                          try { 
+                            const mosArray = JSON.parse(cert.required_mos); 
+                            mosDisplay = Array.isArray(mosArray) ? mosArray : [cert.required_mos]; 
+                          } catch(e) { 
+                            mosDisplay = [cert.required_mos]; 
+                          } 
+                        %>
+                        <% mosDisplay.forEach((mos, index) => { %>
+                        <span class="badge bg-secondary me-1"><%= mos %></span>
+                        <% }); %>
+                      </small>
+                      <% } %>
+                    </div>
+                    <% if (user && isAdmin) { %>
+                    <div class="d-flex flex-wrap gap-2">
+                      <a
+                        href="/certs/edit/<%= cert.id %>"
+                        class="btn btn-sm btn-primary d-flex align-items-center"
+                        style="font-weight: 500"
+                      >
+                        <i class="bi bi-pencil-square me-1"></i> Edit
+                      </a>
+                      <form
+                        action="/certs/delete/<%= cert.id %>"
+                        method="POST"
+                        style="display: inline"
+                        onsubmit="return confirm('Delete this certification?');"
+                      >
+                        <button type="submit" class="btn btn-sm btn-outline-danger">
+                          Delete
+                        </button>
+                      </form>
+                    </div>
+                    <% } %>
+                    <% if (user && !req) { %>
+                    <button 
+                      class="btn btn-success request-btn"
+                      onclick="requestCertification('<%= cert.id %>', '<%= cert.name %>')"
+                      id="request-btn-<%= cert.id %>"
+                    >
+                      <i class="bi bi-patch-check me-2"></i> Request
+                    </button>
+                    <% } %>
+                  </div>
+                </div>
+              </div>
+              <% }); %>
+            </div>
+          </div>
+          <% }); %>
+        <% } %>
       </div>
     </div>
     <%- include("partials/footer") %>
@@ -219,9 +251,9 @@
     />
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
     <script>
-      function toggleDescription(index) {
-        const description = document.getElementById('cert-desc-' + index);
-        const button = document.getElementById('expand-btn-' + index);
+      function toggleDescription(id) {
+        const description = document.getElementById('cert-desc-' + id);
+        const button = document.getElementById('expand-btn-' + id);
 
         if (description.classList.contains('truncated')) {
           description.classList.remove('truncated');
@@ -230,6 +262,79 @@
           description.classList.add('truncated');
           button.textContent = 'Show more';
         }
+      }
+
+      async function requestCertification(certId, certName) {
+        const button = document.getElementById('request-btn-' + certId);
+        const originalText = button.innerHTML;
+        
+        // Disable button and show loading state
+        button.disabled = true;
+        button.innerHTML = '<i class="bi bi-hourglass-split me-2"></i> Requesting...';
+        
+        try {
+          const response = await fetch('/certs/api/request-cert', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+              certId: certId,
+              certName: certName
+            })
+          });
+
+          const result = await response.json();
+          
+          if (result.success) {
+            // Update button to show requested state
+            button.innerHTML = '<i class="bi bi-check-circle me-2"></i> Requested';
+            button.className = 'btn btn-secondary request-btn';
+            button.disabled = true;
+            
+            // Show success message
+            showAlert('Certification requested successfully!', 'success');
+          } else {
+            throw new Error(result.error || 'Failed to request certification');
+          }
+        } catch (error) {
+          console.error('Error requesting certification:', error);
+          
+          // Re-enable button and restore original text
+          button.disabled = false;
+          button.innerHTML = originalText;
+          
+          // Show error message
+          showAlert(error.message || 'Failed to request certification. Please try again.', 'danger');
+        }
+      }
+
+      function showAlert(message, type) {
+        // Remove any existing alerts
+        const existingAlert = document.querySelector('.alert');
+        if (existingAlert) {
+          existingAlert.remove();
+        }
+
+        // Create new alert
+        const alertDiv = document.createElement('div');
+        alertDiv.className = `alert alert-${type} alert-dismissible fade show`;
+        alertDiv.innerHTML = `
+          ${message}
+          <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        `;
+
+        // Insert alert at the top of the main content
+        const mainContent = document.getElementById('main-content');
+        const container = mainContent.querySelector('.container');
+        container.insertBefore(alertDiv, container.firstChild);
+
+        // Auto-dismiss after 5 seconds
+        setTimeout(() => {
+          if (alertDiv.parentNode) {
+            alertDiv.remove();
+          }
+        }, 5000);
       }
     </script>
   </body>
