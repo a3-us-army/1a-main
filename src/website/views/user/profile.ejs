@@ -66,6 +66,124 @@
         border-color: #ffe066 !important;
         text-decoration: none;
       }
+      
+      /* Enhanced button styling */
+      .action-section {
+        background: linear-gradient(135deg, rgba(255, 255, 255, 0.05) 0%, rgba(255, 255, 255, 0.02) 100%);
+        border-radius: 16px;
+        padding: 2rem;
+        margin-bottom: 1.5rem;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(10px);
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+      }
+      
+      .section-title {
+        color: #fff;
+        font-weight: 700;
+        font-size: 1.5rem;
+        margin-bottom: 1.5rem;
+        text-align: center;
+        position: relative;
+        padding-bottom: 0.5rem;
+      }
+      
+      .section-title::after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 60px;
+        height: 3px;
+        background: linear-gradient(90deg, #ffe066, #ffd43b);
+        border-radius: 2px;
+      }
+      
+      .profile-btn {
+        padding: 1rem 1.5rem;
+        border-radius: 12px;
+        font-weight: 600;
+        font-size: 0.95rem;
+        transition: all 0.3s ease;
+        border: none;
+        position: relative;
+        overflow: hidden;
+        text-decoration: none;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
+        min-height: 56px;
+      }
+      
+      .profile-btn::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+        transition: left 0.5s;
+      }
+      
+      .profile-btn:hover::before {
+        left: 100%;
+      }
+      
+      .profile-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+        text-decoration: none;
+      }
+      
+      .btn-primary.profile-btn {
+        background: linear-gradient(135deg, #ffe066 0%, #ffd43b 100%);
+        color: #23272f;
+        box-shadow: 0 4px 15px rgba(255, 224, 102, 0.3);
+      }
+      
+      .btn-primary.profile-btn:hover {
+        background: linear-gradient(135deg, #ffd43b 0%, #fcc419 100%);
+        color: #181a1b;
+        box-shadow: 0 8px 25px rgba(255, 224, 102, 0.4);
+      }
+      
+      .btn-outline-primary.profile-btn {
+        background: transparent;
+        color: #ffe066;
+        border: 2px solid #ffe066;
+        box-shadow: 0 4px 15px rgba(255, 224, 102, 0.1);
+      }
+      
+      .btn-outline-primary.profile-btn:hover {
+        background: linear-gradient(135deg, #ffe066 0%, #ffd43b 100%);
+        color: #23272f;
+        border-color: #ffe066;
+        box-shadow: 0 8px 25px rgba(255, 224, 102, 0.3);
+      }
+      
+      .botstatus-btn.profile-btn {
+        background: linear-gradient(135deg, #ffe066 0%, #ffd43b 100%);
+        color: #23272f;
+        box-shadow: 0 4px 15px rgba(255, 224, 102, 0.3);
+      }
+      
+      .botstatus-btn.profile-btn:hover {
+        background: linear-gradient(135deg, #ffd43b 0%, #fcc419 100%);
+        color: #181a1b;
+        box-shadow: 0 8px 25px rgba(255, 224, 102, 0.4);
+      }
+      
+      .profile-btn i {
+        font-size: 1.1rem;
+        transition: transform 0.3s ease;
+      }
+      
+      .profile-btn:hover i {
+        transform: scale(1.1);
+      }
     </style>
   </head>
   <body>
@@ -116,35 +234,45 @@
               <% } %>
             </div>
           </div>
-          <div class="row mt-4">
-            <div class="col-12 col-md-6 mb-2 mb-md-0">
-              <a href="/my-certs" class="btn btn-primary profile-btn w-100">
-                <i class="bi bi-award"></i> My Certifications
-              </a>
-            </div>
-            <div class="col-12 col-md-6">
-              <a href="/loa" class="btn btn-outline-primary profile-btn w-100">
-                <i class="bi bi-calendar-x"></i> LOA (Leave of Absence)
-              </a>
+          <div class="action-section">
+            <h3 class="section-title">Quick Actions</h3>
+            <div class="row">
+              <div class="col-12 col-md-6 mb-3 mb-md-0">
+                <a href="/my-certs" class="btn btn-primary profile-btn w-100">
+                  <i class="bi bi-award"></i> My Certifications
+                </a>
+              </div>
+              <div class="col-12 col-md-6">
+                <a href="/loa" class="btn btn-outline-primary profile-btn w-100">
+                  <i class="bi bi-calendar-x"></i> LOA (Leave of Absence)
+                </a>
+              </div>
             </div>
           </div>
           <% if (isAdmin) { %>
-          <div class="row mt-3">
-            <h3 class="text-center mb-3">Admin Section</h3>
-            <div class="col-12 col-md-4 mb-2 mb-md-0">
-              <a href="/botstatus" class="btn botstatus-btn profile-btn w-100">
-                <i class="bi bi-robot"></i> Bot Status
-              </a>
-            </div>
-            <div class="col-12 col-md-4 mb-2 mb-md-0">
-              <a href="/vps-status" class="btn botstatus-btn profile-btn w-100">
-                <i class="bi bi-server"></i> VPS Status
-              </a>
-            </div>
-            <div class="col-12 col-md-4">
-              <a href="/gallery-admin" class="btn botstatus-btn profile-btn w-100">
-                <i class="bi bi-images"></i> Gallery Admin
-              </a>
+          <div class="action-section">
+            <h3 class="section-title">Admin Actions</h3>
+            <div class="row">
+              <div class="col-12 col-md-6 col-lg-3 mb-3">
+                <a href="/botstatus" class="btn botstatus-btn profile-btn w-100">
+                  <i class="bi bi-robot"></i> Bot Status
+                </a>
+              </div>
+              <div class="col-12 col-md-6 col-lg-3 mb-3">
+                <a href="/vps-status" class="btn botstatus-btn profile-btn w-100">
+                  <i class="bi bi-server"></i> VPS Status
+                </a>
+              </div>
+              <div class="col-12 col-md-6 col-lg-3 mb-3">
+                <a href="/gallery-admin" class="btn botstatus-btn profile-btn w-100">
+                  <i class="bi bi-images"></i> Gallery Admin
+                </a>
+              </div>
+              <div class="col-12 col-md-6 col-lg-3 mb-3">
+                <a href="/equipment" class="btn botstatus-btn profile-btn w-100">
+                  <i class="bi bi-gear-fill"></i> Equipment
+                </a>
+              </div>
             </div>
           </div>
           <% } %>
