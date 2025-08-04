@@ -10,7 +10,7 @@ const db = getDatabase();
 router.get('/', async (req, res) => {
   let isAdmin = false;
   if (req.user) {
-    isAdmin = await import('../utils/discord.js').then(m =>
+    isAdmin = await import('../../utils/discord.js').then(m =>
       m.isUserAdmin(req.user.id)
     );
   }
