@@ -58,9 +58,87 @@
           font-size: 0.95rem;
         }
       }
+      
+      /* Loading screen styles */
+      #loading-screen {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(135deg, #241d1d 0%, #2d2d2d 50%, #291e1e 100%);
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        z-index: 9999;
+        transition: opacity 0.5s ease-out;
+      }
+      
+      .loading-spinner {
+        width: 80px;
+        height: 80px;
+        border: 4px solid rgba(225, 184, 76, 0.2);
+        border-left: 4px solid #e1b84c;
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+        margin-bottom: 20px;
+      }
+      
+      @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+      }
+      
+      .loading-text {
+        color: #e1b84c;
+        font-size: 1.2rem;
+        font-weight: 500;
+        text-align: center;
+        margin-bottom: 10px;
+      }
+      
+      .loading-subtext {
+        color: #aaa;
+        font-size: 0.9rem;
+        text-align: center;
+      }
+      
+      .loading-dots {
+        display: inline-block;
+        animation: dots 1.5s infinite;
+      }
+      
+      @keyframes dots {
+        0%, 20% { content: ""; }
+        40% { content: "."; }
+        60% { content: ".."; }
+        80%, 100% { content: "..."; }
+      }
+      
+      .loading-dots::after {
+        content: "";
+        animation: dots 1.5s infinite;
+      }
+      
+      #main-content {
+        opacity: 0;
+        transition: opacity 0.5s ease-in;
+      }
+      
+      #main-content.loaded {
+        opacity: 1;
+      }
     </style>
   </head>
   <body>
+    <!-- Loading Screen -->
+    <div id="loading-screen">
+      <div class="loading-spinner"></div>
+      <div class="loading-text">Loading Personnel Data</div>
+      <div class="loading-subtext">Fetching data from Google Sheets<span class="loading-dots"></span></div>
+    </div>
+    
     <%- include("partials/navbar", { user, active }) %>
     <div class="container mt-5" id="main-content">
       <h2 class="mb-4 text-center">
@@ -201,7 +279,7 @@
               groupHtml += `
             <div class="col-12 col-md-6 col-lg-4">
               <div class="card shadow h-100 ${cardStyles[type].border} border-2">
-                <div class="card-header bg-dark $type{cardStyles[type].text} fw-bold">
+                <div class="card-header bg-dark ${cardStyles[type].text} fw-bold">
                   <i class="bi ${cardStyles[type].icon} me-2"></i>${section.name}
                 </div>
                 <div class="card-body p-0">
@@ -267,9 +345,6 @@
         container.innerHTML = html;
       }
 
-      document.addEventListener('DOMContentLoaded', loadPersonnelCards);
-    </script>
-    <script>
       async function loadAviationTable() {
         const res = await fetch('/personnel/api/aviation');
         const aviation = await res.json();
@@ -373,16 +448,14 @@
         }
         container.innerHTML = html;
       }
-      document.addEventListener('DOMContentLoaded', loadAviationTable);
-    </script>
-    <script>
+
       async function loadCallsignsTable() {
         const container = document.getElementById('callsigns-section');
         
         // Callsigns data from the image - alternating aircraft models and callsigns
         const callsignsData = [
           // Row 1: Callsigns
-          { type: 'callsign', a10: 'HAWG 1', f15: 'DUDE 4', f16: 'JEDI 6', ac130: 'MALIGN 3' },
+          { type: 'callsign', a10: 'HAWG 1', f15:'KILLJOY 4', f16: 'JEDI 6', ac130: 'MALIGN 3' },
           // Row 2: Aircraft Models
           { type: 'aircraft', a10: 'MC-130', f15: 'C-17', f16: 'MQ-9', ac130: 'MH-6' },
           // Row 3: Callsigns
@@ -457,8 +530,43 @@
         
         container.innerHTML = html;
       }
-      
-      document.addEventListener('DOMContentLoaded', loadCallsignsTable);
+
+      // Function to hide loading screen and show content
+      function hideLoadingScreen() {
+        const loadingScreen = document.getElementById('loading-screen');
+        const mainContent = document.getElementById('main-content');
+        
+        // Fade out loading screen
+        loadingScreen.style.opacity = '0';
+        
+        // After fade out, hide loading screen and show content
+        setTimeout(() => {
+          loadingScreen.style.display = 'none';
+          mainContent.classList.add('loaded');
+        }, 500);
+      }
+
+      // Main initialization function
+      async function initializePage() {
+        try {
+          // Load all data concurrently
+          await Promise.all([
+            loadPersonnelCards(),
+            loadAviationTable(),
+            loadCallsignsTable()
+          ]);
+          
+          // Hide loading screen after all data is loaded
+          hideLoadingScreen();
+        } catch (error) {
+          console.error('Error loading personnel data:', error);
+          // Still hide loading screen even if there's an error
+          hideLoadingScreen();
+        }
+      }
+
+      // Start loading when DOM is ready
+      document.addEventListener('DOMContentLoaded', initializePage);
     </script>
   </body>
 </html>
