@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Edit Application - <%= application.username %></title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="icon" href="/favicon.ico">
+    <link rel="stylesheet" href="/custom.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <style>
+        .main-card {
+            background: var(--ranger-card) !important;
+            border: 2px solid var(--ranger-gold) !important;
+            border-radius: 15px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+        }
+        
+        .card-header {
+            background: var(--ranger-gold) !important;
+            color: var(--ranger-bg) !important;
+            border-radius: 13px 13px 0 0 !important;
+            border: none;
+            padding: 1.5rem;
+        }
+        
+        .application-detail {
+            background: #3a3a3a;
+            border: 1px solid var(--ranger-gold);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            transition: all 0.3s ease;
+        }
+        
+        .application-detail:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+            background: #404040;
+        }
+        
+        .section-header {
+            color: var(--ranger-gold);
+            font-weight: 600;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .section-header i {
+            color: var(--ranger-gold);
+            font-size: 1.2em;
+        }
+        
+        .info-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.75rem 0;
+            border-bottom: 1px solid #555;
+        }
+        
+        .info-row:last-child {
+            border-bottom: none;
+        }
+        
+        .info-label {
+            font-weight: 600;
+            color: var(--ranger-gold);
+            min-width: 120px;
+        }
+        
+        .info-value {
+            color: var(--ranger-white);
+            font-weight: 500;
+        }
+        
+        .info-value code {
+            background: #555;
+            padding: 0.2rem 0.5rem;
+            border-radius: 5px;
+            font-size: 0.9em;
+            color: var(--ranger-gold);
+        }
+        
+        .question-card {
+            background: #3a3a3a;
+            border: 2px solid var(--ranger-gold);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+            transition: all 0.3s ease;
+        }
+        
+        .question-card:hover {
+            border-color: var(--ranger-gold);
+            box-shadow: 0 4px 15px rgba(225, 184, 76, 0.2);
+            background: #404040;
+        }
+        
+        .question-label {
+            font-weight: 600;
+            color: var(--ranger-gold);
+            margin-bottom: 0.75rem;
+            font-size: 1.1em;
+        }
+        
+        .question-answer {
+            color: var(--ranger-white);
+            line-height: 1.6;
+            padding: 1rem;
+            background: #2d2d2d;
+            border-radius: 8px;
+            border-left: 4px solid var(--ranger-gold);
+        }
+        
+        .no-response {
+            color: var(--ranger-gray);
+            font-style: italic;
+            background: #2d2d2d;
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            border: 1px dashed var(--ranger-gold);
+        }
+        
+        .btn-custom {
+            border-radius: 25px;
+            padding: 0.75rem 1.5rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-custom:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+        }
+        
+        .form-control, .form-select {
+            background: #2d2d2d !important;
+            border: 1px solid var(--ranger-gold) !important;
+            color: var(--ranger-white) !important;
+        }
+        
+        .form-control:focus, .form-select:focus {
+            background: #404040 !important;
+            border-color: var(--ranger-gold) !important;
+            box-shadow: 0 0 0 0.2rem rgba(225, 184, 76, 0.25) !important;
+        }
+        
+        .form-label {
+            color: var(--ranger-gold) !important;
+            font-weight: 600;
+        }
+        
+        .form-text {
+            color: var(--ranger-gray) !important;
+        }
+    </style>
+</head>
+<body>
+    <%- include("../partials/navbar", { user, active }) %>
+    <div id="main-content">
+        <div class="container mt-4">
+            <% if (query && query.alert) { %>
+                <div class="alert alert-success alert-dismissible fade show mt-3" role="alert">
+                    <%= query.alert %>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            <% } %>
+            <% if (query && query.error) { %>
+                <div class="alert alert-danger alert-dismissible fade show mt-3" role="alert">
+                    <%= query.error %>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            <% } %>
+
+            <div class="row justify-content-center">
+                <div class="col-12 col-lg-8">
+                    <div class="card main-card">
+                        <div class="card-header d-flex justify-content-between align-items-center">
+                            <h3 class="mb-0">
+                                <i class="bi bi-pencil-square me-2"></i>Edit Application
+                            </h3>
+                            <div class="d-flex gap-2">
+                                <a href="/apply/admin/view/<%= application.id %>" class="btn btn-outline-primary btn-custom btn-sm">
+                                    <i class="bi bi-eye me-1"></i>View
+                                </a>
+                                <a href="/apply" class="btn btn-outline-secondary btn-custom btn-sm">
+                                    <i class="bi bi-arrow-left me-1"></i>Back
+                                </a>
+                            </div>
+                        </div>
+                        <div class="card-body p-4">
+                            <form method="POST" action="/apply/admin/edit/<%= application.id %>">
+                                <!-- Applicant Information (Read-only) -->
+                                <div class="row mb-4">
+                                    <div class="col-md-6">
+                                        <h5 class="section-header">
+                                            <i class="bi bi-person-circle"></i>Applicant Information
+                                        </h5>
+                                        <div class="application-detail">
+                                            <div class="info-row">
+                                                <span class="info-label">Username:</span>
+                                                <span class="info-value"><%= application.username %></span>
+                                            </div>
+                                            <div class="info-row">
+                                                <span class="info-label">User ID:</span>
+                                                <span class="info-value"><code><%= application.user_id %></code></span>
+                                            </div>
+                                            <div class="info-row">
+                                                <span class="info-label">Submitted:</span>
+                                                <span class="info-value"><%= new Date(application.submitted_at).toLocaleString() %></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <h5 class="section-header">
+                                            <i class="bi bi-gear"></i>Admin Controls
+                                        </h5>
+                                        <div class="application-detail">
+                                            <div class="mb-3">
+                                                <label for="status" class="form-label"><strong>Application Status</strong></label>
+                                                <select id="status" name="status" class="form-select" required>
+                                                    <option value="pending" <%= application.status === 'pending' ? 'selected' : '' %>>Pending</option>
+                                                    <option value="approved" <%= application.status === 'approved' ? 'selected' : '' %>>Approved</option>
+                                                    <option value="denied" <%= application.status === 'denied' ? 'selected' : '' %>>Denied</option>
+                                                </select>
+                                            </div>
+                                            <div class="mb-3">
+                                                <label for="notes" class="form-label"><strong>Admin Notes</strong></label>
+                                                <textarea id="notes" name="notes" class="form-control" rows="4" placeholder="Add any notes about this application..."><%= application.notes || '' %></textarea>
+                                                <div class="form-text">These notes are only visible to admins.</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Application Responses (Read-only) -->
+                                <h5 class="section-header">
+                                    <i class="bi bi-chat-text"></i>Application Responses
+                                </h5>
+                                
+                                <% questions.forEach(question => { %>
+                                    <div class="question-card">
+                                        <div class="question-label">
+                                            <%= question.label %>
+                                        </div>
+                                        <div class="question-answer">
+                                            <% 
+                                                // Map form field IDs to database column names
+                                                let fieldValue = null;
+                                                if (question.id === 'foundUnit') {
+                                                    fieldValue = application.found_unit;
+                                                } else if (question.id === 'unitName') {
+                                                    fieldValue = application.unit_name;
+                                                } else {
+                                                    fieldValue = application[question.id];
+                                                }
+                                            %>
+                                            <% if (fieldValue) { %>
+                                                <% if (question.type === 'textarea') { %>
+                                                    <div style="white-space: pre-wrap;"><%= fieldValue %></div>
+                                                <% } else { %>
+                                                    <%= fieldValue %>
+                                                <% } %>
+                                            <% } else { %>
+                                                <div class="no-response">No response provided</div>
+                                            <% } %>
+                                        </div>
+                                    </div>
+                                <% }) %>
+
+                                <!-- Action Buttons -->
+                                <div class="d-flex justify-content-between mt-5 pt-4 border-top">
+                                    <div class="d-flex gap-3">
+                                        <button type="submit" class="btn btn-primary btn-custom">
+                                            <i class="bi bi-save me-1"></i>Save Changes
+                                        </button>
+                                        <button type="button" class="btn btn-danger btn-custom" onclick="deleteApplication('<%= application.id %>', '<%= application.username %>')">
+                                            <i class="bi bi-trash me-1"></i>Delete Application
+                                        </button>
+                                    </div>
+                                    <div class="d-flex gap-2">
+                                        <a href="/apply/admin/view/<%= application.id %>" class="btn btn-outline-primary btn-custom">
+                                            <i class="bi bi-eye me-1"></i>View Details
+                                        </a>
+                                        <a href="/apply" class="btn btn-outline-secondary btn-custom">
+                                            <i class="bi bi-arrow-left me-1"></i>Back to Applications
+                                        </a>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <%- include("../partials/footer") %>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        function deleteApplication(appId, username) {
+            if (confirm(`Are you sure you want to delete the application for ${username}? This action cannot be undone.`)) {
+                fetch(`/apply/admin/delete/${appId}`, {
+                    method: 'DELETE',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    }
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        window.location.href = '/apply?alert=Application deleted successfully';
+                    } else {
+                        alert('Failed to delete application: ' + data.error);
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('An error occurred while deleting the application');
+                });
+            }
+        }
+
+        // Auto-save notes as user types (optional enhancement)
+        let notesTimeout;
+        document.getElementById('notes').addEventListener('input', function() {
+            clearTimeout(notesTimeout);
+            notesTimeout = setTimeout(() => {
+                // Could implement auto-save here if needed
+                console.log('Notes changed, could auto-save...');
+            }, 2000);
+        });
+    </script>
+</body>
+</html> 

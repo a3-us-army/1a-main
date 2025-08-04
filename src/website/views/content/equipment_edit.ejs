@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Edit Equipment</title>
+    <meta content="1A Website" property="og:title" />
+    <meta content="Welcome to 1A!" property="og:description" />
+    <meta content="https://1a75.org/equipment" property="og:url" />
+    <meta content="https://cdn.xanderxx.xyz/1a-logo.png" property="og:image" />
+    <meta content="#4b5a2a" data-react-helmet="true" name="theme-color" />
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="/custom.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"
+    />
+  </head>
+  <body>
+    <%- include('../partials/navbar') %>
+
+    <div class="container mt-4">
+      <div class="row justify-content-center">
+        <div class="col-md-8">
+          <div class="card equipment-card">
+            <div class="card-header">
+              <h3 class="card-title">Edit Equipment</h3>
+            </div>
+            <div class="card-body">
+              <form method="POST" action="/equipment/edit/<%= equipment.id %>">
+                <div class="mb-3">
+                  <label for="name" class="form-label">Name</label>
+                  <input type="text" class="form-control" id="name" name="name" value="<%= equipment.name %>" required>
+                </div>
+                <div class="mb-3">
+                  <label for="category" class="form-label">Category</label>
+                  <select class="form-control" id="category" name="category" required>
+                    <option value="weapons" <%= equipment.category === 'weapons' ? 'selected' : '' %>>Weapons</option>
+                    <option value="vehicles" <%= equipment.category === 'vehicles' ? 'selected' : '' %>>Vehicles</option>
+                    <option value="gear" <%= equipment.category === 'gear' ? 'selected' : '' %>>Gear</option>
+                    <option value="other" <%= equipment.category === 'other' ? 'selected' : '' %>>Other</option>
+                  </select>
+                </div>
+                <div class="mb-3">
+                  <label for="total_quantity" class="form-label">Total Quantity</label>
+                  <input type="number" class="form-control" id="total_quantity" name="total_quantity" value="<%= equipment.total_quantity %>" required>
+                </div>
+                <div class="mb-3">
+                  <label for="available_quantity" class="form-label">Available Quantity</label>
+                  <input type="number" class="form-control" id="available_quantity" name="available_quantity" value="<%= equipment.available_quantity %>" required>
+                </div>
+                <div class="mb-3">
+                  <label for="description" class="form-label">Description</label>
+                  <textarea class="form-control" id="description" name="description" rows="3"><%= equipment.description || '' %></textarea>
+                </div>
+                <div class="mb-3">
+                  <label for="status" class="form-label">Status</label>
+                  <select class="form-control" id="status" name="status">
+                    <option value="available" <%= equipment.status === 'available' ? 'selected' : '' %>>Available</option>
+                    <option value="maintenance" <%= equipment.status === 'maintenance' ? 'selected' : '' %>>Maintenance</option>
+                    <option value="out_of_service" <%= equipment.status === 'out_of_service' ? 'selected' : '' %>>Out of Service</option>
+                  </select>
+                </div>
+                <div class="d-flex gap-2">
+                  <button type="submit" class="btn btn-primary">Update Equipment</button>
+                  <a href="/equipment" class="btn btn-secondary">Cancel</a>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <%- include('../partials/footer') %>
+  </body>
+</html> 

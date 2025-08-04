@@ -3,6 +3,6 @@ events.db
 node_modules
 service-account.json
 sessions.sqlite
-uploads     
+uploads
 commands-manifest.json
 
