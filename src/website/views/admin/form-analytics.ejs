@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Form Analytics - <%= form.name %> - 1A 75th</title>
+    <meta content="1A Website" property="og:title" />
+    <meta content="Welcome to 1A!" property="og:description" />
+    <meta content="https://1a75.org/form-builder" property="og:url" />
+    <meta content="https://cdn.xanderxx.xyz/1a-logo.png" property="og:image" />
+    <meta content="#4b5a2a" data-react-helmet="true" name="theme-color" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css"
+    />
+    <link rel="icon" href="/favicon.ico" />
+    <link rel="stylesheet" href="/custom.css" />
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  </head>
+  <body>
+    <%- include('../partials/navbar', { user, active }) %>
+    <div class="container mt-5">
+      <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="h2 mb-0">Form Analytics - <%= form.name %></h1>
+        <div class="d-flex gap-2">
+          <a href="/form-builder" class="btn btn-outline-primary">
+            <i class="bi bi-arrow-left me-2"></i>Back to Forms
+          </a>
+          <button class="btn btn-outline-success" onclick="exportAnalytics()">
+            <i class="bi bi-download me-2"></i>Export Report
+          </button>
+        </div>
+      </div>
+
+      <!-- Summary Cards -->
+      <div class="row mb-4">
+        <div class="col-md-3 mb-3">
+          <div class="card text-center">
+            <div class="card-body">
+              <i class="bi bi-chat-dots text-primary" style="font-size: 2rem;"></i>
+              <h5 class="card-title mt-2"><%= analytics.totalResponses %></h5>
+              <p class="card-text text-muted">Total Responses</p>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-3 mb-3">
+          <div class="card text-center">
+            <div class="card-body">
+              <i class="bi bi-graph-up text-success" style="font-size: 2rem;"></i>
+              <h5 class="card-title mt-2"><%= analytics.avgResponsesPerDay %></h5>
+              <p class="card-text text-muted">Avg/Day (Last 30)</p>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-3 mb-3">
+          <div class="card text-center">
+            <div class="card-body">
+              <i class="bi bi-calendar-check text-info" style="font-size: 2rem;"></i>
+              <h5 class="card-title mt-2"><%= analytics.completionRate %>%</h5>
+              <p class="card-text text-muted">Completion Rate</p>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-3 mb-3">
+          <div class="card text-center">
+            <div class="card-body">
+              <i class="bi bi-clock text-warning" style="font-size: 2rem;"></i>
+              <h5 class="card-title mt-2"><%= analytics.avgCompletionTime %>s</h5>
+              <p class="card-text text-muted">Avg Time to Complete</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Charts Row -->
+      <div class="row mb-4">
+        <!-- Response Trends -->
+        <div class="col-md-8 mb-4">
+          <div class="card">
+            <div class="card-header">
+              <h5 class="card-title mb-0">Response Trends (Last 30 Days)</h5>
+            </div>
+            <div class="card-body">
+              <canvas id="responseTrendsChart" width="400" height="200"></canvas>
+            </div>
+          </div>
+        </div>
+
+        <!-- Response Distribution -->
+        <div class="col-md-4 mb-4">
+          <div class="card">
+            <div class="card-header">
+              <h5 class="card-title mb-0">Response Distribution</h5>
+            </div>
+            <div class="card-body">
+              <canvas id="responseDistributionChart" width="400" height="200"></canvas>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Field Analytics -->
+      <div class="card mb-4">
+        <div class="card-header">
+          <h5 class="card-title mb-0">Field Analytics</h5>
+        </div>
+        <div class="card-body">
+          <% if (analytics.fieldAnalytics && analytics.fieldAnalytics.length > 0) { %>
+            <div class="table-responsive">
+              <table class="table table-dark table-hover">
+                <thead>
+                  <tr>
+                    <th>Field</th>
+                    <th>Type</th>
+                    <th>Completion Rate</th>
+                    <th>Most Common Value</th>
+                    <th>Average Length</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <% analytics.fieldAnalytics.forEach(field => { %>
+                    <tr>
+                      <td><strong><%= field.label %></strong></td>
+                      <td><span class="badge bg-secondary"><%= field.type %></span></td>
+                      <td>
+                        <div class="progress" style="height: 20px;">
+                          <div class="progress-bar" role="progressbar" style="width: <%= field.completionRate %>%">
+                            <%= field.completionRate %>%
+                          </div>
+                        </div>
+                      </td>
+                      <td>
+                        <% if (field.mostCommonValue) { %>
+                          <% if (typeof field.mostCommonValue === 'string' && field.mostCommonValue.length > 30) { %>
+                            <span title="<%= field.mostCommonValue %>">
+                              <%= field.mostCommonValue.substring(0, 30) %>...
+                            </span>
+                          <% } else { %>
+                            <%= field.mostCommonValue %>
+                          <% } %>
+                        <% } else { %>
+                          <span class="text-muted">-</span>
+                        <% } %>
+                      </td>
+                      <td>
+                        <% if (field.avgLength) { %>
+                          <%= field.avgLength.toFixed(1) %> chars
+                        <% } else { %>
+                          <span class="text-muted">-</span>
+                        <% } %>
+                      </td>
+                    </tr>
+                  <% }) %>
+                </tbody>
+              </table>
+            </div>
+          <% } else { %>
+            <div class="text-center py-4">
+              <i class="bi bi-bar-chart text-muted" style="font-size: 3rem;"></i>
+              <p class="text-muted mt-3">No field analytics available</p>
+            </div>
+          <% } %>
+        </div>
+      </div>
+
+      <!-- Time-based Analytics -->
+      <div class="row mb-4">
+        <!-- Hourly Distribution -->
+        <div class="col-md-6 mb-4">
+          <div class="card">
+            <div class="card-header">
+              <h5 class="card-title mb-0">Hourly Response Distribution</h5>
+            </div>
+            <div class="card-body">
+              <canvas id="hourlyChart" width="400" height="200"></canvas>
+            </div>
+          </div>
+        </div>
+
+        <!-- Weekly Distribution -->
+        <div class="col-md-6 mb-4">
+          <div class="card">
+            <div class="card-header">
+              <h5 class="card-title mb-0">Weekly Response Distribution</h5>
+            </div>
+            <div class="card-body">
+              <canvas id="weeklyChart" width="400" height="200"></canvas>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Recent Activity -->
+      <div class="card">
+        <div class="card-header">
+          <h5 class="card-title mb-0">Recent Activity</h5>
+        </div>
+        <div class="card-body">
+          <% if (analytics.recentActivity && analytics.recentActivity.length > 0) { %>
+            <div class="list-group list-group-flush">
+              <% analytics.recentActivity.forEach(activity => { %>
+                <div class="list-group-item d-flex justify-content-between align-items-center">
+                  <div>
+                    <i class="bi bi-chat-dots text-primary me-2"></i>
+                    <strong>New response</strong> submitted
+                    <small class="text-muted ms-2">
+                      <%= new Date(activity.timestamp).toLocaleDateString() %> at 
+                      <%= new Date(activity.timestamp).toLocaleTimeString() %>
+                    </small>
+                  </div>
+                  <span class="badge bg-primary rounded-pill">Response #<%= activity.responseNumber %></span>
+                </div>
+              <% }) %>
+            </div>
+          <% } else { %>
+            <div class="text-center py-4">
+              <i class="bi bi-activity text-muted" style="font-size: 3rem;"></i>
+              <p class="text-muted mt-3">No recent activity</p>
+            </div>
+          <% } %>
+        </div>
+      </div>
+    </div>
+
+    <%- include('../partials/footer') %>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+      // Chart.js configuration
+      Chart.defaults.color = '#ffffff';
+      Chart.defaults.borderColor = '#444';
+
+      // Response Trends Chart
+      const trendsCtx = document.getElementById('responseTrendsChart').getContext('2d');
+      new Chart(trendsCtx, {
+        type: 'line',
+        data: {
+          labels: <%- JSON.stringify(analytics.trends.labels) %>,
+          datasets: [{
+            label: 'Responses',
+            data: <%- JSON.stringify(analytics.trends.data) %>,
+            borderColor: '#007bff',
+            backgroundColor: 'rgba(0, 123, 255, 0.1)',
+            tension: 0.4
+          }]
+        },
+        options: {
+          responsive: true,
+          plugins: {
+            legend: {
+              display: false
+            }
+          },
+          scales: {
+            y: {
+              beginAtZero: true,
+              ticks: {
+                stepSize: 1
+              }
+            }
+          }
+        }
+      });
+
+      // Response Distribution Chart
+      const distributionCtx = document.getElementById('responseDistributionChart').getContext('2d');
+      new Chart(distributionCtx, {
+        type: 'doughnut',
+        data: {
+          labels: ['Completed', 'Incomplete'],
+          datasets: [{
+            data: [<%= analytics.completionRate %>, <%= 100 - analytics.completionRate %>],
+            backgroundColor: ['#28a745', '#6c757d']
+          }]
+        },
+        options: {
+          responsive: true,
+          plugins: {
+            legend: {
+              position: 'bottom'
+            }
+          }
+        }
+      });
+
+      // Hourly Distribution Chart
+      const hourlyCtx = document.getElementById('hourlyChart').getContext('2d');
+      new Chart(hourlyCtx, {
+        type: 'bar',
+        data: {
+          labels: <%- JSON.stringify(analytics.hourlyDistribution.labels) %>,
+          datasets: [{
+            label: 'Responses',
+            data: <%- JSON.stringify(analytics.hourlyDistribution.data) %>,
+            backgroundColor: '#17a2b8'
+          }]
+        },
+        options: {
+          responsive: true,
+          plugins: {
+            legend: {
+              display: false
+            }
+          },
+          scales: {
+            y: {
+              beginAtZero: true,
+              ticks: {
+                stepSize: 1
+              }
+            }
+          }
+        }
+      });
+
+      // Weekly Distribution Chart
+      const weeklyCtx = document.getElementById('weeklyChart').getContext('2d');
+      new Chart(weeklyCtx, {
+        type: 'bar',
+        data: {
+          labels: <%- JSON.stringify(analytics.weeklyDistribution.labels) %>,
+          datasets: [{
+            label: 'Responses',
+            data: <%- JSON.stringify(analytics.weeklyDistribution.data) %>,
+            backgroundColor: '#ffc107'
+          }]
+        },
+        options: {
+          responsive: true,
+          plugins: {
+            legend: {
+              display: false
+            }
+          },
+          scales: {
+            y: {
+              beginAtZero: true,
+              ticks: {
+                stepSize: 1
+              }
+            }
+          }
+        }
+      });
+
+      function exportAnalytics() {
+        window.location.href = `/form-builder/analytics/<%= form.id %>/export`;
+      }
+    </script>
+  </body>
+</html> 

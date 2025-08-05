@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title><%= form ? 'Edit' : 'Create' %> Form - 1A 75th</title>
+    <meta content="1A Website" property="og:title" />
+    <meta content="Welcome to 1A!" property="og:description" />
+    <meta content="https://1a75.org/form-builder" property="og:url" />
+    <meta content="https://cdn.xanderxx.xyz/1a-logo.png" property="og:image" />
+    <meta content="#4b5a2a" data-react-helmet="true" name="theme-color" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css"
+    />
+    <link rel="icon" href="/favicon.ico" />
+    <link rel="stylesheet" href="/custom.css" />
+  </head>
+  <body>
+    <%- include('../partials/navbar', { user, active }) %>
+    <div class="container mt-5">
+      <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="h2 mb-0"><%= form ? 'Edit' : 'Create' %> Form</h1>
+        <div class="d-flex gap-2">
+          <a href="/form-builder" class="btn btn-outline-primary">
+            <i class="bi bi-arrow-left me-2"></i>Back to Forms
+          </a>
+        </div>
+      </div>
+
+      <form method="POST" action="/form-builder/save">
+        <% if (form) { %>
+          <input type="hidden" name="id" value="<%= form.id %>">
+        <% } %>
+
+        <!-- Form Details -->
+        <div class="card mb-4">
+          <div class="card-header">
+            <h5 class="card-title mb-0">Form Details</h5>
+          </div>
+          <div class="card-body">
+            <div class="row">
+              <div class="col-md-6 mb-3">
+                <label for="name" class="form-label">Form Name *</label>
+                <input 
+                  type="text" 
+                  class="form-control" 
+                  id="name" 
+                  name="name" 
+                  value="<%= form ? form.name : '' %>" 
+                  required
+                >
+              </div>
+              <div class="col-md-6 mb-3">
+                <label for="is_active" class="form-label">Status</label>
+                <select class="form-select" id="is_active" name="is_active">
+                  <option value="1" <%= form && form.is_active ? 'selected' : '' %>>Active</option>
+                  <option value="0" <%= form && !form.is_active ? 'selected' : '' %>>Inactive</option>
+                </select>
+              </div>
+            </div>
+            <div class="mb-3">
+              <label for="description" class="form-label">Description</label>
+              <textarea 
+                class="form-control" 
+                id="description" 
+                name="description" 
+                rows="3"
+              ><%= form ? form.description || '' : '' %></textarea>
+            </div>
+          </div>
+        </div>
+
+        <!-- Form Fields -->
+        <div class="card mb-4">
+          <div class="card-header d-flex justify-content-between align-items-center">
+            <h5 class="card-title mb-0">Form Fields</h5>
+            <button type="button" class="btn btn-primary btn-sm" onclick="addField()">
+              <i class="bi bi-plus-circle me-2"></i>Add Field
+            </button>
+          </div>
+          <div class="card-body">
+            <div id="fields-container">
+              <% if (form && form.fields && form.fields.length > 0) { %>
+                <% form.fields.forEach((field, index) => { %>
+                  <div class="field-item card mb-3" data-field-index="<%= index %>">
+                    <div class="card-body">
+                      <div class="d-flex justify-content-between align-items-start mb-3">
+                        <h6 class="card-title">Field <%= index + 1 %></h6>
+                        <button type="button" class="btn btn-outline-danger btn-sm" onclick="removeField(this)">
+                          <i class="bi bi-trash"></i>
+                        </button>
+                      </div>
+                      <div class="row">
+                        <div class="col-md-6 mb-3">
+                          <label class="form-label">Field Label *</label>
+                          <input 
+                            type="text" 
+                            class="form-control" 
+                            name="fields[<%= index %>][label]" 
+                            value="<%= field.label %>" 
+                            required
+                          >
+                        </div>
+                        <div class="col-md-6 mb-3">
+                          <label class="form-label">Field Type *</label>
+                          <select class="form-select" name="fields[<%= index %>][type]" onchange="updateFieldOptions(this)">
+                            <option value="text" <%= field.type === 'text' ? 'selected' : '' %>>Text Input</option>
+                            <option value="textarea" <%= field.type === 'textarea' ? 'selected' : '' %>>Text Area</option>
+                            <option value="email" <%= field.type === 'email' ? 'selected' : '' %>>Email</option>
+                            <option value="number" <%= field.type === 'number' ? 'selected' : '' %>>Number</option>
+                            <option value="select" <%= field.type === 'select' ? 'selected' : '' %>>Dropdown</option>
+                            <option value="radio" <%= field.type === 'radio' ? 'selected' : '' %>>Radio Buttons</option>
+                            <option value="checkbox" <%= field.type === 'checkbox' ? 'selected' : '' %>>Checkboxes</option>
+                            <option value="date" <%= field.type === 'date' ? 'selected' : '' %>>Date</option>
+                            <option value="file" <%= field.type === 'file' ? 'selected' : '' %>>File Upload</option>
+                          </select>
+                        </div>
+                      </div>
+                      <div class="row">
+                        <div class="col-md-6 mb-3">
+                          <label class="form-label">Field Name (Internal)</label>
+                          <input 
+                            type="text" 
+                            class="form-control" 
+                            name="fields[<%= index %>][name]" 
+                            value="<%= field.name %>" 
+                            placeholder="auto-generated"
+                          >
+                        </div>
+                        <div class="col-md-6 mb-3">
+                          <label class="form-label">Required</label>
+                          <select class="form-select" name="fields[<%= index %>][required]">
+                            <option value="1" <%= field.required ? 'selected' : '' %>>Yes</option>
+                            <option value="0" <%= !field.required ? 'selected' : '' %>>No</option>
+                          </select>
+                        </div>
+                      </div>
+                      <div class="field-options" id="options-<%= index %>" style="<%= ['select', 'radio', 'checkbox'].includes(field.type) ? '' : 'display: none;' %>">
+                        <label class="form-label">Options (one per line)</label>
+                        <textarea 
+                          class="form-control" 
+                          name="fields[<%= index %>][options]" 
+                          rows="3"
+                          placeholder="Option 1&#10;Option 2&#10;Option 3"
+                        ><%= field.options ? field.options.join('\n') : '' %></textarea>
+                      </div>
+                    </div>
+                  </div>
+                <% }) %>
+              <% } %>
+            </div>
+          </div>
+        </div>
+
+        <!-- Conditional Logic -->
+        <div class="card mb-4">
+          <div class="card-header">
+            <h5 class="card-title mb-0">Conditional Logic (Optional)</h5>
+          </div>
+          <div class="card-body">
+            <div class="mb-3">
+              <label for="conditional_logic" class="form-label">Conditional Logic Rules</label>
+              <textarea 
+                class="form-control" 
+                id="conditional_logic" 
+                name="conditional_logic" 
+                rows="4"
+                placeholder="Example:&#10;IF field1 = 'yes' THEN show field2&#10;IF field3 > 10 THEN require field4"
+              ><%= form ? form.conditional_logic || '' : '' %></textarea>
+              <div class="form-text">Define conditional logic to show/hide fields based on other field values</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Form Settings -->
+        <div class="card mb-4">
+          <div class="card-header">
+            <h5 class="card-title mb-0">Form Settings</h5>
+          </div>
+          <div class="card-body">
+            <div class="row">
+              <div class="col-md-6 mb-3">
+                <label for="max_responses" class="form-label">Maximum Responses</label>
+                <input 
+                  type="number" 
+                  class="form-control" 
+                  id="max_responses" 
+                  name="max_responses" 
+                  value="<%= form ? form.max_responses || '' : '' %>"
+                  min="0"
+                >
+                <div class="form-text">Leave empty for unlimited responses</div>
+              </div>
+              <div class="col-md-6 mb-3">
+                <label for="expiry_date" class="form-label">Expiry Date</label>
+                <input 
+                  type="datetime-local" 
+                  class="form-control" 
+                  id="expiry_date" 
+                  name="expiry_date" 
+                  value="<%= form && form.expiry_date ? new Date(form.expiry_date).toISOString().slice(0, 16) : '' %>"
+                >
+                <div class="form-text">Leave empty for no expiry</div>
+              </div>
+            </div>
+            <div class="mb-3">
+              <label for="success_message" class="form-label">Success Message</label>
+              <textarea 
+                class="form-control" 
+                id="success_message" 
+                name="success_message" 
+                rows="2"
+              ><%= form ? form.success_message || 'Thank you for your submission!' : 'Thank you for your submission!' %></textarea>
+            </div>
+          </div>
+        </div>
+
+        <!-- Save Buttons -->
+        <div class="d-flex gap-2">
+          <button type="submit" class="btn btn-primary">
+            <i class="bi bi-check-circle me-2"></i><%= form ? 'Update' : 'Create' %> Form
+          </button>
+          <a href="/form-builder" class="btn btn-outline-secondary">
+            <i class="bi bi-x-circle me-2"></i>Cancel
+          </a>
+          <% if (form) { %>
+            <a href="/form-builder/preview/<%= form.id %>" class="btn btn-outline-info" target="_blank">
+              <i class="bi bi-eye me-2"></i>Preview Form
+            </a>
+          <% } %>
+        </div>
+      </form>
+    </div>
+
+    <%- include('../partials/footer') %>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+      let fieldIndex = <%= form && form.fields ? form.fields.length : 0 %>;
+
+      function addField() {
+        const container = document.getElementById('fields-container');
+        const fieldHtml = `
+          <div class="field-item card mb-3" data-field-index="${fieldIndex}">
+            <div class="card-body">
+              <div class="d-flex justify-content-between align-items-start mb-3">
+                <h6 class="card-title">Field ${fieldIndex + 1}</h6>
+                <button type="button" class="btn btn-outline-danger btn-sm" onclick="removeField(this)">
+                  <i class="bi bi-trash"></i>
+                </button>
+              </div>
+              <div class="row">
+                <div class="col-md-6 mb-3">
+                  <label class="form-label">Field Label *</label>
+                  <input type="text" class="form-control" name="fields[${fieldIndex}][label]" required>
+                </div>
+                <div class="col-md-6 mb-3">
+                  <label class="form-label">Field Type *</label>
+                  <select class="form-select" name="fields[${fieldIndex}][type]" onchange="updateFieldOptions(this)">
+                    <option value="text">Text Input</option>
+                    <option value="textarea">Text Area</option>
+                    <option value="email">Email</option>
+                    <option value="number">Number</option>
+                    <option value="select">Dropdown</option>
+                    <option value="radio">Radio Buttons</option>
+                    <option value="checkbox">Checkboxes</option>
+                    <option value="date">Date</option>
+                    <option value="file">File Upload</option>
+                  </select>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-6 mb-3">
+                  <label class="form-label">Field Name (Internal)</label>
+                  <input type="text" class="form-control" name="fields[${fieldIndex}][name]" placeholder="auto-generated">
+                </div>
+                <div class="col-md-6 mb-3">
+                  <label class="form-label">Required</label>
+                  <select class="form-select" name="fields[${fieldIndex}][required]">
+                    <option value="1">Yes</option>
+                    <option value="0">No</option>
+                  </select>
+                </div>
+              </div>
+              <div class="field-options" id="options-${fieldIndex}" style="display: none;">
+                <label class="form-label">Options (one per line)</label>
+                <textarea class="form-control" name="fields[${fieldIndex}][options]" rows="3" placeholder="Option 1&#10;Option 2&#10;Option 3"></textarea>
+              </div>
+            </div>
+          </div>
+        `;
+        container.insertAdjacentHTML('beforeend', fieldHtml);
+        fieldIndex++;
+      }
+
+      function removeField(button) {
+        button.closest('.field-item').remove();
+      }
+
+      function updateFieldOptions(select) {
+        const fieldItem = select.closest('.field-item');
+        const optionsDiv = fieldItem.querySelector('.field-options');
+        const fieldType = select.value;
+        
+        if (['select', 'radio', 'checkbox'].includes(fieldType)) {
+          optionsDiv.style.display = 'block';
+        } else {
+          optionsDiv.style.display = 'none';
+        }
+      }
+
+      // Initialize field options visibility on page load
+      document.addEventListener('DOMContentLoaded', function() {
+        document.querySelectorAll('select[name*="[type]"]').forEach(select => {
+          updateFieldOptions(select);
+        });
+      });
+    </script>
+  </body>
+</html> 

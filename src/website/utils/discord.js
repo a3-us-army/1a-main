@@ -79,6 +79,41 @@ export async function isUserAdmin(userId) {
   }
 }
 
+export async function isUserWebAdmin(userId) {
+  const guildId = process.env.GUILD_ID;
+  const botToken = process.env.DISCORD_TOKEN;
+  if (!guildId || !botToken) {
+    console.error(
+      '[WEB ADMIN CHECK] Missing GUILD_ID or BOT_TOKEN in environment.'
+    );
+    return false;
+  }
+
+  try {
+    const res = await fetch(
+      `https://discord.com/api/v10/guilds/${guildId}/members/${userId}`,
+      {
+        headers: { Authorization: `Bot ${botToken}` },
+      }
+    );
+
+    if (!res.ok) {
+      return false;
+    }
+    
+    const member = JSON.parse(await res.text());
+    const memberRoleIds = member.roles || [];
+    
+    // Check for the specific "web admin" role ID
+    const WEB_ADMIN_ROLE_ID = '1402098883177353316';
+    
+    return memberRoleIds.includes(WEB_ADMIN_ROLE_ID);
+  } catch (err) {
+    console.error('Failed to check web admin status:', err);
+    return false;
+  }
+}
+
 export async function fetchDiscordAvatar(discord_id, botToken) {
   try {
     const response = await fetch(

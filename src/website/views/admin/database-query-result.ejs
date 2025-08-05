@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Query Result - 1A 75th</title>
+    <meta content="1A Website" property="og:title" />
+    <meta content="Welcome to 1A!" property="og:description" />
+    <meta content="https://1a75.org/database-editor" property="og:url" />
+    <meta content="https://cdn.xanderxx.xyz/1a-logo.png" property="og:image" />
+    <meta content="#4b5a2a" data-react-helmet="true" name="theme-color" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css"
+    />
+    <link rel="icon" href="/favicon.ico" />
+    <link rel="stylesheet" href="/custom.css" />
+  </head>
+  <body>
+    <%- include('../partials/navbar', { user, active }) %>
+    <div class="container mt-5">
+      <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="h2 mb-0">Query Result</h1>
+        <div class="d-flex gap-2">
+          <a href="/database-editor" class="btn btn-outline-primary">
+            <i class="bi bi-arrow-left me-2"></i>Back to Editor
+          </a>
+        </div>
+      </div>
+
+      <!-- Query Info -->
+      <div class="card mb-4">
+        <div class="card-header">
+          <h5 class="card-title mb-0">Executed Query</h5>
+        </div>
+        <div class="card-body">
+          <div class="mb-3">
+            <label class="form-label">SQL Query:</label>
+            <div class="bg-dark text-light p-3 rounded">
+              <code><%= query %></code>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-6">
+              <p><strong>Results:</strong> <%= result.length %> rows</p>
+            </div>
+            <div class="col-md-6">
+              <p><strong>Execution Time:</strong> <span class="text-muted">Instant</span></p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Results Table -->
+      <div class="card">
+        <div class="card-header">
+          <h5 class="card-title mb-0">Query Results</h5>
+        </div>
+        <div class="card-body p-0">
+          <% if (result.length > 0) { %>
+            <div class="table-responsive">
+              <table class="table table-dark table-hover mb-0">
+                <thead>
+                  <tr>
+                    <% Object.keys(result[0]).forEach(column => { %>
+                      <th><%= column %></th>
+                    <% }) %>
+                  </tr>
+                </thead>
+                <tbody>
+                  <% result.forEach(row => { %>
+                    <tr>
+                      <% Object.values(row).forEach(value => { %>
+                        <td>
+                          <% if (value === null || value === undefined) { %>
+                            <span class="text-muted">NULL</span>
+                          <% } else if (typeof value === 'boolean') { %>
+                            <span class="badge <%= value ? 'bg-success' : 'bg-secondary' %>">
+                              <%= value ? 'True' : 'False' %>
+                            </span>
+                          <% } else if (typeof value === 'string' && value.length > 50) { %>
+                            <span title="<%= value %>">
+                              <%= value.substring(0, 50) %>...
+                            </span>
+                          <% } else { %>
+                            <%= value %>
+                          <% } %>
+                        </td>
+                      <% }) %>
+                    </tr>
+                  <% }) %>
+                </tbody>
+              </table>
+            </div>
+          <% } else { %>
+            <div class="text-center py-5">
+              <i class="bi bi-table text-muted" style="font-size: 3rem;"></i>
+              <p class="text-muted mt-3">No results found</p>
+            </div>
+          <% } %>
+        </div>
+      </div>
+
+      <!-- Export Options -->
+      <% if (result.length > 0) { %>
+        <div class="card mt-4">
+          <div class="card-header">
+            <h5 class="card-title mb-0">Export Results</h5>
+          </div>
+          <div class="card-body">
+            <div class="d-flex gap-2">
+              <button class="btn btn-outline-primary" onclick="exportToCSV()">
+                <i class="bi bi-download me-2"></i>Export to CSV
+              </button>
+              <button class="btn btn-outline-secondary" onclick="copyToClipboard()">
+                <i class="bi bi-clipboard me-2"></i>Copy to Clipboard
+              </button>
+            </div>
+          </div>
+        </div>
+      <% } %>
+    </div>
+
+    <%- include('../partials/footer') %>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+      function exportToCSV() {
+        const data = <%- JSON.stringify(result) %>;
+        if (data.length === 0) return;
+        
+        const headers = Object.keys(data[0]);
+        const csvContent = [
+          headers.join(','),
+          ...data.map(row => 
+            headers.map(header => {
+              const value = row[header];
+              if (value === null || value === undefined) return '';
+              return `"${value.toString().replace(/"/g, '""')}"`;
+            }).join(',')
+          )
+        ].join('\n');
+        
+        const blob = new Blob([csvContent], { type: 'text/csv' });
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'query_result.csv';
+        a.click();
+        window.URL.revokeObjectURL(url);
+      }
+      
+      function copyToClipboard() {
+        const data = <%- JSON.stringify(result) %>;
+        const text = JSON.stringify(data, null, 2);
+        
+        navigator.clipboard.writeText(text).then(() => {
+          // Show a temporary success message
+          const button = event.target.closest('button');
+          const originalText = button.innerHTML;
+          button.innerHTML = '<i class="bi bi-check me-2"></i>Copied!';
+          button.classList.remove('btn-outline-secondary');
+          button.classList.add('btn-success');
+          
+          setTimeout(() => {
+            button.innerHTML = originalText;
+            button.classList.remove('btn-success');
+            button.classList.add('btn-outline-secondary');
+          }, 2000);
+        });
+      }
+    </script>
+  </body>
+</html> 

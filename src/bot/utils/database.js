@@ -1,5 +1,4 @@
 import Database from 'better-sqlite3';
-
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
@@ -101,6 +100,19 @@ export function setupDatabase() {
   } catch (e) {
     // Column already exists
   }
+
+  // Create database health logs table
+  db.prepare(`
+    CREATE TABLE IF NOT EXISTS database_health_logs (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      table_name TEXT NOT NULL,
+      record_count INTEGER NOT NULL,
+      table_size_bytes INTEGER,
+      last_updated TEXT NOT NULL,
+      health_score INTEGER NOT NULL,
+      issues TEXT
+    )
+  `).run();
   // Remove any rows with id = NULL
   db.prepare('DELETE FROM applications WHERE id IS NULL').run();
 
@@ -269,6 +281,122 @@ export function setupDatabase() {
       uploaded_at TEXT NOT NULL,
       display_order INTEGER DEFAULT 0,
       file_size INTEGER DEFAULT 0
+    )
+  `).run();
+
+  // Create user_activity table for tracking user activity
+  db.prepare(`
+    CREATE TABLE IF NOT EXISTS user_activity (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      user_id TEXT NOT NULL,
+      activity_type TEXT NOT NULL,
+      details TEXT,
+      ip_address TEXT,
+      user_agent TEXT,
+      created_at TEXT NOT NULL
+    )
+  `).run();
+
+  // Create form_templates table for advanced form features
+  db.prepare(`
+    CREATE TABLE IF NOT EXISTS form_templates (
+      id TEXT PRIMARY KEY,
+      name TEXT NOT NULL,
+      description TEXT,
+      fields TEXT NOT NULL, -- JSON string of field definitions
+      conditional_logic TEXT, -- JSON string of conditional logic
+      created_by TEXT NOT NULL,
+      created_at TEXT NOT NULL,
+      updated_at TEXT,
+      is_active BOOLEAN DEFAULT 1
+    )
+  `).run();
+
+  // Create form_responses table for form analytics
+  db.prepare(`
+    CREATE TABLE IF NOT EXISTS form_responses (
+      id TEXT PRIMARY KEY,
+      form_id TEXT NOT NULL,
+      user_id TEXT,
+      responses TEXT NOT NULL, -- JSON string of responses
+      completion_time INTEGER, -- seconds to complete
+      started_at TEXT NOT NULL,
+      completed_at TEXT,
+      ip_address TEXT,
+      user_agent TEXT
+    )
+  `).run();
+
+  // Create financial_transactions table
+  db.prepare(`
+    CREATE TABLE IF NOT EXISTS financial_transactions (
+      id TEXT PRIMARY KEY,
+      type TEXT NOT NULL, -- 'donation', 'expense', 'income'
+      amount DECIMAL(10,2) NOT NULL,
+      description TEXT NOT NULL,
+      category TEXT,
+      donor_name TEXT,
+      donor_email TEXT,
+      payment_method TEXT,
+      transaction_date TEXT NOT NULL,
+      created_by TEXT,
+      created_at TEXT NOT NULL,
+      notes TEXT
+    )
+  `).run();
+
+  // Create financial_categories table
+  db.prepare(`
+    CREATE TABLE IF NOT EXISTS financial_categories (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      name TEXT NOT NULL,
+      type TEXT NOT NULL, -- 'income', 'expense'
+      description TEXT,
+      color TEXT,
+      created_at TEXT NOT NULL
+    )
+  `).run();
+
+  // Create budget_plans table
+  db.prepare(`
+    CREATE TABLE IF NOT EXISTS budget_plans (
+      id TEXT PRIMARY KEY,
+      name TEXT NOT NULL,
+      period TEXT NOT NULL, -- 'monthly', 'quarterly', 'yearly'
+      start_date TEXT NOT NULL,
+      end_date TEXT NOT NULL,
+      total_budget DECIMAL(10,2) NOT NULL,
+      created_by TEXT NOT NULL,
+      created_at TEXT NOT NULL,
+      notes TEXT
+    )
+  `).run();
+
+  // Create budget_items table
+  db.prepare(`
+    CREATE TABLE IF NOT EXISTS budget_items (
+      id TEXT PRIMARY KEY,
+      budget_id TEXT NOT NULL,
+      category_id INTEGER,
+      name TEXT NOT NULL,
+      planned_amount DECIMAL(10,2) NOT NULL,
+      actual_amount DECIMAL(10,2) DEFAULT 0,
+      notes TEXT,
+      FOREIGN KEY (budget_id) REFERENCES budget_plans(id),
+      FOREIGN KEY (category_id) REFERENCES financial_categories(id)
+    )
+  `).run();
+
+  // Create database_health_logs table
+  db.prepare(`
+    CREATE TABLE IF NOT EXISTS database_health_logs (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      table_name TEXT NOT NULL,
+      record_count INTEGER NOT NULL,
+      table_size_bytes INTEGER,
+      last_updated TEXT NOT NULL,
+      health_score INTEGER, -- 0-100
+      issues TEXT -- JSON string of issues found
     )
   `).run();
 
@@ -1205,4 +1333,352 @@ export function findSnippetNames(prefix) {
       'SELECT name FROM snippets WHERE name LIKE ? ORDER BY name LIMIT 25'
     )
     .all(`${prefix}%`);
+}
+
+// User Activity Tracking Functions
+export function logUserActivity(userId, activityType, details = null, ipAddress = null, userAgent = null) {
+  return getDatabase()
+    .prepare(`
+      INSERT INTO user_activity (user_id, activity_type, details, ip_address, user_agent, created_at)
+      VALUES (?, ?, ?, ?, ?, ?)
+    `)
+    .run(userId, activityType, details, ipAddress, userAgent, new Date().toISOString());
+}
+
+export function getUserActivity(userId, limit = 50) {
+  return getDatabase()
+    .prepare(`
+      SELECT * FROM user_activity 
+      WHERE user_id = ? 
+      ORDER BY created_at DESC 
+      LIMIT ?
+    `)
+    .all(userId, limit);
+}
+
+export function getAllUserActivity(limit = 100) {
+  return getDatabase()
+    .prepare(`
+      SELECT ua.*, u.username, u.discord_tag 
+      FROM user_activity ua
+      LEFT JOIN users u ON ua.user_id = u.id
+      ORDER BY ua.created_at DESC 
+      LIMIT ?
+    `)
+    .all(limit);
+}
+
+export function getActivityStats(days = 30) {
+  const db = getDatabase();
+  const cutoffDate = new Date();
+  cutoffDate.setDate(cutoffDate.getDate() - days);
+  
+  return db.prepare(`
+    SELECT 
+      activity_type,
+      COUNT(*) as count,
+      DATE(created_at) as date
+    FROM user_activity 
+    WHERE created_at >= ?
+    GROUP BY activity_type, DATE(created_at)
+    ORDER BY date DESC, count DESC
+  `).all(cutoffDate.toISOString());
+}
+
+// Form Template Functions
+export function createFormTemplate(templateData) {
+  const { id, name, description, fields, conditionalLogic, createdBy } = templateData;
+  return getDatabase()
+    .prepare(`
+      INSERT INTO form_templates (id, name, description, fields, conditional_logic, created_by, created_at)
+      VALUES (?, ?, ?, ?, ?, ?, ?)
+    `)
+    .run(id, name, description, JSON.stringify(fields), JSON.stringify(conditionalLogic), createdBy, new Date().toISOString());
+}
+
+export function getAllFormTemplates() {
+  return getDatabase()
+    .prepare('SELECT * FROM form_templates ORDER BY created_at DESC')
+    .all();
+}
+
+export function getFormTemplate(templateId) {
+  return getDatabase()
+    .prepare('SELECT * FROM form_templates WHERE id = ?')
+    .get(templateId);
+}
+
+export function updateFormTemplate(templateId, updates) {
+  const db = getDatabase();
+  const updateFields = [];
+  const params = [];
+  
+  if (updates.name) {
+    updateFields.push('name = ?');
+    params.push(updates.name);
+  }
+  if (updates.description) {
+    updateFields.push('description = ?');
+    params.push(updates.description);
+  }
+  if (updates.fields) {
+    updateFields.push('fields = ?');
+    params.push(JSON.stringify(updates.fields));
+  }
+  if (updates.conditionalLogic) {
+    updateFields.push('conditional_logic = ?');
+    params.push(JSON.stringify(updates.conditionalLogic));
+  }
+  if (updates.isActive !== undefined) {
+    updateFields.push('is_active = ?');
+    params.push(updates.isActive);
+  }
+  
+  updateFields.push('updated_at = ?');
+  params.push(new Date().toISOString());
+  params.push(templateId);
+  
+  return db.prepare(`
+    UPDATE form_templates 
+    SET ${updateFields.join(', ')} 
+    WHERE id = ?
+  `).run(...params);
+}
+
+export function deleteFormTemplate(templateId) {
+  return getDatabase()
+    .prepare('DELETE FROM form_templates WHERE id = ?')
+    .run(templateId);
+}
+
+// Form Response Functions
+export function saveFormResponse(responseData) {
+  const { id, formId, userId, responses, completionTime, startedAt, completedAt, ipAddress, userAgent } = responseData;
+  return getDatabase()
+    .prepare(`
+      INSERT INTO form_responses (id, form_id, user_id, responses, completion_time, started_at, completed_at, ip_address, user_agent)
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+    `)
+    .run(id, formId, userId, JSON.stringify(responses), completionTime, startedAt, completedAt, ipAddress, userAgent);
+}
+
+export function getFormResponses(formId, limit = 100) {
+  return getDatabase()
+    .prepare(`
+      SELECT * FROM form_responses 
+      WHERE form_id = ? 
+      ORDER BY started_at DESC 
+      LIMIT ?
+    `)
+    .all(formId, limit);
+}
+
+export function getFormAnalytics(formId) {
+  const db = getDatabase();
+  
+  // Get completion rate
+  const totalStarted = db.prepare('SELECT COUNT(*) as count FROM form_responses WHERE form_id = ?').get(formId);
+  const totalCompleted = db.prepare('SELECT COUNT(*) as count FROM form_responses WHERE form_id = ? AND completed_at IS NOT NULL').get(formId);
+  
+  // Get average completion time
+  const avgTime = db.prepare('SELECT AVG(completion_time) as avg_time FROM form_responses WHERE form_id = ? AND completion_time IS NOT NULL').get(formId);
+  
+  // Get daily submissions
+  const dailyStats = db.prepare(`
+    SELECT DATE(started_at) as date, COUNT(*) as count
+    FROM form_responses 
+    WHERE form_id = ? 
+    GROUP BY DATE(started_at)
+    ORDER BY date DESC
+    LIMIT 30
+  `).all(formId);
+  
+  return {
+    totalStarted: totalStarted.count,
+    totalCompleted: totalCompleted.count,
+    completionRate: totalStarted.count > 0 ? (totalCompleted.count / totalStarted.count * 100).toFixed(2) : 0,
+    averageCompletionTime: avgTime.avg_time ? Math.round(avgTime.avg_time) : 0,
+    dailyStats
+  };
+}
+
+// Financial Management Functions
+export function addFinancialTransaction(transactionData) {
+  const { id, type, amount, description, category, donorName, donorEmail, paymentMethod, transactionDate, createdBy, notes } = transactionData;
+  return getDatabase()
+    .prepare(`
+      INSERT INTO financial_transactions (id, type, amount, description, category, donor_name, donor_email, payment_method, transaction_date, created_by, created_at, notes)
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+    `)
+    .run(id, type, amount, description, category, donorName, donorEmail, paymentMethod, transactionDate, createdBy, new Date().toISOString(), notes);
+}
+
+export function getAllFinancialTransactions(limit = 100) {
+  return getDatabase()
+    .prepare(`
+      SELECT * FROM financial_transactions 
+      ORDER BY transaction_date DESC 
+      LIMIT ?
+    `)
+    .all(limit);
+}
+
+export function getFinancialTransactionsByType(type, limit = 100) {
+  return getDatabase()
+    .prepare(`
+      SELECT * FROM financial_transactions 
+      WHERE type = ? 
+      ORDER BY transaction_date DESC 
+      LIMIT ?
+    `)
+    .all(type, limit);
+}
+
+export function getFinancialSummary(startDate = null, endDate = null) {
+  const db = getDatabase();
+  let query = `
+    SELECT 
+      type,
+      SUM(amount) as total,
+      COUNT(*) as count
+    FROM financial_transactions
+  `;
+  
+  const params = [];
+  if (startDate && endDate) {
+    query += ' WHERE transaction_date BETWEEN ? AND ?';
+    params.push(startDate, endDate);
+  }
+  
+  query += ' GROUP BY type';
+  
+  return db.prepare(query).all(...params);
+}
+
+export function addFinancialCategory(categoryData) {
+  const { name, type, description, color } = categoryData;
+  return getDatabase()
+    .prepare(`
+      INSERT INTO financial_categories (name, type, description, color, created_at)
+      VALUES (?, ?, ?, ?, ?)
+    `)
+    .run(name, type, description, color, new Date().toISOString());
+}
+
+export function getAllFinancialCategories() {
+  return getDatabase()
+    .prepare('SELECT * FROM financial_categories ORDER BY name')
+    .all();
+}
+
+export function createBudgetPlan(budgetData) {
+  const { id, name, period, startDate, endDate, totalBudget, createdBy, notes } = budgetData;
+  return getDatabase()
+    .prepare(`
+      INSERT INTO budget_plans (id, name, period, start_date, end_date, total_budget, created_by, created_at, notes)
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+    `)
+    .run(id, name, period, startDate, endDate, totalBudget, createdBy, new Date().toISOString(), notes);
+}
+
+export function getAllBudgetPlans() {
+  return getDatabase()
+    .prepare('SELECT * FROM budget_plans ORDER BY start_date DESC')
+    .all();
+}
+
+export function getBudgetPlan(budgetId) {
+  return getDatabase()
+    .prepare('SELECT * FROM budget_plans WHERE id = ?')
+    .get(budgetId);
+}
+
+export function addBudgetItem(itemData) {
+  const { id, budgetId, categoryId, name, plannedAmount, notes } = itemData;
+  return getDatabase()
+    .prepare(`
+      INSERT INTO budget_items (id, budget_id, category_id, name, planned_amount, notes)
+      VALUES (?, ?, ?, ?, ?, ?)
+    `)
+    .run(id, budgetId, categoryId, name, plannedAmount, notes);
+}
+
+export function getBudgetItems(budgetId) {
+  return getDatabase()
+    .prepare(`
+      SELECT bi.*, fc.name as category_name, fc.color as category_color
+      FROM budget_items bi
+      LEFT JOIN financial_categories fc ON bi.category_id = fc.id
+      WHERE bi.budget_id = ?
+      ORDER BY bi.name
+    `)
+    .all(budgetId);
+}
+
+// Database Health Functions
+export function logDatabaseHealth(tableName, recordCount, tableSizeBytes, healthScore, issues = null) {
+  return getDatabase()
+    .prepare(`
+      INSERT INTO database_health_logs (table_name, record_count, table_size_bytes, last_updated, health_score, issues)
+      VALUES (?, ?, ?, ?, ?, ?)
+    `)
+    .run(tableName, recordCount, tableSizeBytes, new Date().toISOString(), healthScore, JSON.stringify(issues));
+}
+
+export function getDatabaseHealthLogs(limit = 50) {
+  return getDatabase()
+    .prepare(`
+      SELECT * FROM database_health_logs 
+      ORDER BY last_updated DESC 
+      LIMIT ?
+    `)
+    .all(limit);
+}
+
+export function getDatabaseHealthSummary() {
+  const db = getDatabase();
+  
+  // Get table sizes and record counts
+  const tables = db.prepare(`
+    SELECT name FROM sqlite_master 
+    WHERE type='table' AND name NOT LIKE 'sqlite_%'
+  `).all();
+  
+  const healthData = [];
+  for (const table of tables) {
+    const recordCount = db.prepare(`SELECT COUNT(*) as count FROM ${table.name}`).get().count;
+    const tableInfo = db.prepare(`PRAGMA table_info(${table.name})`).all();
+    const healthScore = calculateTableHealthScore(table.name, recordCount, tableInfo);
+    
+    healthData.push({
+      tableName: table.name,
+      recordCount,
+      columnCount: tableInfo.length,
+      healthScore
+    });
+  }
+  
+  return healthData;
+}
+
+function calculateTableHealthScore(tableName, recordCount, tableInfo) {
+  let score = 100;
+  
+  // Deduct points for tables with no records (might indicate issues)
+  if (recordCount === 0 && !['users', 'financial_categories'].includes(tableName)) {
+    score -= 20;
+  }
+  
+  // Deduct points for tables with too many columns (might indicate poor design)
+  if (tableInfo.length > 15) {
+    score -= 10;
+  }
+  
+  // Deduct points for tables with no primary key
+  const hasPrimaryKey = tableInfo.some(col => col.pk > 0);
+  if (!hasPrimaryKey) {
+    score -= 30;
+  }
+  
+  return Math.max(0, score);
 }

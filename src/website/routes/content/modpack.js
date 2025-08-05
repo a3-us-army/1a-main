@@ -32,7 +32,7 @@ router.get('/', async (req, res) => {
     .all();
   let isAdmin = false;
   if (req.user) {
-    isAdmin = await import('../utils/discord.js').then(m =>
+    isAdmin = await import('../../utils/discord.js').then(m =>
       m.isUserAdmin(req.user.id)
     );
   }
