@@ -188,20 +188,22 @@ router.post('/optimize', ensureAdmin, async (req, res) => {
 router.post('/backup', ensureAdmin, async (req, res) => {
   try {
     const dbPath = path.resolve(__dirname, '../../../../events.db');
-    const backupPath = path.resolve(__dirname, `../../../../backup_${Date.now()}.db`);
+    const backupDir = path.resolve(__dirname, '../../../../backup_db');
+    const fs = await import('fs/promises');
     
-    // Create backup
-    const backupDb = new (require('better-sqlite3'))(backupPath);
-    const backup = backupDb.backup(dbPath);
+    // Create backup directory if it doesn't exist
+    try {
+      await fs.access(backupDir);
+    } catch {
+      await fs.mkdir(backupDir, { recursive: true });
+    }
     
-    await new Promise((resolve, reject) => {
-      backup.complete((err) => {
-        if (err) reject(err);
-        else resolve();
-      });
-    });
+    // Create backup with timestamp
+    const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
+    const backupPath = path.join(backupDir, `backup_${timestamp}.db`);
     
-    backupDb.close();
+    // Create backup using fs.copyFile
+    await fs.copyFile(dbPath, backupPath);
     
     res.redirect('/database-health?alert=Database backup created successfully');
   } catch (error) {
@@ -241,6 +243,66 @@ router.get('/api/stats', ensureAdmin, async (req, res) => {
   } catch (error) {
     console.error('Error loading database stats:', error);
     res.status(500).json({ error: 'Failed to load database statistics' });
+  }
+});
+
+// List Backups
+router.get('/backups', ensureAdmin, async (req, res) => {
+  try {
+    const backupDir = path.resolve(__dirname, '../../../../backup_db');
+    const fs = await import('fs/promises');
+    
+    // Check if backup directory exists
+    try {
+      await fs.access(backupDir);
+    } catch {
+      return res.json([]);
+    }
+    
+    // Get list of backup files
+    const files = await fs.readdir(backupDir);
+    const backups = [];
+    
+    for (const file of files) {
+      if (file.endsWith('.db')) {
+        const filePath = path.join(backupDir, file);
+        const stats = await fs.stat(filePath);
+        backups.push({
+          name: file,
+          size: stats.size,
+          created: stats.birthtime,
+          path: filePath
+        });
+      }
+    }
+    
+    // Sort by creation date (newest first)
+    backups.sort((a, b) => new Date(b.created) - new Date(a.created));
+    
+    res.json(backups);
+  } catch (error) {
+    console.error('Error listing backups:', error);
+    res.status(500).json({ error: 'Failed to list backups' });
+  }
+});
+
+// Delete Backup
+router.delete('/backup/:filename', ensureAdmin, async (req, res) => {
+  try {
+    const backupDir = path.resolve(__dirname, '../../../../backup_db');
+    const backupPath = path.join(backupDir, req.params.filename);
+    const fs = await import('fs/promises');
+    
+    // Validate filename to prevent directory traversal
+    if (!req.params.filename.endsWith('.db') || req.params.filename.includes('..')) {
+      return res.status(400).json({ error: 'Invalid backup filename' });
+    }
+    
+    await fs.unlink(backupPath);
+    res.json({ success: true });
+  } catch (error) {
+    console.error('Error deleting backup:', error);
+    res.status(500).json({ error: 'Failed to delete backup' });
   }
 });
 

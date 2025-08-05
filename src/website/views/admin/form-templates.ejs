@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Form Templates - 1A 75th</title>
+    <meta content="1A Website" property="og:title" />
+    <meta content="Welcome to 1A!" property="og:description" />
+    <meta content="https://1a75.org/form-builder" property="og:url" />
+    <meta content="https://cdn.xanderxx.xyz/1a-logo.png" property="og:image" />
+    <meta content="#4b5a2a" data-react-helmet="true" name="theme-color" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css"
+    />
+    <link rel="icon" href="/favicon.ico" />
+    <link rel="stylesheet" href="/custom.css" />
+  </head>
+  <body>
+    <%- include('../partials/navbar', { user, active }) %>
+    <div class="container mt-5">
+      <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="h2 mb-0">Form Templates</h1>
+        <div class="d-flex gap-2">
+          <a href="/form-builder" class="btn btn-outline-primary">
+            <i class="bi bi-arrow-left me-2"></i>Back to Forms
+          </a>
+          <a href="/form-builder/new" class="btn btn-primary">
+            <i class="bi bi-plus-circle me-2"></i>Create New Form
+          </a>
+        </div>
+      </div>
+
+      <% if (alert) { %>
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+          <%= alert %>
+          <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+      <% } %>
+
+      <% if (error) { %>
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+          <%= error %>
+          <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+      <% } %>
+
+      <!-- Template Categories -->
+      <div class="row mb-4">
+        <div class="col-12">
+          <div class="card">
+            <div class="card-header">
+              <h5 class="card-title mb-0">Quick Start Templates</h5>
+            </div>
+            <div class="card-body">
+              <div class="row">
+                <div class="col-md-4 mb-3">
+                  <div class="card h-100">
+                    <div class="card-body text-center">
+                      <i class="bi bi-person-plus text-primary" style="font-size: 2rem;"></i>
+                      <h6 class="card-title mt-2">Application Form</h6>
+                      <p class="card-text small">Standard application form with personal info, experience, and questions.</p>
+                      <button class="btn btn-primary btn-sm" onclick="useTemplate('application')">
+                        <i class="bi bi-plus-circle me-1"></i>Use Template
+                      </button>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-4 mb-3">
+                  <div class="card h-100">
+                    <div class="card-body text-center">
+                      <i class="bi bi-chat-dots text-success" style="font-size: 2rem;"></i>
+                      <h6 class="card-title mt-2">Feedback Form</h6>
+                      <p class="card-text small">Collect feedback with rating scales and open-ended questions.</p>
+                      <button class="btn btn-success btn-sm" onclick="useTemplate('feedback')">
+                        <i class="bi bi-plus-circle me-1"></i>Use Template
+                      </button>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-4 mb-3">
+                  <div class="card h-100">
+                    <div class="card-body text-center">
+                      <i class="bi bi-calendar-event text-warning" style="font-size: 2rem;"></i>
+                      <h6 class="card-title mt-2">Event Registration</h6>
+                      <p class="card-text small">Event registration with attendee info and preferences.</p>
+                      <button class="btn btn-warning btn-sm" onclick="useTemplate('event')">
+                        <i class="bi bi-plus-circle me-1"></i>Use Template
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Existing Templates -->
+      <div class="card">
+        <div class="card-header">
+          <h5 class="card-title mb-0">Your Form Templates</h5>
+        </div>
+        <div class="card-body">
+          <% if (templates.length > 0) { %>
+            <div class="row">
+              <% templates.forEach(template => { %>
+                <div class="col-md-6 col-lg-4 mb-3">
+                  <div class="card h-100">
+                    <div class="card-body">
+                      <h6 class="card-title"><%= template.name %></h6>
+                      <p class="card-text small text-muted"><%= template.description || 'No description' %></p>
+                      <div class="d-flex justify-content-between align-items-center mb-2">
+                        <small class="text-muted">
+                          <i class="bi bi-list-ul me-1"></i><%= template.fields ? template.fields.length : 0 %> fields
+                        </small>
+                        <span class="badge <%= template.is_active ? 'bg-success' : 'bg-secondary' %>">
+                          <%= template.is_active ? 'Active' : 'Inactive' %>
+                        </span>
+                      </div>
+                      <div class="d-flex flex-column gap-2">
+                        <button class="btn btn-outline-primary btn-sm" onclick="useTemplate('existing', '<%= template.id %>')" title="Use this template to create a new form">
+                          <i class="bi bi-plus-circle me-1"></i>Use as Template
+                        </button>
+                        <div class="d-flex gap-1">
+                          <a href="/form-builder/edit/<%= template.id %>" class="btn btn-outline-secondary btn-sm" title="Edit this template">
+                            <i class="bi bi-pencil me-1"></i>Edit
+                          </a>
+                          <a href="/form-builder/responses/<%= template.id %>" class="btn btn-outline-info btn-sm" title="View responses">
+                            <i class="bi bi-chat-dots me-1"></i>Responses
+                          </a>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              <% }) %>
+            </div>
+          <% } else { %>
+            <div class="text-center py-5">
+              <i class="bi bi-collection text-muted" style="font-size: 3rem;"></i>
+              <p class="text-muted mt-3">No templates yet</p>
+              <p class="text-muted small">Create your first form to get started!</p>
+            </div>
+          <% } %>
+        </div>
+      </div>
+    </div>
+
+    <%- include('../partials/footer') %>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+      function useTemplate(type, templateId = null) {
+        if (type === 'existing' && templateId) {
+          // Use existing template as base
+          window.location.href = `/form-builder/new?template=${templateId}`;
+        } else {
+          // Use predefined template
+          window.location.href = `/form-builder/new?template=${type}`;
+        }
+      }
+    </script>
+  </body>
+</html> 

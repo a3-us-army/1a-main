@@ -127,7 +127,7 @@
                             type="text" 
                             class="form-control" 
                             name="fields[<%= index %>][name]" 
-                            value="<%= field.name %>" 
+                            value="<%= field.name || field.label.toLowerCase().replace(/\s+/g, '_') %>" 
                             placeholder="auto-generated"
                           >
                         </div>
@@ -219,19 +219,30 @@
           </div>
         </div>
 
-        <!-- Save Buttons -->
-        <div class="d-flex gap-2">
-          <button type="submit" class="btn btn-primary">
-            <i class="bi bi-check-circle me-2"></i><%= form ? 'Update' : 'Create' %> Form
-          </button>
-          <a href="/form-builder" class="btn btn-outline-secondary">
-            <i class="bi bi-x-circle me-2"></i>Cancel
-          </a>
-          <% if (form) { %>
-            <a href="/form-builder/preview/<%= form.id %>" class="btn btn-outline-info" target="_blank">
-              <i class="bi bi-eye me-2"></i>Preview Form
-            </a>
-          <% } %>
+        <!-- Action Buttons -->
+        <div class="card mt-4">
+          <div class="card-body">
+            <div class="d-flex justify-content-between align-items-center">
+              <div class="d-flex gap-2">
+                <button type="submit" class="btn btn-primary btn-lg">
+                  <i class="bi bi-check-circle me-2"></i><%= form ? 'Update' : 'Create' %> Form
+                </button>
+                <a href="/form-builder" class="btn btn-outline-secondary btn-lg">
+                  <i class="bi bi-x-circle me-2"></i>Cancel
+                </a>
+              </div>
+              <div class="d-flex gap-2">
+                <% if (form) { %>
+                  <a href="/form-builder/preview/<%= form.id %>" class="btn btn-outline-info" target="_blank" title="Preview how your form will look to users">
+                    <i class="bi bi-eye me-2"></i>Preview Form
+                  </a>
+                  <a href="/form-builder/responses/<%= form.id %>" class="btn btn-outline-success" title="View form responses">
+                    <i class="bi bi-chat-dots me-2"></i>View Responses
+                  </a>
+                <% } %>
+              </div>
+            </div>
+          </div>
         </div>
       </form>
     </div>
@@ -255,7 +266,7 @@
               <div class="row">
                 <div class="col-md-6 mb-3">
                   <label class="form-label">Field Label *</label>
-                  <input type="text" class="form-control" name="fields[${fieldIndex}][label]" required>
+                  <input type="text" class="form-control" name="fields[${fieldIndex}][label]" required oninput="generateFieldName(this)">
                 </div>
                 <div class="col-md-6 mb-3">
                   <label class="form-label">Field Type *</label>
@@ -275,7 +286,7 @@
               <div class="row">
                 <div class="col-md-6 mb-3">
                   <label class="form-label">Field Name (Internal)</label>
-                  <input type="text" class="form-control" name="fields[${fieldIndex}][name]" placeholder="auto-generated">
+                  <input type="text" class="form-control" name="fields[${fieldIndex}][name]" placeholder="auto-generated" onchange="generateFieldName(this)">
                 </div>
                 <div class="col-md-6 mb-3">
                   <label class="form-label">Required</label>
@@ -317,7 +328,26 @@
         document.querySelectorAll('select[name*="[type]"]').forEach(select => {
           updateFieldOptions(select);
         });
+        
+        // Auto-generate field names for existing fields
+        document.querySelectorAll('input[name*="[label]"]').forEach(input => {
+          input.addEventListener('input', function() {
+            const fieldItem = this.closest('.field-item');
+            const nameInput = fieldItem.querySelector('input[name*="[name]"]');
+            if (nameInput && !nameInput.value) {
+              nameInput.value = this.value.toLowerCase().replace(/\s+/g, '_').replace(/[^a-z0-9_]/g, '');
+            }
+          });
+        });
       });
+
+      function generateFieldName(labelInput) {
+        const fieldItem = labelInput.closest('.field-item');
+        const nameInput = fieldItem.querySelector('input[name*="[name]"]');
+        if (nameInput && !nameInput.value) {
+          nameInput.value = labelInput.value.toLowerCase().replace(/\s+/g, '_').replace(/[^a-z0-9_]/g, '');
+        }
+      }
     </script>
   </body>
 </html> 

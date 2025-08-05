@@ -8,3 +8,4 @@ commands-manifest.json
 .prittierrc
 .prettierignore
 .vscode
+backup_db

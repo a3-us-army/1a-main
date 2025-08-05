@@ -308,9 +308,38 @@ export function setupDatabase() {
       created_by TEXT NOT NULL,
       created_at TEXT NOT NULL,
       updated_at TEXT,
-      is_active BOOLEAN DEFAULT 1
+      is_active BOOLEAN DEFAULT 1,
+      success_message TEXT DEFAULT 'Thank you for your submission!',
+      max_responses INTEGER,
+      expiry_date TEXT,
+      response_count INTEGER DEFAULT 0
     )
   `).run();
+
+  // Add missing columns if they don't exist
+  try {
+    db.prepare('ALTER TABLE form_templates ADD COLUMN success_message TEXT DEFAULT "Thank you for your submission!"').run();
+  } catch (e) {
+    // Column already exists
+  }
+  
+  try {
+    db.prepare('ALTER TABLE form_templates ADD COLUMN max_responses INTEGER').run();
+  } catch (e) {
+    // Column already exists
+  }
+  
+  try {
+    db.prepare('ALTER TABLE form_templates ADD COLUMN expiry_date TEXT').run();
+  } catch (e) {
+    // Column already exists
+  }
+  
+  try {
+    db.prepare('ALTER TABLE form_templates ADD COLUMN response_count INTEGER DEFAULT 0').run();
+  } catch (e) {
+    // Column already exists
+  }
 
   // Create form_responses table for form analytics
   db.prepare(`
@@ -1387,13 +1416,13 @@ export function getActivityStats(days = 30) {
 
 // Form Template Functions
 export function createFormTemplate(templateData) {
-  const { id, name, description, fields, conditionalLogic, createdBy } = templateData;
+  const { id, name, description, fields, conditionalLogic, createdBy, successMessage, maxResponses, expiryDate } = templateData;
   return getDatabase()
     .prepare(`
-      INSERT INTO form_templates (id, name, description, fields, conditional_logic, created_by, created_at)
-      VALUES (?, ?, ?, ?, ?, ?, ?)
+      INSERT INTO form_templates (id, name, description, fields, conditional_logic, created_by, created_at, success_message, max_responses, expiry_date)
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
     `)
-    .run(id, name, description, JSON.stringify(fields), JSON.stringify(conditionalLogic), createdBy, new Date().toISOString());
+    .run(id, name, description, JSON.stringify(fields), JSON.stringify(conditionalLogic), createdBy, new Date().toISOString(), successMessage || 'Thank you for your submission!', maxResponses || null, expiryDate || null);
 }
 
 export function getAllFormTemplates() {
@@ -1413,30 +1442,52 @@ export function updateFormTemplate(templateId, updates) {
   const updateFields = [];
   const params = [];
   
-  if (updates.name) {
+  // Helper function to ensure valid SQLite3 types
+  const ensureValidType = (value) => {
+    if (value === null || value === undefined) return null;
+    if (typeof value === 'string' || typeof value === 'number' || typeof value === 'boolean') return value;
+    if (Array.isArray(value) || typeof value === 'object') return JSON.stringify(value);
+    return String(value);
+  };
+  
+  if (updates.name !== undefined) {
     updateFields.push('name = ?');
-    params.push(updates.name);
+    params.push(ensureValidType(updates.name));
   }
-  if (updates.description) {
+  if (updates.description !== undefined) {
     updateFields.push('description = ?');
-    params.push(updates.description);
+    params.push(ensureValidType(updates.description));
   }
-  if (updates.fields) {
+  if (updates.fields !== undefined) {
     updateFields.push('fields = ?');
     params.push(JSON.stringify(updates.fields));
   }
-  if (updates.conditionalLogic) {
+  if (updates.conditionalLogic !== undefined) {
     updateFields.push('conditional_logic = ?');
-    params.push(JSON.stringify(updates.conditionalLogic));
+    params.push(updates.conditionalLogic ? updates.conditionalLogic : null);
   }
   if (updates.isActive !== undefined) {
     updateFields.push('is_active = ?');
-    params.push(updates.isActive);
+    params.push(updates.isActive ? 1 : 0);
+  }
+  if (updates.successMessage !== undefined) {
+    updateFields.push('success_message = ?');
+    params.push(ensureValidType(updates.successMessage));
+  }
+  if (updates.maxResponses !== undefined) {
+    updateFields.push('max_responses = ?');
+    params.push(updates.maxResponses ? parseInt(updates.maxResponses) : null);
+  }
+  if (updates.expiryDate !== undefined) {
+    updateFields.push('expiry_date = ?');
+    params.push(ensureValidType(updates.expiryDate));
   }
   
   updateFields.push('updated_at = ?');
   params.push(new Date().toISOString());
   params.push(templateId);
+  
+  console.log('Update params:', params); // Debug log
   
   return db.prepare(`
     UPDATE form_templates 
@@ -1454,12 +1505,23 @@ export function deleteFormTemplate(templateId) {
 // Form Response Functions
 export function saveFormResponse(responseData) {
   const { id, formId, userId, responses, completionTime, startedAt, completedAt, ipAddress, userAgent } = responseData;
-  return getDatabase()
-    .prepare(`
-      INSERT INTO form_responses (id, form_id, user_id, responses, completion_time, started_at, completed_at, ip_address, user_agent)
-      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
-    `)
-    .run(id, formId, userId, JSON.stringify(responses), completionTime, startedAt, completedAt, ipAddress, userAgent);
+  
+  const db = getDatabase();
+  
+  // Save the response
+  db.prepare(`
+    INSERT INTO form_responses (id, form_id, user_id, responses, completion_time, started_at, completed_at, ip_address, user_agent)
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+  `).run(id, formId, userId, JSON.stringify(responses), completionTime, startedAt, completedAt, ipAddress, userAgent);
+  
+  // Update response count for the form
+  db.prepare(`
+    UPDATE form_templates 
+    SET response_count = response_count + 1 
+    WHERE id = ?
+  `).run(formId);
+  
+  return { success: true };
 }
 
 export function getFormResponses(formId, limit = 100) {
@@ -1648,13 +1710,14 @@ export function getDatabaseHealthSummary() {
   for (const table of tables) {
     const recordCount = db.prepare(`SELECT COUNT(*) as count FROM ${table.name}`).get().count;
     const tableInfo = db.prepare(`PRAGMA table_info(${table.name})`).all();
-    const healthScore = calculateTableHealthScore(table.name, recordCount, tableInfo);
+    const healthResult = calculateTableHealthScore(table.name, recordCount, tableInfo);
     
     healthData.push({
       tableName: table.name,
       recordCount,
       columnCount: tableInfo.length,
-      healthScore
+      healthScore: healthResult.score,
+      issues: healthResult.issues
     });
   }
   
@@ -1663,22 +1726,67 @@ export function getDatabaseHealthSummary() {
 
 function calculateTableHealthScore(tableName, recordCount, tableInfo) {
   let score = 100;
+  const issues = [];
   
-  // Deduct points for tables with no records (might indicate issues)
-  if (recordCount === 0 && !['users', 'financial_categories'].includes(tableName)) {
+  // Check for empty tables (except for certain tables that can be empty)
+  if (recordCount === 0 && !['users', 'financial_categories', 'database_health_logs'].includes(tableName)) {
     score -= 20;
+    issues.push('Empty table - may indicate data loss or initialization issues');
   }
   
-  // Deduct points for tables with too many columns (might indicate poor design)
+  // Check for tables with too many columns (poor design)
   if (tableInfo.length > 15) {
     score -= 10;
+    issues.push(`Too many columns (${tableInfo.length}) - consider normalization`);
   }
   
-  // Deduct points for tables with no primary key
+  // Check for tables with no primary key
   const hasPrimaryKey = tableInfo.some(col => col.pk > 0);
   if (!hasPrimaryKey) {
     score -= 30;
+    issues.push('No primary key defined - data integrity risk');
   }
   
-  return Math.max(0, score);
+  // Check for tables with nullable columns that should be required
+  const nullableColumns = tableInfo.filter(col => col.notnull === 0);
+  if (nullableColumns.length > 0) {
+    const criticalColumns = ['id', 'name', 'title', 'email', 'user_id'];
+    const criticalNullable = nullableColumns.filter(col => 
+      criticalColumns.some(critical => col.name.toLowerCase().includes(critical))
+    );
+    if (criticalNullable.length > 0) {
+      score -= 15;
+      issues.push(`Critical columns are nullable: ${criticalNullable.map(col => col.name).join(', ')}`);
+    }
+  }
+  
+  // Check for tables with no indexes (performance issue)
+  const indexes = getDatabase().prepare(`PRAGMA index_list(${tableName})`).all();
+  if (indexes.length === 0 && recordCount > 100) {
+    score -= 10;
+    issues.push('No indexes found - may cause performance issues with large datasets');
+  }
+  
+  // Check for potential data type issues
+  const textColumns = tableInfo.filter(col => col.type.toLowerCase().includes('text'));
+  const largeTextColumns = textColumns.filter(col => 
+    col.type.toLowerCase().includes('varchar') && 
+    parseInt(col.type.match(/\d+/)?.[0] || '0') > 1000
+  );
+  if (largeTextColumns.length > 0) {
+    score -= 5;
+    issues.push(`Large text columns detected - consider using appropriate data types`);
+  }
+  
+  // Check for tables with foreign key constraints (good practice)
+  const foreignKeys = getDatabase().prepare(`PRAGMA foreign_key_list(${tableName})`).all();
+  if (foreignKeys.length === 0 && tableName !== 'users' && tableInfo.length > 3) {
+    score -= 5;
+    issues.push('No foreign key constraints - data integrity may be compromised');
+  }
+  
+  return {
+    score: Math.max(0, score),
+    issues: issues
+  };
 }

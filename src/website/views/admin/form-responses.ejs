@@ -129,8 +129,14 @@
                       <td><%= index + 1 %></td>
                       <td>
                         <small>
-                          <%= new Date(response.submitted_at).toLocaleDateString() %><br>
-                          <%= new Date(response.submitted_at).toLocaleTimeString() %>
+                          <% 
+                            const responseDate = response.completed_at || response.created_at || response.started_at;
+                            if (responseDate) { %>
+                              <%= new Date(responseDate).toLocaleDateString() %><br>
+                              <%= new Date(responseDate).toLocaleTimeString() %>
+                            <% } else { %>
+                              <span class="text-muted">No date</span>
+                            <% } %>
                         </small>
                       </td>
                       <% form.fields.forEach(field => { %>
@@ -155,13 +161,13 @@
                         </td>
                       <% }) %>
                       <td>
-                        <div class="btn-group btn-group-sm">
-                          <button class="btn btn-outline-info" onclick="viewResponse('<%= response.id %>')" title="View Details">
-                            <i class="bi bi-eye"></i>
+                        <div class="d-flex gap-2">
+                          <button class="btn btn-outline-info btn-sm" onclick="viewResponse('<%= response.id %>')" title="View Response Details">
+                            <i class="bi bi-eye me-1"></i>View
                           </button>
-                          <form method="POST" action="/form-builder/responses/<%= form.id %>/delete/<%= response.id %>" class="d-inline" onsubmit="return confirm('Are you sure you want to delete this response?')">
-                            <button type="submit" class="btn btn-outline-danger" title="Delete Response">
-                              <i class="bi bi-trash"></i>
+                          <form method="POST" action="/form-builder/responses/<%= form.id %>/delete/<%= response.id %>" class="d-inline" onsubmit="return confirm('Are you sure you want to delete this response? This action cannot be undone.')">
+                            <button type="submit" class="btn btn-outline-danger btn-sm" title="Delete Response">
+                              <i class="bi bi-trash me-1"></i>Delete
                             </button>
                           </form>
                         </div>

@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Preview: <%= template.name %> - 1A 75th</title>
+    <meta content="1A Website" property="og:title" />
+    <meta content="Welcome to 1A!" property="og:description" />
+    <meta content="https://1a75.org/form-builder" property="og:url" />
+    <meta content="https://cdn.xanderxx.xyz/1a-logo.png" property="og:image" />
+    <meta content="#4b5a2a" data-react-helmet="true" name="theme-color" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css"
+    />
+    <link rel="icon" href="/favicon.ico" />
+    <link rel="stylesheet" href="/custom.css" />
+  </head>
+  <body>
+    <%- include('../partials/navbar', { user, active }) %>
+    <div class="container mt-5">
+      <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="h2 mb-0">Form Preview: <%= template.name %></h1>
+        <div class="d-flex gap-2">
+          <a href="/form-builder" class="btn btn-outline-primary">
+            <i class="bi bi-arrow-left me-2"></i>Back to Forms
+          </a>
+          <a href="/form-builder/edit/<%= template.id %>" class="btn btn-primary">
+            <i class="bi bi-pencil me-2"></i>Edit Form
+          </a>
+        </div>
+      </div>
+
+      <!-- Form Preview -->
+      <div class="card">
+        <div class="card-header">
+          <h5 class="card-title mb-0"><%= template.name %></h5>
+          <% if (template.description) { %>
+            <p class="text-muted mb-0 mt-2"><%= template.description %></p>
+          <% } %>
+        </div>
+        <div class="card-body">
+          <form id="preview-form">
+            <% if (template.fields) { %>
+              <% const fields = JSON.parse(template.fields); %>
+              <% fields.forEach((field, index) => { %>
+                <div class="mb-3">
+                  <label for="field-<%= index %>" class="form-label">
+                    <%= field.label %>
+                    <% if (field.required) { %>
+                      <span class="text-danger">*</span>
+                    <% } %>
+                  </label>
+                  
+                  <% if (field.type === 'text') { %>
+                    <input 
+                      type="text" 
+                      class="form-control" 
+                      id="field-<%= index %>" 
+                      name="<%= field.name %>"
+                      <% if (field.required) { %>required<% } %>
+                      placeholder="Enter <%= field.label.toLowerCase() %>"
+                    >
+                  <% } else if (field.type === 'textarea') { %>
+                    <textarea 
+                      class="form-control" 
+                      id="field-<%= index %>" 
+                      name="<%= field.name %>"
+                      rows="3"
+                      <% if (field.required) { %>required<% } %>
+                      placeholder="Enter <%= field.label.toLowerCase() %>"
+                    ></textarea>
+                  <% } else if (field.type === 'email') { %>
+                    <input 
+                      type="email" 
+                      class="form-control" 
+                      id="field-<%= index %>" 
+                      name="<%= field.name %>"
+                      <% if (field.required) { %>required<% } %>
+                      placeholder="Enter email address"
+                    >
+                  <% } else if (field.type === 'number') { %>
+                    <input 
+                      type="number" 
+                      class="form-control" 
+                      id="field-<%= index %>" 
+                      name="<%= field.name %>"
+                      <% if (field.required) { %>required<% } %>
+                      placeholder="Enter number"
+                    >
+                  <% } else if (field.type === 'select') { %>
+                    <select 
+                      class="form-select" 
+                      id="field-<%= index %>" 
+                      name="<%= field.name %>"
+                      <% if (field.required) { %>required<% } %>
+                    >
+                      <option value="">Select an option</option>
+                      <% if (field.options) { %>
+                        <% field.options.forEach(option => { %>
+                          <option value="<%= option %>"><%= option %></option>
+                        <% }) %>
+                      <% } %>
+                    </select>
+                  <% } else if (field.type === 'radio') { %>
+                    <div>
+                      <% if (field.options) { %>
+                        <% field.options.forEach(option => { %>
+                          <div class="form-check">
+                            <input 
+                              class="form-check-input" 
+                              type="radio" 
+                              id="field-<%= index %>-<%= option.replace(/\s+/g, '-').toLowerCase() %>" 
+                              name="<%= field.name %>" 
+                              value="<%= option %>"
+                              <% if (field.required) { %>required<% } %>
+                            >
+                            <label class="form-check-label" for="field-<%= index %>-<%= option.replace(/\s+/g, '-').toLowerCase() %>">
+                              <%= option %>
+                            </label>
+                          </div>
+                        <% }) %>
+                      <% } %>
+                    </div>
+                  <% } else if (field.type === 'checkbox') { %>
+                    <div>
+                      <% if (field.options) { %>
+                        <% field.options.forEach(option => { %>
+                          <div class="form-check">
+                            <input 
+                              class="form-check-input" 
+                              type="checkbox" 
+                              id="field-<%= index %>-<%= option.replace(/\s+/g, '-').toLowerCase() %>" 
+                              name="<%= field.name %>[]" 
+                              value="<%= option %>"
+                            >
+                            <label class="form-check-label" for="field-<%= index %>-<%= option.replace(/\s+/g, '-').toLowerCase() %>">
+                              <%= option %>
+                            </label>
+                          </div>
+                        <% }) %>
+                      <% } %>
+                    </div>
+                  <% } else if (field.type === 'date') { %>
+                    <input 
+                      type="date" 
+                      class="form-control" 
+                      id="field-<%= index %>" 
+                      name="<%= field.name %>"
+                      <% if (field.required) { %>required<% } %>
+                    >
+                  <% } else if (field.type === 'file') { %>
+                    <input 
+                      type="file" 
+                      class="form-control" 
+                      id="field-<%= index %>" 
+                      name="<%= field.name %>"
+                      <% if (field.required) { %>required<% } %>
+                    >
+                  <% } %>
+                  
+                  <% if (field.description) { %>
+                    <div class="form-text"><%= field.description %></div>
+                  <% } %>
+                </div>
+              <% }) %>
+            <% } %>
+            
+            <div class="d-flex gap-2">
+              <button type="submit" class="btn btn-primary">
+                <i class="bi bi-check-circle me-2"></i>Submit Form
+              </button>
+              <button type="button" class="btn btn-outline-secondary" onclick="resetForm()">
+                <i class="bi bi-arrow-clockwise me-2"></i>Reset
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+
+      <!-- Form Information -->
+      <div class="card mt-4">
+        <div class="card-header">
+          <h5 class="card-title mb-0">Form Information</h5>
+        </div>
+        <div class="card-body">
+          <div class="row">
+            <div class="col-md-6">
+              <p><strong>Form ID:</strong> <%= template.id %></p>
+              <p><strong>Status:</strong> 
+                <% if (template.is_active) { %>
+                  <span class="badge bg-success">Active</span>
+                <% } else { %>
+                  <span class="badge bg-secondary">Inactive</span>
+                <% } %>
+              </p>
+              <p><strong>Created:</strong> <%= new Date(template.created_at).toLocaleDateString() %></p>
+            </div>
+            <div class="col-md-6">
+              <p><strong>Total Fields:</strong> <%= template.fields ? JSON.parse(template.fields).length : 0 %></p>
+              <p><strong>Required Fields:</strong> 
+                <% if (template.fields) { %>
+                  <%= JSON.parse(template.fields).filter(f => f.required).length %>
+                <% } else { %>
+                  0
+                <% } %>
+              </p>
+              <p><strong>Form Link:</strong> 
+                <code id="form-link"><%= `${req.protocol}://${req.get('host')}/form/${template.id}` %></code>
+                <button class="btn btn-sm btn-outline-primary ms-2" onclick="copyFormLink()">
+                  <i class="bi bi-clipboard"></i>
+                </button>
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <%- include('../partials/footer') %>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+      function resetForm() {
+        document.getElementById('preview-form').reset();
+      }
+
+      function copyFormLink() {
+        const link = document.getElementById('form-link').textContent;
+        navigator.clipboard.writeText(link).then(() => {
+          const button = event.target.closest('button');
+          const originalHTML = button.innerHTML;
+          button.innerHTML = '<i class="bi bi-check"></i>';
+          button.classList.remove('btn-outline-primary');
+          button.classList.add('btn-success');
+          
+          setTimeout(() => {
+            button.innerHTML = originalHTML;
+            button.classList.remove('btn-success');
+            button.classList.add('btn-outline-primary');
+          }, 2000);
+        });
+      }
+
+      // Handle form submission for preview
+      document.getElementById('preview-form').addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        // Show success message
+        const formData = new FormData(this);
+        const data = {};
+        for (let [key, value] of formData.entries()) {
+          data[key] = value;
+        }
+        
+        alert('Form submitted successfully! (Preview mode)\n\nForm data:\n' + JSON.stringify(data, null, 2));
+      });
+    </script>
+  </body>
+</html> 
