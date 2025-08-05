@@ -5,4 +5,6 @@ service-account.json
 sessions.sqlite
 uploads
 commands-manifest.json
-
+.prittierrc
+.prettierignore
+.vscode
