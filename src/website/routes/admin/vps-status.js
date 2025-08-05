@@ -51,8 +51,13 @@ router.get('/api', ensureAdmin, async (req, res) => {
         const totalSwap = parts[1];
         const usedSwap = parts[2];
         const freeSwap = parts[3];
-        const swapPercent = totalSwap !== '0B' ? 
-          ((parseFloat(usedSwap.replace(/[A-Za-z]/g, '')) / parseFloat(totalSwap.replace(/[A-Za-z]/g, ''))) * 100).toFixed(2) : '0';
+        
+        // Convert human-readable sizes to bytes for accurate percentage calculation
+        const totalBytes = parseHumanReadableSize(totalSwap);
+        const usedBytes = parseHumanReadableSize(usedSwap);
+        
+        const swapPercent = totalBytes > 0 ? 
+          ((usedBytes / totalBytes) * 100).toFixed(2) : '0';
         
         swapUsage = {
           total: totalSwap,
@@ -135,6 +140,26 @@ router.get('/api', ensureAdmin, async (req, res) => {
     res.status(500).json({ error: 'Failed to fetch VPS status' });
   }
 });
+
+function parseHumanReadableSize(sizeStr) {
+  if (!sizeStr || sizeStr === '0B') return 0;
+  
+  const match = sizeStr.match(/^([\d.]+)\s*([KMGT]?[B])$/i);
+  if (!match) return 0;
+  
+  const value = parseFloat(match[1]);
+  const unit = match[2].toUpperCase();
+  
+  const multipliers = {
+    'B': 1,
+    'KB': 1024,
+    'MB': 1024 * 1024,
+    'GB': 1024 * 1024 * 1024,
+    'TB': 1024 * 1024 * 1024 * 1024
+  };
+  
+  return value * (multipliers[unit] || 1);
+}
 
 function formatBytes(bytes) {
   if (bytes === 0) return '0 Bytes';
