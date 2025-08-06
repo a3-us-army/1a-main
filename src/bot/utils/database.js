@@ -557,6 +557,38 @@ export function setupDatabase() {
     );
   `
   ).run();
+
+  // Create document center tables
+  db.prepare(`
+    CREATE TABLE IF NOT EXISTS document_tabs (
+      id TEXT PRIMARY KEY,
+      name TEXT NOT NULL,
+      description TEXT,
+      sort_order INTEGER DEFAULT 0,
+      created_by TEXT,
+      created_at TEXT,
+      updated_by TEXT,
+      updated_at TEXT
+    )
+  `).run();
+
+  db.prepare(`
+    CREATE TABLE IF NOT EXISTS documents (
+      id TEXT PRIMARY KEY,
+      tab_id TEXT NOT NULL,
+      title TEXT NOT NULL,
+      description TEXT,
+      url TEXT,
+      required_mos TEXT,
+      sort_order INTEGER DEFAULT 0,
+      created_by TEXT,
+      created_at TEXT,
+      updated_by TEXT,
+      updated_at TEXT,
+      FOREIGN KEY (tab_id) REFERENCES document_tabs(id) ON DELETE CASCADE
+    )
+  `).run();
+
   setupEquipmentTables();
 
   return db;

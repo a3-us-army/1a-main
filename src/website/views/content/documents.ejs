@@ -1,0 +1,945 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Document Center</title>
+    <meta content="1A Website" property="og:title" />
+    <meta content="Welcome to 1A!" property="og:description" />
+    <meta content="https://1a75.org/documents" property="og:url" />
+    <meta content="https://cdn.xanderxx.xyz/1a-logo.png" property="og:image" />
+    <meta content="#4b5a2a" data-react-helmet="true" name="theme-color" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta
+      http-equiv="Cache-Control"
+      content="no-cache, no-store, must-revalidate"
+    />
+    <meta http-equiv="Pragma" content="no-cache" />
+    <meta http-equiv="Expires" content="0" />
+    <meta name="version" content="2024-01-27-v3" />
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <link rel="icon" href="/favicon.ico" />
+    <link rel="stylesheet" href="/custom.css?v=2" />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+    />
+    <style>
+      .document-tab {
+        cursor: pointer;
+        transition: all 0.3s ease;
+        border: 2px solid transparent;
+        color: #fff !important;
+        background-color: transparent;
+        border-radius: 0.375rem;
+        padding: 0.5rem 1rem;
+        margin-right: 0.25rem;
+        text-decoration: none;
+      }
+      
+      .document-tab:hover {
+        background-color: rgba(225, 184, 76, 0.1);
+        border-color: rgba(225, 184, 76, 0.3);
+        color: #e1b84c !important;
+        text-decoration: none;
+      }
+      
+      .document-tab.active {
+        background-color: rgba(225, 184, 76, 0.2);
+        border-color: #e1b84c;
+        color: #e1b84c !important;
+        text-decoration: none;
+      }
+      
+      .document-card {
+        background: linear-gradient(135deg, #2d2d2d 0%, #23272f 100%);
+        border: 1px solid #404040;
+        border-radius: 8px;
+        transition: all 0.3s ease;
+        margin-bottom: 1rem;
+      }
+      
+      .document-card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+        border-color: #e1b84c;
+      }
+      
+      .document-title {
+        color: #e1b84c;
+        font-weight: 600;
+        margin-bottom: 0.5rem;
+      }
+      
+      .document-description {
+        color: #b0b0b0;
+        font-size: 0.9rem;
+        margin-bottom: 0.5rem;
+      }
+      
+      .document-mos-badge {
+        background: linear-gradient(135deg, #1a237e 0%, #283593 100%);
+        color: white;
+        font-size: 0.75rem;
+        padding: 0.25rem 0.5rem;
+        border-radius: 4px;
+        display: inline-block;
+        margin-top: 0.5rem;
+      }
+      
+      .admin-controls {
+        background: rgba(225, 184, 76, 0.1);
+        border: 1px solid rgba(225, 184, 76, 0.3);
+        border-radius: 8px;
+        padding: 1rem;
+        margin-bottom: 2rem;
+      }
+      
+      .btn-document {
+        background: linear-gradient(135deg, #e1b84c 0%, #d4af37 100%) !important;
+        border: none !important;
+        color: #000000 !important;
+        font-weight: 700 !important;
+        transition: all 0.3s ease;
+        text-shadow: 0 1px 2px rgba(255, 255, 255, 0.3);
+      }
+      
+      .btn-document:hover {
+        background: linear-gradient(135deg, #d4af37 0%, #c19b2e 100%) !important;
+        transform: translateY(-1px);
+        color: #000000 !important;
+        text-shadow: 0 1px 2px rgba(255, 255, 255, 0.4);
+      }
+      
+      .btn-document-secondary {
+        background: linear-gradient(135deg, #404040 0%, #2d2d2d 100%);
+        border: 1px solid #e1b84c;
+        color: #e1b84c;
+        font-weight: 600;
+        transition: all 0.3s ease;
+      }
+      
+      .btn-document-secondary:hover {
+        background: linear-gradient(135deg, #e1b84c 0%, #d4af37 100%);
+        color: #1a1a1a;
+      }
+      
+      .empty-state {
+        text-align: center;
+        padding: 3rem 1rem;
+        color: #888;
+      }
+      
+      .empty-state i {
+        font-size: 3rem;
+        margin-bottom: 1rem;
+        opacity: 0.5;
+      }
+      
+      .modal-content {
+        background: linear-gradient(135deg, #2d2d2d 0%, #23272f 100%);
+        border: 1px solid #404040;
+        color: #fff;
+      }
+      
+      .modal-header {
+        border-bottom: 1px solid #404040;
+      }
+      
+      .modal-footer {
+        border-top: 1px solid #404040;
+      }
+      
+      .form-control, .form-select {
+        background-color: #1a1a1a;
+        border: 1px solid #404040;
+        color: #fff;
+      }
+      
+      .form-control:focus, .form-select:focus {
+        background-color: #1a1a1a;
+        border-color: #e1b84c;
+        color: #fff;
+        box-shadow: 0 0 0 0.2rem rgba(225, 184, 76, 0.25);
+      }
+      
+      .form-label {
+        color: #e1b84c;
+        font-weight: 600;
+      }
+      
+      .alert {
+        border-radius: 8px;
+        border: none;
+      }
+      
+      .alert-success {
+        background: linear-gradient(135deg, #2e7d32 0%, #1b5e20 100%);
+        color: #fff;
+      }
+      
+      .alert-danger {
+        background: linear-gradient(135deg, #c62828 0%, #b71c1c 100%);
+        color: #fff;
+      }
+      
+      .mos-selection {
+        max-height: 200px;
+        overflow-y: auto;
+        border: 1px solid #404040;
+        border-radius: 0.375rem;
+        padding: 1rem;
+        background-color: #1a1a1a;
+      }
+      
+      .form-check {
+        margin-bottom: 0.5rem;
+      }
+      
+      .form-check-input {
+        background-color: #2d2d2d;
+        border-color: #404040;
+      }
+      
+      .form-check-input:checked {
+        background-color: #e1b84c;
+        border-color: #e1b84c;
+      }
+      
+      .form-check-label {
+        color: #fff;
+        cursor: pointer;
+      }
+      
+      .dropdown-menu {
+        background: linear-gradient(135deg, #2d2d2d 0%, #23272f 100%);
+        border: 1px solid #404040;
+        color: #fff;
+        z-index: 1050;
+        min-width: 200px;
+        position: absolute;
+        top: 100%;
+        left: 0;
+        margin-top: 0.125rem;
+      }
+      
+      .dropdown-menu.show {
+        display: block !important;
+        opacity: 1 !important;
+        visibility: visible !important;
+      }
+      
+      .dropdown {
+        position: relative;
+      }
+      
+      .dropdown-item {
+        color: #fff;
+      }
+      
+      .dropdown-item:hover {
+        background-color: rgba(225, 184, 76, 0.2);
+        color: #e1b84c;
+      }
+      
+      .dropdown-item.text-danger:hover {
+        background-color: rgba(220, 53, 69, 0.2);
+        color: #dc3545;
+      }
+    </style>
+  </head>
+  <body>
+    <%- include("../partials/navbar", { user, active }) %>
+    <main id="main-content">
+      <div class="container mt-5">
+        <div class="row">
+          <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+              <h2 class="mb-0">
+                <i class="bi bi-file-earmark-text me-2"></i>Document Center
+              </h2>
+              <% if (isAdmin) { %>
+                <button class="btn btn-document" data-bs-toggle="modal" data-bs-target="#addTabModal">
+                  <i class="bi bi-plus-circle me-2"></i>Add Tab
+                </button>
+              <% } %>
+            </div>
+            
+            <% if (alert) { %>
+              <div class="alert alert-success alert-dismissible fade show" role="alert">
+                <i class="bi bi-check-circle me-2"></i><%= alert %>
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+              </div>
+            <% } %>
+            
+            <% if (error) { %>
+              <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                <i class="bi bi-exclamation-triangle me-2"></i><%= error %>
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+              </div>
+            <% } %>
+            
+            <% if (isAdmin) { %>
+              <div class="admin-controls">
+                <h5 class="text-warning mb-3">
+                  <i class="bi bi-gear me-2"></i>Admin Controls
+                </h5>
+                <p class="text-muted mb-0">
+                  You can create new tabs and documents. Documents can be restricted to specific MOS roles.
+                </p>
+              </div>
+            <% } %>
+            
+            <% if (tabs.length === 0) { %>
+              <div class="empty-state">
+                <i class="bi bi-file-earmark-text"></i>
+                <h4>No Documents Available</h4>
+                <p>No document tabs have been created yet.</p>
+                <% if (isAdmin) { %>
+                  <button class="btn btn-document" data-bs-toggle="modal" data-bs-target="#addTabModal">
+                    <i class="bi bi-plus-circle me-2"></i>Create First Tab
+                  </button>
+                <% } %>
+              </div>
+            <% } else { %>
+              <!-- Tab Navigation -->
+              <ul class="nav nav-tabs mb-4" id="documentTabs" role="tablist">
+                <% tabs.forEach((tab, index) => { %>
+                  <li class="nav-item" role="presentation">
+                    <button 
+                      class="nav-link document-tab <%= index === 0 ? 'active' : '' %>" 
+                      id="tab-<%= tab.id %>" 
+                      data-bs-toggle="tab" 
+                      data-bs-target="#content-<%= tab.id %>" 
+                      type="button" 
+                      role="tab"
+                    >
+                      <i class="bi bi-folder me-2"></i><%= tab.name %>
+                    </button>
+                  </li>
+                <% }); %>
+              </ul>
+              
+              <!-- Tab Content -->
+              <div class="tab-content" id="documentTabContent">
+                <% tabs.forEach((tab, index) => { %>
+                  <div 
+                    class="tab-pane fade <%= index === 0 ? 'show active' : '' %>" 
+                    id="content-<%= tab.id %>" 
+                    role="tabpanel"
+                  >
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                      <h4 class="mb-0">
+                        <i class="bi bi-folder me-2"></i><%= tab.name %>
+                      </h4>
+                      <% if (isAdmin) { %>
+                        <div class="dropdown d-inline-block me-2">
+                          <button class="btn btn-document-secondary btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown" onclick="console.log('Tab settings clicked')">
+                            <i class="bi bi-gear me-1"></i>Tab Settings
+                          </button>
+                          <ul class="dropdown-menu">
+                            <li><a class="dropdown-item edit-tab-btn" href="#" data-tab-id="<%- tab.id %>" data-tab-name="<%- tab.name %>" data-tab-description="<%- tab.description || '' %>" data-tab-sort="<%- tab.sort_order || 0 %>">
+                              <i class="bi bi-pencil me-2"></i>Edit Tab
+                            </a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item text-danger delete-tab-btn" href="#" data-tab-id="<%- tab.id %>" data-tab-name="<%- tab.name %>">
+                              <i class="bi bi-trash me-2"></i>Delete Tab
+                            </a></li>
+                          </ul>
+                        </div>
+                        <button class="btn btn-document btn-sm" data-bs-toggle="modal" data-bs-target="#addDocumentModal" onclick="setSelectedTab('<%- tab.id %>')">
+                          <i class="bi bi-plus-circle me-1"></i>Add Document
+                        </button>
+                      <% } %>
+                    </div>
+                    
+                    <% if (tab.description) { %>
+                      <p class="text-muted mb-3"><%= tab.description %></p>
+                    <% } %>
+                    
+                    <% if (tab.documents.length === 0) { %>
+                      <div class="empty-state">
+                        <i class="bi bi-file-earmark"></i>
+                        <h5>No Documents in This Tab</h5>
+                        <p>No documents have been added to this tab yet.</p>
+                        <% if (isAdmin) { %>
+                          <button class="btn btn-document" data-bs-toggle="modal" data-bs-target="#addDocumentModal" onclick="setSelectedTab('<%- tab.id %>')">
+                            <i class="bi bi-plus-circle me-2"></i>Add First Document
+                          </button>
+                        <% } %>
+                      </div>
+                    <% } else { %>
+                      <div class="row">
+                        <% tab.documents.forEach(doc => { %>
+                          <div class="col-12 col-md-6 col-lg-4">
+                            <div class="document-card p-3">
+                              <div class="d-flex justify-content-between align-items-start mb-2">
+                                <h6 class="document-title mb-0"><%= doc.title %></h6>
+                                <% if (isAdmin) { %>
+                                  <div class="dropdown">
+                                    <button class="btn btn-sm btn-link text-muted p-0 dropdown-toggle" type="button" data-bs-toggle="dropdown">
+                                      <i class="bi bi-three-dots-vertical"></i>
+                                    </button>
+                                    <ul class="dropdown-menu">
+                                      <li><a class="dropdown-item edit-doc-btn" href="#" data-doc-id="<%- doc.id %>" data-doc-title="<%- doc.title %>" data-doc-description="<%- doc.description || '' %>" data-doc-url="<%- doc.url || '' %>" data-doc-mos="<%- doc.required_mos || '' %>" data-doc-sort="<%- doc.sort_order || 0 %>">
+                                        <i class="bi bi-pencil me-2"></i>Edit
+                                      </a></li>
+                                      <li><hr class="dropdown-divider"></li>
+                                      <li><a class="dropdown-item text-danger delete-doc-btn" href="#" data-doc-id="<%- doc.id %>" data-doc-title="<%- doc.title %>">
+                                        <i class="bi bi-trash me-2"></i>Delete
+                                      </a></li>
+                                    </ul>
+                                  </div>
+                                <% } %>
+                              </div>
+                              
+                              <% if (doc.description) { %>
+                                <p class="document-description mb-2"><%= doc.description %></p>
+                              <% } %>
+                              
+                              <% if (doc.url) { %>
+                                <a href="<%= doc.url %>" target="_blank" class="btn btn-document btn-sm">
+                                  <i class="bi bi-box-arrow-up-right me-1"></i>View Document
+                                </a>
+                              <% } %>
+                              
+                              <% if (doc.required_mos) { %>
+                                <div class="document-mos-badge">
+                                  <i class="bi bi-shield-lock me-1"></i>Required MOS: <%= doc.required_mos %>
+                                </div>
+                              <% } %>
+                            </div>
+                          </div>
+                        <% }); %>
+                      </div>
+                    <% } %>
+                  </div>
+                <% }); %>
+              </div>
+            <% } %>
+          </div>
+        </div>
+      </div>
+    </main>
+    
+    <!-- Add Tab Modal -->
+    <div class="modal fade" id="addTabModal" tabindex="-1">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">
+              <i class="bi bi-folder-plus me-2"></i>Add New Tab
+            </h5>
+            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+          </div>
+          <form action="/documents/tabs" method="POST">
+            <div class="modal-body">
+              <div class="mb-3">
+                <label for="tabName" class="form-label">Tab Name *</label>
+                <input type="text" class="form-control" id="tabName" name="name" required>
+              </div>
+              <div class="mb-3">
+                <label for="tabDescription" class="form-label">Description</label>
+                <textarea class="form-control" id="tabDescription" name="description" rows="3"></textarea>
+              </div>
+              <div class="mb-3">
+                <label for="tabSortOrder" class="form-label">Sort Order</label>
+                <input type="number" class="form-control" id="tabSortOrder" name="sort_order" value="0" min="0">
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+              <button type="submit" class="btn btn-document">Create Tab</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Add Document Modal -->
+    <div class="modal fade" id="addDocumentModal" tabindex="-1">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">
+              <i class="bi bi-file-earmark-plus me-2"></i>Add New Document
+            </h5>
+            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+          </div>
+          <form action="/documents/documents" method="POST">
+            <div class="modal-body">
+              <div class="mb-3">
+                <label for="documentTab" class="form-label">Tab *</label>
+                <select class="form-select" id="documentTab" name="tab_id" required>
+                  <option value="">Select a tab...</option>
+                  <% tabs.forEach(tab => { %>
+                    <option value="<%= tab.id %>"><%= tab.name %></option>
+                  <% }); %>
+                </select>
+              </div>
+              <div class="mb-3">
+                <label for="documentTitle" class="form-label">Document Title *</label>
+                <input type="text" class="form-control" id="documentTitle" name="title" required>
+              </div>
+              <div class="mb-3">
+                <label for="documentDescription" class="form-label">Description</label>
+                <textarea class="form-control" id="documentDescription" name="description" rows="3"></textarea>
+              </div>
+              <div class="mb-3">
+                <label for="documentUrl" class="form-label">Document URL</label>
+                <input type="url" class="form-control" id="documentUrl" name="url" placeholder="https://...">
+              </div>
+              <div class="mb-3">
+                <label for="documentMOS" class="form-label">Required MOS (Optional)</label>
+                <div class="mos-selection">
+                  <div class="form-check">
+                    <input class="form-check-input" type="checkbox" id="no-restriction" name="no_restriction" value="1">
+                    <label class="form-check-label" for="no-restriction">
+                      No restriction (available to all users)
+                    </label>
+                  </div>
+                  <hr class="my-2">
+                  <p class="text-muted small mb-2">Select one or more MOS roles (users with any of these roles can access the document):</p>
+                  <% availableMOS.forEach(mos => { %>
+                    <div class="form-check">
+                      <input class="form-check-input mos-checkbox" type="checkbox" id="mos-<%= mos.replace(/[^a-zA-Z0-9]/g, '_') %>" name="required_mos[]" value="<%= mos %>">
+                      <label class="form-check-label" for="mos-<%= mos.replace(/[^a-zA-Z0-9]/g, '_') %>">
+                        <%= mos %>
+                      </label>
+                    </div>
+                  <% }); %>
+                </div>
+              </div>
+              <div class="mb-3">
+                <label for="documentSortOrder" class="form-label">Sort Order</label>
+                <input type="number" class="form-control" id="documentSortOrder" name="sort_order" value="0" min="0">
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+              <button type="submit" class="btn btn-document">Create Document</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Edit Tab Modal -->
+    <div class="modal fade" id="editTabModal" tabindex="-1">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">
+              <i class="bi bi-pencil me-2"></i>Edit Tab
+            </h5>
+            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+          </div>
+          <form id="editTabForm">
+            <div class="modal-body">
+              <div class="mb-3">
+                <label for="editTabName" class="form-label">Tab Name *</label>
+                <input type="text" class="form-control" id="editTabName" name="name" required>
+              </div>
+              <div class="mb-3">
+                <label for="editTabDescription" class="form-label">Description</label>
+                <textarea class="form-control" id="editTabDescription" name="description" rows="3"></textarea>
+              </div>
+              <div class="mb-3">
+                <label for="editTabSortOrder" class="form-label">Sort Order</label>
+                <input type="number" class="form-control" id="editTabSortOrder" name="sort_order" value="0" min="0">
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+              <button type="submit" class="btn btn-document">Update Tab</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Edit Document Modal -->
+    <div class="modal fade" id="editDocumentModal" tabindex="-1">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">
+              <i class="bi bi-pencil me-2"></i>Edit Document
+            </h5>
+            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+          </div>
+          <form id="editDocumentForm">
+            <div class="modal-body">
+              <div class="mb-3">
+                <label for="editDocumentTitle" class="form-label">Document Title *</label>
+                <input type="text" class="form-control" id="editDocumentTitle" name="title" required>
+              </div>
+              <div class="mb-3">
+                <label for="editDocumentDescription" class="form-label">Description</label>
+                <textarea class="form-control" id="editDocumentDescription" name="description" rows="3"></textarea>
+              </div>
+              <div class="mb-3">
+                <label for="editDocumentUrl" class="form-label">Document URL</label>
+                <input type="url" class="form-control" id="editDocumentUrl" name="url" placeholder="https://...">
+              </div>
+              <div class="mb-3">
+                <label for="editDocumentMOS" class="form-label">Required MOS (Optional)</label>
+                <div class="mos-selection">
+                  <div class="form-check">
+                    <input class="form-check-input" type="checkbox" id="edit-no-restriction" name="no_restriction" value="1">
+                    <label class="form-check-label" for="edit-no-restriction">
+                      No restriction (available to all users)
+                    </label>
+                  </div>
+                  <hr class="my-2">
+                  <p class="text-muted small mb-2">Select one or more MOS roles (users with any of these roles can access the document):</p>
+                  <% availableMOS.forEach(mos => { %>
+                    <div class="form-check">
+                      <input class="form-check-input edit-mos-checkbox" type="checkbox" id="edit-mos-<%= mos.replace(/[^a-zA-Z0-9]/g, '_') %>" name="required_mos[]" value="<%= mos %>">
+                      <label class="form-check-label" for="edit-mos-<%= mos.replace(/[^a-zA-Z0-9]/g, '_') %>">
+                        <%= mos %>
+                      </label>
+                    </div>
+                  <% }); %>
+                </div>
+              </div>
+              <div class="mb-3">
+                <label for="editDocumentSortOrder" class="form-label">Sort Order</label>
+                <input type="number" class="form-control" id="editDocumentSortOrder" name="sort_order" value="0" min="0">
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+              <button type="submit" class="btn btn-document">Update Document</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+    
+    <%- include("../partials/footer") %>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+      let currentTabId = '';
+      let currentDocumentId = '';
+      
+      // Initialize all dropdowns when the page loads
+      document.addEventListener('DOMContentLoaded', function() {
+        // Initialize Bootstrap dropdowns
+        var dropdownElementList = [].slice.call(document.querySelectorAll('.dropdown-toggle'));
+        var dropdownList = dropdownElementList.map(function (dropdownToggleEl) {
+          return new bootstrap.Dropdown(dropdownToggleEl);
+        });
+        
+        console.log('Dropdowns initialized:', dropdownList.length);
+        
+        // Handle dropdown toggles with proper show/hide
+        document.querySelectorAll('.dropdown-toggle').forEach(function(toggle) {
+          toggle.addEventListener('click', function(e) {
+            e.preventDefault();
+            console.log('Dropdown toggle clicked');
+            
+            const dropdown = this.nextElementSibling;
+            if (dropdown && dropdown.classList.contains('dropdown-menu')) {
+              console.log('Dropdown menu found, toggling');
+              
+              // Toggle the dropdown
+              if (dropdown.classList.contains('show')) {
+                // Hide dropdown
+                dropdown.style.display = 'none';
+                dropdown.style.opacity = '0';
+                dropdown.style.visibility = 'hidden';
+                dropdown.classList.remove('show');
+                console.log('Dropdown hidden');
+              } else {
+                // Show dropdown
+                dropdown.style.display = 'block';
+                dropdown.style.opacity = '1';
+                dropdown.style.visibility = 'visible';
+                dropdown.classList.add('show');
+                console.log('Dropdown shown');
+              }
+            } else {
+              console.log('Dropdown menu not found');
+            }
+          });
+        });
+        
+        // Close dropdowns when clicking outside
+        document.addEventListener('click', function(e) {
+          if (!e.target.closest('.dropdown')) {
+            document.querySelectorAll('.dropdown-menu.show').forEach(function(dropdown) {
+              dropdown.style.display = 'none';
+              dropdown.style.opacity = '0';
+              dropdown.style.visibility = 'hidden';
+              dropdown.classList.remove('show');
+            });
+          }
+        });
+        
+        // Use event delegation for dynamically created elements
+        document.addEventListener('click', function(e) {
+          console.log('Click detected on:', e.target);
+          
+          // Edit tab button
+          if (e.target.closest('.edit-tab-btn')) {
+            e.preventDefault();
+            const btn = e.target.closest('.edit-tab-btn');
+            const tabId = btn.getAttribute('data-tab-id');
+            const tabName = btn.getAttribute('data-tab-name');
+            const tabDescription = btn.getAttribute('data-tab-description');
+            const tabSort = btn.getAttribute('data-tab-sort');
+            editTab(tabId, tabName, tabDescription, parseInt(tabSort));
+          }
+          
+          // Delete tab button
+          if (e.target.closest('.delete-tab-btn')) {
+            e.preventDefault();
+            const btn = e.target.closest('.delete-tab-btn');
+            const tabId = btn.getAttribute('data-tab-id');
+            const tabName = btn.getAttribute('data-tab-name');
+            deleteTab(tabId, tabName);
+          }
+          
+          // Edit document button
+          if (e.target.closest('.edit-doc-btn')) {
+            e.preventDefault();
+            const btn = e.target.closest('.edit-doc-btn');
+            const docId = btn.getAttribute('data-doc-id');
+            const docTitle = btn.getAttribute('data-doc-title');
+            const docDescription = btn.getAttribute('data-doc-description');
+            const docUrl = btn.getAttribute('data-doc-url');
+            const docMos = btn.getAttribute('data-doc-mos');
+            const docSort = btn.getAttribute('data-doc-sort');
+            editDocument(docId, docTitle, docDescription, docUrl, docMos, parseInt(docSort));
+          }
+          
+          // Delete document button
+          if (e.target.closest('.delete-doc-btn')) {
+            e.preventDefault();
+            const btn = e.target.closest('.delete-doc-btn');
+            const docId = btn.getAttribute('data-doc-id');
+            const docTitle = btn.getAttribute('data-doc-title');
+            deleteDocument(docId, docTitle);
+          }
+        });
+      });
+      
+      // Handle MOS selection checkboxes
+      document.addEventListener('DOMContentLoaded', function() {
+        // Handle "No restriction" checkbox
+        const noRestrictionCheckboxes = document.querySelectorAll('#no-restriction, #edit-no-restriction');
+        noRestrictionCheckboxes.forEach(function(checkbox) {
+          checkbox.addEventListener('change', function() {
+            const mosCheckboxes = this.closest('.mos-selection').querySelectorAll('.mos-checkbox, .edit-mos-checkbox');
+            if (this.checked) {
+              // Uncheck all MOS checkboxes when "No restriction" is checked
+              mosCheckboxes.forEach(function(mosCheckbox) {
+                mosCheckbox.checked = false;
+              });
+            }
+          });
+        });
+        
+        // Handle MOS checkboxes
+        const mosCheckboxes = document.querySelectorAll('.mos-checkbox, .edit-mos-checkbox');
+        mosCheckboxes.forEach(function(checkbox) {
+          checkbox.addEventListener('change', function() {
+            const noRestrictionCheckbox = this.closest('.mos-selection').querySelector('#no-restriction, #edit-no-restriction');
+            if (this.checked) {
+              // Uncheck "No restriction" when any MOS is selected
+              noRestrictionCheckbox.checked = false;
+            }
+          });
+        });
+      });
+      
+      function setSelectedTab(tabId) {
+        document.getElementById('documentTab').value = tabId;
+      }
+      
+      function editTab(tabId, name, description, sortOrder) {
+        console.log('editTab called:', { tabId, name, description, sortOrder });
+        currentTabId = tabId;
+        document.getElementById('editTabName').value = name;
+        document.getElementById('editTabDescription').value = description;
+        document.getElementById('editTabSortOrder').value = sortOrder;
+        
+        new bootstrap.Modal(document.getElementById('editTabModal')).show();
+      }
+      
+      function editDocument(documentId, title, description, url, requiredMos, sortOrder) {
+        console.log('editDocument called:', { documentId, title, description, url, requiredMos, sortOrder });
+        currentDocumentId = documentId;
+        document.getElementById('editDocumentTitle').value = title;
+        document.getElementById('editDocumentDescription').value = description;
+        document.getElementById('editDocumentUrl').value = url;
+        document.getElementById('editDocumentSortOrder').value = sortOrder;
+        
+        // Handle MOS selection in edit modal
+        const noRestrictionCheckbox = document.getElementById('edit-no-restriction');
+        const mosCheckboxes = document.querySelectorAll('.edit-mos-checkbox');
+        
+        // Reset all checkboxes first
+        noRestrictionCheckbox.checked = false;
+        mosCheckboxes.forEach(checkbox => checkbox.checked = false);
+        
+        // Set the appropriate checkboxes based on requiredMos
+        if (!requiredMos || requiredMos === '') {
+          // No restriction
+          noRestrictionCheckbox.checked = true;
+        } else {
+          // Parse comma-separated MOS requirements
+          const mosList = requiredMos.split(',').map(mos => mos.trim());
+          mosList.forEach(mos => {
+            const checkbox = document.querySelector(`#edit-mos-${mos.replace(/[^a-zA-Z0-9]/g, '_')}`);
+            if (checkbox) {
+              checkbox.checked = true;
+            }
+          });
+        }
+        
+        new bootstrap.Modal(document.getElementById('editDocumentModal')).show();
+      }
+      
+      function deleteDocument(documentId, title) {
+        console.log('deleteDocument called:', { documentId, title });
+        if (confirm(`Are you sure you want to delete the document "${title}"?`)) {
+          fetch(`/documents/documents/${documentId}`, {
+            method: 'DELETE',
+            headers: {
+              'Content-Type': 'application/json'
+            }
+          })
+          .then(response => response.json())
+          .then(data => {
+            if (data.success) {
+              location.reload();
+            } else {
+              alert('Failed to delete document');
+            }
+          })
+          .catch(error => {
+            console.error('Error:', error);
+            alert('Failed to delete document');
+          });
+        }
+      }
+      
+      function deleteTab(tabId, tabName) {
+        console.log('deleteTab called:', { tabId, tabName });
+        if (confirm(`Are you sure you want to delete the tab "${tabName}"? This will also delete all documents in this tab.`)) {
+          fetch(`/documents/tabs/${tabId}`, {
+            method: 'DELETE',
+            headers: {
+              'Content-Type': 'application/json'
+            }
+          })
+          .then(response => response.json())
+          .then(data => {
+            if (data.success) {
+              location.reload();
+            } else {
+              alert('Failed to delete tab');
+            }
+          })
+          .catch(error => {
+            console.error('Error:', error);
+            alert('Failed to delete tab');
+          });
+        }
+      }
+      
+      // Handle edit tab form submission
+      document.getElementById('editTabForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        const formData = new FormData(this);
+        const data = {
+          name: formData.get('name'),
+          description: formData.get('description'),
+          sort_order: parseInt(formData.get('sort_order'))
+        };
+        
+        fetch(`/documents/tabs/${currentTabId}`, {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(data)
+        })
+        .then(response => response.json())
+        .then(data => {
+          if (data.success) {
+            location.reload();
+          } else {
+            alert('Failed to update tab');
+          }
+        })
+        .catch(error => {
+          console.error('Error:', error);
+          alert('Failed to update tab');
+        });
+      });
+      
+             // Handle edit document form submission
+       document.getElementById('editDocumentForm').addEventListener('submit', function(e) {
+         e.preventDefault();
+         
+         const formData = new FormData(this);
+         
+         // Handle multiple MOS selection
+         const noRestriction = formData.get('no_restriction');
+         const selectedMOS = formData.getAll('required_mos[]');
+         
+         console.log('Form submission debug:', {
+           noRestriction: noRestriction,
+           selectedMOS: selectedMOS,
+           formDataEntries: Array.from(formData.entries())
+         });
+         
+         let finalRequiredMOS = null;
+         if (noRestriction) {
+           finalRequiredMOS = null; // No restriction
+         } else if (selectedMOS && selectedMOS.length > 0) {
+           finalRequiredMOS = selectedMOS.join(', '); // Join multiple MOS with commas
+         }
+         
+         const data = {
+           title: formData.get('title'),
+           description: formData.get('description'),
+           url: formData.get('url'),
+           required_mos: finalRequiredMOS,
+           sort_order: parseInt(formData.get('sort_order'))
+         };
+         
+         console.log('Sending data to server:', data);
+        
+        fetch(`/documents/documents/${currentDocumentId}`, {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(data)
+        })
+        .then(response => response.json())
+        .then(data => {
+          if (data.success) {
+            location.reload();
+          } else {
+            alert('Failed to update document');
+          }
+        })
+        .catch(error => {
+          console.error('Error:', error);
+          alert('Failed to update document');
+        });
+      });
+    </script>
+  </body>
+</html> 
