@@ -1,7 +1,7 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
   <head>
-    <title>PERSEC</title>
+    <title>PERSEC - Profile</title>
     <meta content="1A Website" property="og:title" />
     <meta content="Welcome to 1A!" property="og:description" />
     <meta content="https://1a75.org/profile" property="og:url" />
@@ -19,93 +19,209 @@
     <link rel="icon" href="/favicon.ico" />
     <link rel="stylesheet" href="/custom.css" />
     <style>
+      :root {
+        --primary-color: #ffe066;
+        --primary-dark: #ffd43b;
+        --primary-darker: #fcc419;
+        --text-dark: #23272f;
+        --text-darker: #181a1b;
+        --bg-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        --card-bg: rgba(255, 255, 255, 0.95);
+        --glass-bg: rgba(255, 255, 255, 0.1);
+        --border-light: rgba(255, 255, 255, 0.2);
+        --shadow-light: 0 8px 32px rgba(0, 0, 0, 0.1);
+        --shadow-medium: 0 12px 40px rgba(0, 0, 0, 0.15);
+        --shadow-heavy: 0 20px 60px rgba(0, 0, 0, 0.2);
+      }
+
+      body {
+        background: var(--bg-gradient);
+        min-height: 100vh;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      }
+
+      .profile-container {
+        padding: 2rem 0;
+      }
+
+      .profile-card {
+        background: var(--card-bg);
+        border-radius: 24px;
+        box-shadow: var(--shadow-heavy);
+        overflow: hidden;
+        border: 1px solid var(--border-light);
+        backdrop-filter: blur(20px);
+        position: relative;
+      }
+
+      .profile-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 4px;
+        background: linear-gradient(90deg, var(--primary-color), var(--primary-dark), var(--primary-darker));
+      }
+
       .user-banner {
         width: 100%;
-        max-height: 180px;
+        height: 200px;
         object-fit: cover;
-        border-radius: 1rem 1rem 0 0;
-        margin-bottom: -48px;
+        position: relative;
       }
+
+      .user-banner::after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        height: 60px;
+        background: linear-gradient(transparent, rgba(0, 0, 0, 0.3));
+      }
+
+      .profile-header {
+        position: relative;
+        padding: 2rem;
+        text-align: center;
+        background: linear-gradient(135deg, rgba(255, 255, 255, 0.9) 0%, rgba(255, 255, 255, 0.7) 100%);
+      }
+
       .user-avatar {
-        width: 96px;
-        height: 96px;
+        width: 120px;
+        height: 120px;
         border-radius: 50%;
         object-fit: cover;
-        border: 4px solid #fff;
-        margin-top: -48px;
-        background: #fff;
+        border: 6px solid #fff;
+        box-shadow: var(--shadow-medium);
+        margin-top: -60px;
+        position: relative;
+        z-index: 2;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
       }
+
+      .user-avatar:hover {
+        transform: scale(1.05);
+        box-shadow: var(--shadow-heavy);
+      }
+
+      .user-name {
+        font-size: 2rem;
+        font-weight: 700;
+        color: var(--text-dark);
+        margin: 1rem 0 0.5rem 0;
+        text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      }
+
+      .user-id {
+        color: #6c757d;
+        font-size: 0.95rem;
+        font-weight: 500;
+        margin-bottom: 1.5rem;
+      }
+
+      .roles-section {
+        margin: 1.5rem 0;
+      }
+
+      .roles-title {
+        font-size: 1.1rem;
+        font-weight: 600;
+        color: var(--text-dark);
+        margin-bottom: 1rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
+      }
+
       .role-badge {
         display: inline-block;
-        margin: 0.2rem 0.3rem 0.2rem 0;
-        padding: 0.4em 0.8em;
-        border-radius: 1em;
-        font-size: 0.97em;
-        font-weight: 500;
-        border: 1.5px solid #fff;
-        box-shadow: 0 1px 4px rgba(0, 0, 0, 0.04);
-        transition: filter 0.1s;
-      }
-      .role-badge:hover {
-        filter: brightness(1.1);
-      }
-      .botstatus-btn {
-        background-color: #ffe066 !important;
-        color: #23272f !important;
+        margin: 0.3rem;
+        padding: 0.6em 1.2em;
+        border-radius: 20px;
+        font-size: 0.9rem;
         font-weight: 600;
-        border: 2px solid #ffd43b !important;
-        box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
-        transition:
-          background 0.2s,
-          color 0.2s;
+        border: 2px solid rgba(255, 255, 255, 0.8);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        transition: all 0.3s ease;
+        position: relative;
+        overflow: hidden;
       }
-      .botstatus-btn:hover,
-      .botstatus-btn:focus {
-        background-color: #ffd43b !important;
-        color: #181a1b !important;
-        border-color: #ffe066 !important;
-        text-decoration: none;
+
+      .role-badge::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+        transition: left 0.5s;
       }
-      
-      /* Enhanced button styling */
+
+      .role-badge:hover::before {
+        left: 100%;
+      }
+
+      .role-badge:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+      }
+
       .action-section {
-        background: linear-gradient(135deg, rgba(255, 255, 255, 0.05) 0%, rgba(255, 255, 255, 0.02) 100%);
-        border-radius: 16px;
-        padding: 2rem;
-        margin-bottom: 1.5rem;
-        border: 1px solid rgba(255, 255, 255, 0.1);
-        backdrop-filter: blur(10px);
-        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        background: var(--glass-bg);
+        border-radius: 20px;
+        padding: 2.5rem;
+        margin: 2rem 0;
+        border: 1px solid var(--border-light);
+        backdrop-filter: blur(15px);
+        box-shadow: var(--shadow-light);
+        position: relative;
+        overflow: hidden;
       }
-      
+
+      .action-section::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 3px;
+        background: linear-gradient(90deg, var(--primary-color), var(--primary-dark));
+      }
+
       .section-title {
         color: #fff;
         font-weight: 700;
-        font-size: 1.5rem;
-        margin-bottom: 1.5rem;
+        font-size: 1.8rem;
+        margin-bottom: 2rem;
         text-align: center;
         position: relative;
-        padding-bottom: 0.5rem;
+        padding-bottom: 1rem;
+        text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
       }
-      
+
       .section-title::after {
         content: '';
         position: absolute;
         bottom: 0;
         left: 50%;
         transform: translateX(-50%);
-        width: 60px;
-        height: 3px;
-        background: linear-gradient(90deg, #ffe066, #ffd43b);
+        width: 80px;
+        height: 4px;
+        background: linear-gradient(90deg, var(--primary-color), var(--primary-dark));
         border-radius: 2px;
+        box-shadow: 0 2px 8px rgba(255, 224, 102, 0.4);
       }
-      
+
       .profile-btn {
-        padding: 1rem 1.5rem;
-        border-radius: 12px;
+        padding: 1.2rem 1.8rem;
+        border-radius: 16px;
         font-weight: 600;
-        font-size: 0.95rem;
-        transition: all 0.3s ease;
+        font-size: 1rem;
+        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
         border: none;
         position: relative;
         overflow: hidden;
@@ -113,10 +229,11 @@
         display: flex;
         align-items: center;
         justify-content: center;
-        gap: 0.5rem;
-        min-height: 56px;
+        gap: 0.8rem;
+        min-height: 64px;
+        letter-spacing: 0.5px;
       }
-      
+
       .profile-btn::before {
         content: '';
         position: absolute;
@@ -124,74 +241,162 @@
         left: -100%;
         width: 100%;
         height: 100%;
-        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
-        transition: left 0.5s;
+        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+        transition: left 0.6s ease;
       }
-      
+
       .profile-btn:hover::before {
         left: 100%;
       }
-      
+
       .profile-btn:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+        transform: translateY(-4px) scale(1.02);
+        box-shadow: var(--shadow-heavy);
         text-decoration: none;
       }
-      
+
+      .profile-btn:active {
+        transform: translateY(-2px) scale(1.01);
+      }
+
       .btn-primary.profile-btn {
-        background: linear-gradient(135deg, #ffe066 0%, #ffd43b 100%);
-        color: #23272f;
-        box-shadow: 0 4px 15px rgba(255, 224, 102, 0.3);
+        background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-dark) 100%);
+        color: var(--text-dark);
+        box-shadow: 0 6px 20px rgba(255, 224, 102, 0.4);
       }
-      
+
       .btn-primary.profile-btn:hover {
-        background: linear-gradient(135deg, #ffd43b 0%, #fcc419 100%);
-        color: #181a1b;
-        box-shadow: 0 8px 25px rgba(255, 224, 102, 0.4);
+        background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary-darker) 100%);
+        color: var(--text-darker);
+        box-shadow: 0 12px 30px rgba(255, 224, 102, 0.5);
       }
-      
+
       .btn-outline-primary.profile-btn {
         background: transparent;
-        color: #ffe066;
-        border: 2px solid #ffe066;
-        box-shadow: 0 4px 15px rgba(255, 224, 102, 0.1);
+        color: var(--primary-color);
+        border: 3px solid var(--primary-color);
+        box-shadow: 0 6px 20px rgba(255, 224, 102, 0.2);
       }
-      
+
       .btn-outline-primary.profile-btn:hover {
-        background: linear-gradient(135deg, #ffe066 0%, #ffd43b 100%);
-        color: #23272f;
-        border-color: #ffe066;
-        box-shadow: 0 8px 25px rgba(255, 224, 102, 0.3);
+        background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-dark) 100%);
+        color: var(--text-dark);
+        border-color: var(--primary-color);
+        box-shadow: 0 12px 30px rgba(255, 224, 102, 0.4);
       }
-      
-      .botstatus-btn.profile-btn {
-        background: linear-gradient(135deg, #ffe066 0%, #ffd43b 100%);
-        color: #23272f;
-        box-shadow: 0 4px 15px rgba(255, 224, 102, 0.3);
+
+      .admin-btn {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: #fff;
+        box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
       }
-      
-      .botstatus-btn.profile-btn:hover {
-        background: linear-gradient(135deg, #ffd43b 0%, #fcc419 100%);
-        color: #181a1b;
-        box-shadow: 0 8px 25px rgba(255, 224, 102, 0.4);
+
+      .admin-btn:hover {
+        background: linear-gradient(135deg, #5a6fd8 0%, #6a4190 100%);
+        color: #fff;
+        box-shadow: 0 12px 30px rgba(102, 126, 234, 0.5);
       }
-      
+
       .profile-btn i {
-        font-size: 1.1rem;
-        transition: transform 0.3s ease;
+        font-size: 1.3rem;
+        transition: transform 0.4s ease;
       }
-      
+
       .profile-btn:hover i {
-        transform: scale(1.1);
+        transform: scale(1.2) rotate(5deg);
+      }
+
+      .admin-section {
+        background: linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%);
+        border: 1px solid rgba(102, 126, 234, 0.3);
+      }
+
+      .admin-section .section-title {
+        background: linear-gradient(135deg, #667eea, #764ba2);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+      }
+
+      .admin-section .section-title::after {
+        background: linear-gradient(90deg, #667eea, #764ba2);
+        box-shadow: 0 2px 8px rgba(102, 126, 234, 0.4);
+      }
+
+      @media (max-width: 768px) {
+        .profile-container {
+          padding: 1rem 0;
+        }
+        
+        .profile-card {
+          border-radius: 16px;
+          margin: 0 1rem;
+        }
+        
+        .user-avatar {
+          width: 100px;
+          height: 100px;
+          margin-top: -50px;
+        }
+        
+        .user-name {
+          font-size: 1.6rem;
+        }
+        
+        .action-section {
+          padding: 1.5rem;
+          margin: 1.5rem 0;
+        }
+        
+        .section-title {
+          font-size: 1.5rem;
+        }
+        
+        .profile-btn {
+          padding: 1rem 1.5rem;
+          font-size: 0.95rem;
+        }
+      }
+
+      .fade-in {
+        animation: fadeIn 0.8s ease-out;
+      }
+
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+          transform: translateY(20px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      .slide-in {
+        animation: slideIn 0.6s ease-out;
+      }
+
+      @keyframes slideIn {
+        from {
+          opacity: 0;
+          transform: translateX(-30px);
+        }
+        to {
+          opacity: 1;
+          transform: translateX(0);
+        }
       }
     </style>
   </head>
   <body>
     <%- include("../partials/navbar", { user, active }) %>
-    <div class="container mt-4" id="main-content">
+    
+    <div class="container profile-container" id="main-content">
       <div class="row justify-content-center">
-        <div class="col-12 col-md-8 col-lg-6">
-          <div class="card shadow-lg mx-auto">
+        <div class="col-12 col-lg-8 col-xl-6">
+          <!-- Profile Card -->
+          <div class="profile-card fade-in">
             <% if (bannerUrl) { %>
             <img
               src="<%= bannerUrl %>"
@@ -199,104 +404,165 @@
               alt="Discord Banner"
             />
             <% } %>
-            <div class="card-body text-center">
+            
+            <div class="profile-header">
               <img
                 src="<%= avatarUrl %>"
-                class="user-avatar mb-2"
+                class="user-avatar"
                 alt="User Avatar"
               />
-              <h3 class="card-title mb-1">
-                <%= discordUser.username %> <% if (discordUser.discriminator &&
-                discordUser.discriminator !== "0") { %> #<%=
-                discordUser.discriminator %> <% } %>
-              </h3>
-              <p class="text-muted mb-2">Discord ID: <%= discordUser.id %></p>
+              <h1 class="user-name">
+                <%= discordUser.username %>
+                <% if (discordUser.discriminator && discordUser.discriminator !== "0") { %>
+                  <span class="text-muted">#<%= discordUser.discriminator %></span>
+                <% } %>
+              </h1>
+              <p class="user-id">
+                <i class="bi bi-hash"></i> Discord ID: <%= discordUser.id %>
+              </p>
+              
               <% // Helper: get best text color for a given hex background
-              function getRoleTextColor(hex) { if (!hex) return "#fff"; const r
-              = parseInt(hex.substring(0,2), 16); const g =
-              parseInt(hex.substring(2,4), 16); const b =
-              parseInt(hex.substring(4,6), 16); const luminance = 0.299*r +
-              0.587*g + 0.114*b; return luminance > 186 ? "#222" : "#fff"; } %>
+              function getRoleTextColor(hex) {
+                if (!hex) return "#fff";
+                const r = parseInt(hex.substring(0,2), 16);
+                const g = parseInt(hex.substring(2,4), 16);
+                const b = parseInt(hex.substring(4,6), 16);
+                const luminance = 0.299*r + 0.587*g + 0.114*b;
+                return luminance > 186 ? "#222" : "#fff";
+              } %>
+              
               <% if (userRoles && userRoles.length) { %>
-              <div class="mb-2">
-                <strong>Roles in Server:</strong><br />
-                <% userRoles.forEach(role => { const hex =
-                role.color.toString(16).padStart(6, '0'); const textColor =
-                getRoleTextColor(hex); %>
-                <span
-                  class="role-badge"
-                  style="background: #<%= hex %>; color: <%= textColor %>;"
-                >
-                  <%= role.name %>
-                </span>
-                <% }) %>
+              <div class="roles-section">
+                <div class="roles-title">
+                  <i class="bi bi-shield-check"></i>
+                  Server Roles
+                </div>
+                <div class="d-flex flex-wrap justify-content-center">
+                  <% userRoles.forEach(role => { 
+                    const hex = role.color.toString(16).padStart(6, '0');
+                    const textColor = getRoleTextColor(hex);
+                  %>
+                  <span
+                    class="role-badge"
+                    style="background: #<%= hex %>; color: <%= textColor %>;"
+                  >
+                    <%= role.name %>
+                  </span>
+                  <% }) %>
+                </div>
               </div>
               <% } %>
             </div>
           </div>
-          <div class="action-section">
-            <h3 class="section-title">Quick Actions</h3>
-            <div class="row">
-              <div class="col-12 col-md-6 mb-3 mb-md-0">
+
+          <!-- Quick Actions Section -->
+          <div class="action-section slide-in">
+            <h3 class="section-title">
+              <i class="bi bi-lightning-charge"></i>
+              Quick Actions
+            </h3>
+            <div class="row g-3">
+              <div class="col-12 col-md-6">
                 <a href="/my-certs" class="btn btn-primary profile-btn w-100">
-                  <i class="bi bi-award"></i> My Certifications
+                  <i class="bi bi-award-fill"></i>
+                  My Certifications
                 </a>
               </div>
               <div class="col-12 col-md-6">
                 <a href="/loa" class="btn btn-outline-primary profile-btn w-100">
-                  <i class="bi bi-calendar-x"></i> LOA (Leave of Absence)
+                  <i class="bi bi-calendar-x-fill"></i>
+                  Leave of Absence
                 </a>
               </div>
             </div>
           </div>
-          <% if (isAdmin) { %>
-          <div class="action-section">
-            <h3 class="section-title">Admin Actions</h3>
-            <div class="row">
-              <div class="col-12 col-md-6 col-lg-3 mb-3">
-                <a href="/botstatus" class="btn botstatus-btn profile-btn w-100">
-                  <i class="bi bi-robot"></i> Bot Status
-                </a>
-              </div>
-              <div class="col-12 col-md-6 col-lg-3 mb-3">
-                <a href="/vps-status" class="btn botstatus-btn profile-btn w-100">
-                  <i class="bi bi-server"></i> VPS Status
-                </a>
-              </div>
-              <div class="col-12 col-md-6 col-lg-3 mb-3">
-                <a href="/gallery-admin" class="btn botstatus-btn profile-btn w-100">
-                  <i class="bi bi-images"></i> Gallery Admin
-                </a>
-              </div>
-              <div class="col-12 col-md-6 col-lg-3 mb-3">
-                <a href="/equipment" class="btn botstatus-btn profile-btn w-100">
-                  <i class="bi bi-gear-fill"></i> Equipment Management
-                </a>
-              </div>
-              <div class="col-12 col-md-6 col-lg-3 mb-3">
-                <a href="/form-builder" class="btn botstatus-btn profile-btn w-100">
-                  <i class="bi bi-file-earmark-text"></i> Form Builder
-                </a>
-              </div>
-              <div class="col-12 col-md-6 col-lg-3 mb-3">
-                <a href="/database-health" class="btn botstatus-btn profile-btn w-100">
-                  <i class="bi bi-database"></i> Database Health
-                </a>
-              </div>
-              <div class="col-12 col-md-6 col-lg-3 mb-3">
-                <a href="/database-editor" class="btn botstatus-btn profile-btn w-100">
-                  <i class="bi bi-database"></i> Database Editor
-                </a>
-              </div>
-            </div>
-          </div>
-          
 
+          <!-- Admin Actions Section -->
+          <% if (isAdmin) { %>
+          <div class="action-section admin-section slide-in">
+            <h3 class="section-title">
+              <i class="bi bi-gear-fill"></i>
+              Admin Panel
+            </h3>
+            <div class="row g-3">
+              <div class="col-12 col-md-6 col-lg-4">
+                <a href="/botstatus" class="btn admin-btn profile-btn w-100">
+                  <i class="bi bi-robot"></i>
+                  Bot Status
+                </a>
+              </div>
+              <div class="col-12 col-md-6 col-lg-4">
+                <a href="/vps-status" class="btn admin-btn profile-btn w-100">
+                  <i class="bi bi-server"></i>
+                  VPS Status
+                </a>
+              </div>
+              <div class="col-12 col-md-6 col-lg-4">
+                <a href="/gallery-admin" class="btn admin-btn profile-btn w-100">
+                  <i class="bi bi-images"></i>
+                  Gallery Admin
+                </a>
+              </div>
+              <div class="col-12 col-md-6 col-lg-4">
+                <a href="/equipment" class="btn admin-btn profile-btn w-100">
+                  <i class="bi bi-tools"></i>
+                  Equipment Management
+                </a>
+              </div>
+              <div class="col-12 col-md-6 col-lg-4">
+                <a href="/form-builder" class="btn admin-btn profile-btn w-100">
+                  <i class="bi bi-file-earmark-text"></i>
+                  Form Builder
+                </a>
+              </div>
+              <div class="col-12 col-md-6 col-lg-4">
+                <a href="/database-health" class="btn admin-btn profile-btn w-100">
+                  <i class="bi bi-heart-pulse"></i>
+                  Database Health
+                </a>
+              </div>
+              <div class="col-12 col-md-6 col-lg-4">
+                <a href="/database-editor" class="btn admin-btn profile-btn w-100">
+                  <i class="bi bi-database-gear"></i>
+                  Database Editor
+                </a>
+              </div>
+              <div class="col-12 col-md-6 col-lg-4">
+                <a href="/codebase-backup" class="btn admin-btn profile-btn w-100">
+                  <i class="bi bi-archive-fill"></i>
+                  Codebase Backups
+                </a>
+              </div>
+            </div>
+          </div>
           <% } %>
         </div>
       </div>
     </div>
+
     <%- include("../partials/footer") %>
+    
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+      // Add smooth scrolling and enhance user experience
+      document.addEventListener('DOMContentLoaded', function() {
+        // Add staggered animation to buttons
+        const buttons = document.querySelectorAll('.profile-btn');
+        buttons.forEach((button, index) => {
+          button.style.animationDelay = `${index * 0.1}s`;
+        });
+
+        // Add hover effects to role badges
+        const roleBadges = document.querySelectorAll('.role-badge');
+        roleBadges.forEach(badge => {
+          badge.addEventListener('mouseenter', function() {
+            this.style.transform = 'translateY(-3px) scale(1.05)';
+          });
+          badge.addEventListener('mouseleave', function() {
+            this.style.transform = 'translateY(0) scale(1)';
+          });
+        });
+      });
+    </script>
   </body>
 </html>

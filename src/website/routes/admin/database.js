@@ -10,6 +10,7 @@ import {
 import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
+import cron from 'node-cron';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -19,6 +20,80 @@ const router = Router();
 // Ensure database is set up
 setupDatabase();
 const db = getDatabase();
+
+// Automated backup function
+async function performAutomatedBackup() {
+  try {
+    const dbPath = path.resolve(__dirname, '../../../../events.db');
+    const backupDir = path.resolve(__dirname, '../../../../backup_db');
+    const fs = await import('fs/promises');
+    
+    // Create backup directory if it doesn't exist
+    try {
+      await fs.access(backupDir);
+    } catch {
+      await fs.mkdir(backupDir, { recursive: true });
+    }
+    
+    // Create backup with readable timestamp
+    const now = new Date();
+    const dateStr = now.toISOString().split('T')[0]; // YYYY-MM-DD
+    const timeStr = now.toTimeString().split(' ')[0].replace(/:/g, '-'); // HH-MM-SS
+    const backupFilename = `backup-${dateStr}-${timeStr}.db`;
+    const backupPath = path.join(backupDir, backupFilename);
+    
+    // Create backup
+    await fs.copyFile(dbPath, backupPath);
+    console.log(`Automated backup created: ${backupFilename}`);
+    
+    // Clean up old backups (keep only 10 most recent)
+    const files = await fs.readdir(backupDir);
+    const backupFiles = files
+      .filter(file => file.endsWith('.db'))
+      .map(file => ({
+        name: file,
+        path: path.join(backupDir, file),
+        stats: null
+      }));
+    
+    // Get file stats for sorting
+    for (const file of backupFiles) {
+      try {
+        file.stats = await fs.stat(file.path);
+      } catch (err) {
+        console.error(`Error getting stats for ${file.name}:`, err);
+      }
+    }
+    
+    // Sort by creation time (oldest first)
+    backupFiles.sort((a, b) => {
+      if (!a.stats || !b.stats) return 0;
+      return a.stats.birthtime.getTime() - b.stats.birthtime.getTime();
+    });
+    
+    // Delete oldest backups if we have more than 10
+    if (backupFiles.length > 10) {
+      const filesToDelete = backupFiles.slice(0, backupFiles.length - 10);
+      for (const file of filesToDelete) {
+        try {
+          await fs.unlink(file.path);
+          console.log(`Deleted old backup: ${file.name}`);
+        } catch (err) {
+          console.error(`Error deleting backup ${file.name}:`, err);
+        }
+      }
+    }
+  } catch (error) {
+    console.error('Error performing automated backup:', error);
+  }
+}
+
+// Schedule daily backup at 2:00 AM
+cron.schedule('0 2 * * *', performAutomatedBackup, {
+  timezone: 'UTC'
+});
+
+console.log('Automated daily backup scheduled for 2:00 AM UTC');
 
 // Database Health Dashboard
 router.get('/', ensureAdmin, async (req, res) => {
@@ -184,6 +259,17 @@ router.post('/optimize', ensureAdmin, async (req, res) => {
   }
 });
 
+// Manual Automated Backup Trigger (for testing)
+router.post('/auto-backup', ensureAdmin, async (req, res) => {
+  try {
+    await performAutomatedBackup();
+    res.redirect('/database-health?alert=Automated backup completed successfully');
+  } catch (error) {
+    console.error('Error triggering automated backup:', error);
+    res.redirect('/database-health?error=Failed to trigger automated backup');
+  }
+});
+
 // Database Backup
 router.post('/backup', ensureAdmin, async (req, res) => {
   try {
@@ -198,12 +284,53 @@ router.post('/backup', ensureAdmin, async (req, res) => {
       await fs.mkdir(backupDir, { recursive: true });
     }
     
-    // Create backup with timestamp
-    const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
-    const backupPath = path.join(backupDir, `backup_${timestamp}.db`);
+    // Create backup with readable timestamp
+    const now = new Date();
+    const dateStr = now.toISOString().split('T')[0]; // YYYY-MM-DD
+    const timeStr = now.toTimeString().split(' ')[0].replace(/:/g, '-'); // HH-MM-SS
+    const backupFilename = `backup-${dateStr}-${timeStr}.db`;
+    const backupPath = path.join(backupDir, backupFilename);
     
     // Create backup using fs.copyFile
     await fs.copyFile(dbPath, backupPath);
+    
+    // Clean up old backups (keep only 10 most recent)
+    const files = await fs.readdir(backupDir);
+    const backupFiles = files
+      .filter(file => file.endsWith('.db'))
+      .map(file => ({
+        name: file,
+        path: path.join(backupDir, file),
+        stats: null
+      }));
+    
+    // Get file stats for sorting
+    for (const file of backupFiles) {
+      try {
+        file.stats = await fs.stat(file.path);
+      } catch (err) {
+        console.error(`Error getting stats for ${file.name}:`, err);
+      }
+    }
+    
+    // Sort by creation time (oldest first)
+    backupFiles.sort((a, b) => {
+      if (!a.stats || !b.stats) return 0;
+      return a.stats.birthtime.getTime() - b.stats.birthtime.getTime();
+    });
+    
+    // Delete oldest backups if we have more than 10
+    if (backupFiles.length > 10) {
+      const filesToDelete = backupFiles.slice(0, backupFiles.length - 10);
+      for (const file of filesToDelete) {
+        try {
+          await fs.unlink(file.path);
+          console.log(`Deleted old backup: ${file.name}`);
+        } catch (err) {
+          console.error(`Error deleting backup ${file.name}:`, err);
+        }
+      }
+    }
     
     res.redirect('/database-health?alert=Database backup created successfully');
   } catch (error) {
@@ -283,6 +410,43 @@ router.get('/backups', ensureAdmin, async (req, res) => {
   } catch (error) {
     console.error('Error listing backups:', error);
     res.status(500).json({ error: 'Failed to list backups' });
+  }
+});
+
+// Download Backup
+router.get('/backup/:filename', ensureAdmin, async (req, res) => {
+  try {
+    const backupDir = path.resolve(__dirname, '../../../../backup_db');
+    const backupPath = path.join(backupDir, req.params.filename);
+    const fsPromises = await import('fs/promises');
+    const fs = await import('fs');
+    
+    // Validate filename to prevent directory traversal
+    if (!req.params.filename.endsWith('.db') || req.params.filename.includes('..')) {
+      return res.status(400).json({ error: 'Invalid backup filename' });
+    }
+    
+    // Check if file exists
+    try {
+      await fsPromises.access(backupPath);
+    } catch {
+      return res.status(404).json({ error: 'Backup file not found' });
+    }
+    
+    // Get file stats
+    const stats = await fsPromises.stat(backupPath);
+    
+    // Set headers for file download
+    res.setHeader('Content-Type', 'application/octet-stream');
+    res.setHeader('Content-Disposition', `attachment; filename="${req.params.filename}"`);
+    res.setHeader('Content-Length', stats.size);
+    
+    // Stream the file
+    const fileStream = fs.default.createReadStream(backupPath);
+    fileStream.pipe(res);
+  } catch (error) {
+    console.error('Error downloading backup:', error);
+    res.status(500).json({ error: 'Failed to download backup' });
   }
 });
 

@@ -9,3 +9,4 @@ commands-manifest.json
 .prettierignore
 .vscode
 backup_db
+backup_codebase

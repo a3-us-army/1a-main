@@ -1,0 +1,50 @@
+[
+  {
+    "pattern": ".prettierrc",
+    "type": "file"
+  },
+  {
+    "pattern": ".git",
+    "type": "directory"
+  },
+  {
+    "pattern": "backup_codebase",
+    "type": "directory"
+  },
+  {
+    "pattern": "backup_db",
+    "type": "directory"
+  },
+  {
+    "pattern": ".prettierignore",
+    "type": "file"
+  },
+  {
+    "pattern": "node_modules",
+    "type": "directory"
+  },
+  {
+    "pattern": "events.db",
+    "type": "file"
+  },
+  {
+    "pattern": "sessions.sqlite",
+    "type": "file"
+  },
+  {
+    "pattern": "LICENSE.txt",
+    "type": "file"
+  },
+  {
+    "pattern": "README.md",
+    "type": "file"
+  },
+  {
+    "pattern": ".env",
+    "type": "file"
+  },
+  {
+    "pattern": ".gitignore",
+    "type": "file"
+  }
+]

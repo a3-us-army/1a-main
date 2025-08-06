@@ -31,18 +31,34 @@ router.get('/', ensureAuth, async (req, res) => {
       .filter(cert => {
         if (!cert.required_mos) return true;
 
-        // Check if user has the required MOS by ID or name
-        const mosRole = getAvailableMOSRoles().find(
-          mos => mos.name === cert.required_mos
-        );
-        if (mosRole) {
-          return (
-            userRoleIds.includes(mosRole.id) ||
-            userRoleNames.includes(cert.required_mos)
-          );
+        // Check if user has any of the required MOS by ID or name
+        let requiredMosArray = [];
+        try {
+          // Try to parse as JSON array first
+          requiredMosArray = JSON.parse(cert.required_mos);
+        } catch (e) {
+          // If not JSON, treat as single value
+          requiredMosArray = [cert.required_mos];
         }
 
-        return userRoleNames.includes(cert.required_mos);
+        // Check if user has any of the required MOS roles
+        for (const requiredMos of requiredMosArray) {
+          const mosRole = getAvailableMOSRoles().find(
+            mos => mos.name === requiredMos
+          );
+          if (mosRole) {
+            if (
+              userRoleIds.includes(mosRole.id) ||
+              userRoleNames.includes(requiredMos)
+            ) {
+              return true;
+            }
+          } else if (userRoleNames.includes(requiredMos)) {
+            return true;
+          }
+        }
+
+        return false;
       });
   }
 
