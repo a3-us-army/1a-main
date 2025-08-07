@@ -29,6 +29,7 @@
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
     />
+    <script src="/js/rich-text-editor.js"></script>
     <style>
       .document-tab {
         cursor: pointer;
@@ -379,7 +380,12 @@
                           <div class="col-12 col-md-6 col-lg-4">
                             <div class="document-card p-3">
                               <div class="d-flex justify-content-between align-items-start mb-2">
-                                <h6 class="document-title mb-0"><%= doc.title %></h6>
+                                <div>
+                                  <h6 class="document-title mb-0">
+                                    <i class="bi bi-link-45deg me-1 text-info"></i>
+                                    <%= doc.title %>
+                                  </h6>
+                                </div>
                                 <% if (isAdmin) { %>
                                   <div class="dropdown">
                                     <button class="btn btn-sm btn-link text-muted p-0 dropdown-toggle" type="button" data-bs-toggle="dropdown">
@@ -584,8 +590,8 @@
                 <textarea class="form-control" id="editDocumentDescription" name="description" rows="3"></textarea>
               </div>
               <div class="mb-3">
-                <label for="editDocumentUrl" class="form-label">Document URL</label>
-                <input type="url" class="form-control" id="editDocumentUrl" name="url" placeholder="https://...">
+                <label for="editDocumentUrl" class="form-label">Document URL *</label>
+                <input type="url" class="form-control" id="editDocumentUrl" name="url" placeholder="https://..." required>
               </div>
               <div class="mb-3">
                 <label for="editDocumentMOS" class="form-label">Required MOS (Optional)</label>
@@ -622,6 +628,7 @@
       </div>
     </div>
     
+
     <%- include("../partials/footer") %>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
     <script>
@@ -757,6 +764,8 @@
             }
           });
         });
+        
+
       });
       
       function setSelectedTab(tabId) {
@@ -773,12 +782,13 @@
         new bootstrap.Modal(document.getElementById('editTabModal')).show();
       }
       
+
+      
       function editDocument(documentId, title, description, url, requiredMos, sortOrder) {
-        console.log('editDocument called:', { documentId, title, description, url, requiredMos, sortOrder });
         currentDocumentId = documentId;
         document.getElementById('editDocumentTitle').value = title;
         document.getElementById('editDocumentDescription').value = description;
-        document.getElementById('editDocumentUrl').value = url;
+        document.getElementById('editDocumentUrl').value = url || '';
         document.getElementById('editDocumentSortOrder').value = sortOrder;
         
         // Handle MOS selection in edit modal
@@ -807,10 +817,12 @@
         new bootstrap.Modal(document.getElementById('editDocumentModal')).show();
       }
       
+
+      
       function deleteDocument(documentId, title) {
         console.log('deleteDocument called:', { documentId, title });
         if (confirm(`Are you sure you want to delete the document "${title}"?`)) {
-          fetch(`/documents/documents/${documentId}`, {
+          fetch(`/documents/${documentId}`, {
             method: 'DELETE',
             headers: {
               'Content-Type': 'application/json'
@@ -897,12 +909,6 @@
          const noRestriction = formData.get('no_restriction');
          const selectedMOS = formData.getAll('required_mos[]');
          
-         console.log('Form submission debug:', {
-           noRestriction: noRestriction,
-           selectedMOS: selectedMOS,
-           formDataEntries: Array.from(formData.entries())
-         });
-         
          let finalRequiredMOS = null;
          if (noRestriction) {
            finalRequiredMOS = null; // No restriction
@@ -920,7 +926,7 @@
          
          console.log('Sending data to server:', data);
         
-        fetch(`/documents/documents/${currentDocumentId}`, {
+        fetch(`/documents/${currentDocumentId}`, {
           method: 'PUT',
           headers: {
             'Content-Type': 'application/json'
@@ -939,6 +945,8 @@
           console.error('Error:', error);
           alert('Failed to update document');
         });
+        
+
       });
     </script>
   </body>

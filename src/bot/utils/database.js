@@ -579,6 +579,8 @@ export function setupDatabase() {
       title TEXT NOT NULL,
       description TEXT,
       url TEXT,
+      content TEXT, -- Rich text content for built-in docs
+      content_type TEXT DEFAULT 'external', -- 'external' for URLs, 'builtin' for rich content
       required_mos TEXT,
       sort_order INTEGER DEFAULT 0,
       created_by TEXT,
@@ -588,6 +590,19 @@ export function setupDatabase() {
       FOREIGN KEY (tab_id) REFERENCES document_tabs(id) ON DELETE CASCADE
     )
   `).run();
+  
+  // Add content and content_type columns to existing documents table if they don't exist
+  try {
+    db.prepare('ALTER TABLE documents ADD COLUMN content TEXT').run();
+  } catch (e) {
+    // Column already exists
+  }
+  
+  try {
+    db.prepare('ALTER TABLE documents ADD COLUMN content_type TEXT DEFAULT "external"').run();
+  } catch (e) {
+    // Column already exists
+  }
 
   setupEquipmentTables();
 
