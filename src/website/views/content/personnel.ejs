@@ -30,32 +30,409 @@
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
     />
     <style>
-      .platoon-title {
-        font-size: 1.5rem;
-        font-weight: 700;
-        color: #ffe066;
-        margin-bottom: 0.5rem;
-        margin-top: 2rem;
+      :root {
+        --primary-gold: var(--ranger-gold, #e1b84c);
+        --secondary-gold: #DAA520;
+        --dark-gold: var(--ranger-gold, #e1b84c);
+        --deep-brown: var(--ranger-red, #b12a2c);
+        --pure-black: var(--ranger-bg, #241d1d);
+        --bg-gradient: linear-gradient(135deg, var(--ranger-bg, #241d1d) 0%, var(--ranger-footer, #291e1e) 100%);
+        --card-bg: var(--ranger-card, #2d2d2d);
+        --glass-bg: rgba(255, 255, 255, 0.1);
+        --border-light: rgba(225, 184, 76, 0.3);
+        --shadow-light: 0 8px 32px rgba(0, 0, 0, 0.1);
+        --shadow-medium: 0 12px 40px rgba(0, 0, 0, 0.15);
+        --shadow-heavy: 0 20px 60px rgba(0, 0, 0, 0.2);
+
+        /* Modern Color Coding Colors */
+        --command-color: #FF6B35; /* Vibrant orange-red for command */
+        --platoon-color: #4ECDC4; /* Teal for platoon */
+        --support-color: #45B7D1; /* Blue for support */
+        --other-color: #9B59B6; /* Purple for other */
       }
+
+      body {
+        background: var(--bg-gradient);
+        color: #ffffff;
+        min-height: 100vh;
+      }
+
+      /* Animations */
+      @keyframes fade-in {
+        from { opacity: 0; transform: translateY(20px); }
+        to { opacity: 1; transform: translateY(0); }
+      }
+
+      @keyframes slide-in {
+        from { opacity: 0; transform: translateX(-30px); }
+        to { opacity: 1; transform: translateX(0); }
+      }
+
+      /* Modern Hero Section */
+      .personnel-container {
+        animation: fade-in 0.8s ease-out;
+      }
+
+      .personnel-hero {
+        background: var(--card-bg);
+        padding: 3rem 2rem;
+        border-radius: 20px;
+        border: 2px solid var(--ranger-gold);
+        margin-bottom: 3rem;
+        position: relative;
+        box-shadow: var(--shadow-heavy);
+        overflow: hidden;
+      }
+
+      .personnel-hero::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 4px;
+        background: linear-gradient(90deg, #FFD700, #DAA520, #B8860B);
+      }
+
+      .personnel-title {
+        color: var(--ranger-gold);
+        font-weight: 800;
+        font-size: 2.5rem;
+        margin-bottom: 1rem;
+        text-align: center;
+      }
+
+      .personnel-subtitle {
+        color: #cccccc;
+        font-size: 1.2rem;
+        text-align: center;
+        margin-bottom: 0;
+      }
+
+      /* Group Headers */
+      .group-header {
+        color: var(--ranger-gold);
+        font-weight: 700;
+        font-size: 1.8rem;
+        margin-bottom: 1.5rem;
+        margin-top: 2rem;
+        padding: 1rem;
+        background: rgba(255, 255, 255, 0.05);
+        border-radius: 12px;
+        border: 1px solid var(--ranger-gold);
+        position: relative;
+        overflow: hidden;
+        animation: slide-in 0.6s ease-out both;
+      }
+
+      .group-header::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 3px;
+        background: linear-gradient(90deg, #FFD700, #DAA520);
+      }
+
+      /* Modern Color-Coded Cards */
+      .personnel-card {
+        background: rgba(255, 255, 255, 0.05);
+        border-radius: 16px;
+        margin-bottom: 1.5rem;
+        box-shadow: var(--shadow-medium);
+        transition: all 0.3s ease;
+        position: relative;
+        overflow: hidden;
+        animation: slide-in 0.6s ease-out both;
+        border: 2px solid transparent;
+      }
+
+      /* Command Cards - Golden */
+      .personnel-card.command {
+        border-color: var(--command-color);
+      }
+
+      .personnel-card.command::before {
+        background: linear-gradient(90deg, var(--command-color), #E74C3C);
+      }
+
+      .personnel-card.command .card-header {
+        background: linear-gradient(135deg, var(--command-color) 0%, #E74C3C 100%);
+        color: #ffffff;
+        text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+      }
+
+      /* Platoon Cards - Sky Blue */
+      .personnel-card.platoon {
+        border-color: var(--platoon-color);
+      }
+
+      .personnel-card.platoon::before {
+        background: linear-gradient(90deg, var(--platoon-color), #16A085);
+      }
+
+      .personnel-card.platoon .card-header {
+        background: linear-gradient(135deg, var(--platoon-color) 0%, #16A085 100%);
+        color: #ffffff;
+        text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+      }
+
+      /* Support Cards - Light Green */
+      .personnel-card.support {
+        border-color: var(--support-color);
+      }
+
+      .personnel-card.support::before {
+        background: linear-gradient(90deg, var(--support-color), #2980B9);
+      }
+
+      .personnel-card.support .card-header {
+        background: linear-gradient(135deg, var(--support-color) 0%, #2980B9 100%);
+        color: #ffffff;
+        text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+      }
+
+      /* Other Cards - Plum */
+      .personnel-card.other {
+        border-color: var(--other-color);
+      }
+
+      .personnel-card.other::before {
+        background: linear-gradient(90deg, var(--other-color), #8E44AD);
+      }
+
+      .personnel-card.other .card-header {
+        background: linear-gradient(135deg, var(--other-color) 0%, #8E44AD 100%);
+        color: #ffffff;
+        text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+      }
+
+      /* Card hover effects and top gradient */
+      .personnel-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 3px;
+        opacity: 0;
+        transition: opacity 0.3s ease;
+      }
+
+      .personnel-card:hover {
+        transform: translateY(-5px);
+        box-shadow: var(--shadow-heavy);
+      }
+
+      .personnel-card:hover::before {
+        opacity: 1;
+      }
+
+      .personnel-card .card-header {
+        font-weight: 700;
+        font-size: 1.1rem;
+        padding: 1rem;
+        border-radius: 16px 16px 0 0;
+        border: none;
+      }
+
+      .personnel-card .card-body {
+        background: transparent;
+        padding: 0;
+      }
+
+      /* Table Modernization */
+      .table-dark {
+        background: transparent;
+        --bs-table-bg: transparent;
+      }
+
       .table-dark th,
       .table-dark td {
-        color: #fff;
-        background-color: #23272f;
+        color: #e0e0e0;
+        background-color: #2a2a2a;
+        border-color: #404040;
+        padding: 0.75rem 0.5rem;
+        vertical-align: middle;
       }
+
       .table-dark thead th {
-        background-color: #181a1b;
+        background-color: #1a1a1a;
+        font-weight: 700;
+        font-size: 0.85rem;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        color: #f0f0f0;
+        border-bottom: 2px solid #555555;
+        text-align: center;
       }
+
+      .table-dark tbody tr:hover {
+        background-color: #3a3a3a;
+        transition: background-color 0.2s ease;
+      }
+
+      .table-dark tbody tr:nth-child(even) td {
+        background-color: #333333;
+      }
+
+      .table-dark tbody tr:nth-child(odd) td {
+        background-color: #2a2a2a;
+      }
+
+      /* Aircraft type rows styling - make them dark like headers */
+      .table-dark tbody tr.aircraft-row td {
+        background-color: #1a1a1a !important;
+        color: #f0f0f0;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.3px;
+        text-align: center;
+      }
+
+      .table-dark tbody tr.aircraft-row:hover td {
+        background-color: #262626 !important;
+      }
+
+      /* Callsign badge styling - full width and centered */
+      .callsign-badge {
+        display: block !important;
+        width: 100% !important;
+        text-align: center !important;
+        margin: 0 !important;
+        padding: 0.75rem 0.5rem !important;
+        border-radius: 6px !important;
+        background: linear-gradient(135deg, #3498DB 0%, #2980B9 100%) !important;
+        color: #ffffff !important;
+        text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3) !important;
+        border: 1px solid rgba(255, 255, 255, 0.2) !important;
+        font-weight: 600 !important;
+        font-size: 0.85rem !important;
+        letter-spacing: 0.5px !important;
+      }
+
+      /* Callsign table cells - remove padding so badge can span full width */
+      .table-dark tbody tr:not(.aircraft-row) td {
+        padding: 0.25rem !important;
+      }
+
+      /* Modern Badges */
+      .badge {
+        font-weight: 600;
+        padding: 0.5rem 0.75rem;
+        border-radius: 8px;
+        font-size: 0.8rem;
+      }
+
+      .badge.bg-success {
+        background: linear-gradient(135deg, #27AE60 0%, #2ECC71 100%) !important;
+        color: #ffffff !important;
+        text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+      }
+
+      .badge.bg-secondary {
+        background: linear-gradient(135deg, #7F8C8D 0%, #95A5A6 100%) !important;
+        color: #ffffff !important;
+        text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+      }
+
+      .badge.bg-danger {
+        background: linear-gradient(135deg, #E74C3C 0%, #C0392B 100%) !important;
+        color: #ffffff !important;
+        text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+      }
+
+      .badge.bg-warning {
+        background: linear-gradient(135deg, #F39C12 0%, #E67E22 100%) !important;
+        color: #ffffff !important;
+        text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+      }
+
       .badge-reserve {
-        background: #1a237e !important;
-        color: #fff !important;
+        background: linear-gradient(135deg, #3498DB 0%, #2980B9 100%) !important;
+        color: #ffffff !important;
+        text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+        border: 1px solid rgba(255, 255, 255, 0.2);
       }
+
+      /* No Data Message */
+      .no-personnel {
+        background: rgba(255, 255, 255, 0.05);
+        border: 1px solid var(--ranger-gold);
+        border-radius: 16px;
+        padding: 3rem;
+        text-align: center;
+        color: #cccccc;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .no-personnel::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 3px;
+        background: linear-gradient(90deg, #FFD700, #DAA520);
+      }
+
+      .no-personnel i {
+        color: var(--ranger-gold);
+        font-size: 3rem;
+        margin-bottom: 1rem;
+      }
+
+      /* Staggered animations */
+      .personnel-card:nth-child(1) { animation-delay: 0.1s; }
+      .personnel-card:nth-child(2) { animation-delay: 0.2s; }
+      .personnel-card:nth-child(3) { animation-delay: 0.3s; }
+      .personnel-card:nth-child(4) { animation-delay: 0.4s; }
+      .personnel-card:nth-child(5) { animation-delay: 0.5s; }
+      .personnel-card:nth-child(6) { animation-delay: 0.6s; }
+
+      /* Responsive Design */
+      @media (max-width: 768px) {
+        .personnel-hero {
+          padding: 2rem 1rem;
+        }
+
+        .personnel-title {
+          font-size: 2rem;
+        }
+
+        .personnel-subtitle {
+          font-size: 1rem;
+        }
+
+        .group-header {
+          font-size: 1.4rem;
+          margin-top: 1.5rem;
+          padding: 0.75rem;
+        }
+
+        .table-responsive {
+          font-size: 0.9rem;
+        }
+
+        .personnel-card .card-header {
+          font-size: 1rem;
+          padding: 0.75rem;
+        }
+      }
+
       @media (max-width: 600px) {
-        .platoon-title {
+        .group-header {
           font-size: 1.1rem;
           margin-top: 1.2rem;
         }
         .table-responsive {
-          font-size: 0.95rem;
+          font-size: 0.85rem;
         }
       }
       
@@ -140,10 +517,14 @@
     </div>
     
     <%- include("../partials/navbar", { user, active }) %>
-    <div class="container mt-5" id="main-content">
-      <h2 class="mb-4 text-center">
-        <i class="bi bi-people me-2"></i>All Personnel
-      </h2>
+    <div class="container mt-5 personnel-container" id="main-content">
+      <!-- Hero Section -->
+      <div class="personnel-hero">
+        <h1 class="personnel-title">
+          <i class="bi bi-people me-2"></i>Personnel Roster
+        </h1>
+        <p class="personnel-subtitle">Current status and organization of all 1A personnel</p>
+      </div>
       <div id="platoon-sections">
         <!-- Sections will be rendered here by JS -->
       </div>
@@ -208,7 +589,13 @@
         let html = '';
 
         if (!Array.isArray(personnel) || personnel.length === 0) {
-          html = `<div class="alert alert-info text-center">No personnel data found.</div>`;
+          html = `
+            <div class="no-personnel">
+              <i class="bi bi-people d-block"></i>
+              <h4>No personnel data found</h4>
+              <p>Unable to load personnel information at this time.</p>
+            </div>
+          `;
         } else {
           // Group personnel by section
           const sections = [];
@@ -240,27 +627,27 @@
             groups[type].push(section);
           });
 
-          // Helper: Card color classes
+          // Helper: Card color classes for modern styling
           const cardStyles = {
             command: {
-              border: 'border-success',
-              text: 'text-success',
+              type: 'command',
               icon: 'bi-shield-lock-fill',
+              title: 'Command'
             },
             platoon: {
-              border: 'border-primary',
-              text: 'text-primary',
+              type: 'platoon',
               icon: 'bi-people-fill',
+              title: 'Platoon'
             },
             support: {
-              border: 'border-info',
-              text: 'text-info',
+              type: 'support',
               icon: 'bi-truck',
+              title: 'Support'
             },
             other: {
-              border: 'border-secondary',
-              text: 'text-secondary',
+              type: 'other',
               icon: 'bi-question-circle',
+              title: 'Other'
             },
           };
 
@@ -269,7 +656,7 @@
             if (!groups[type] || groups[type].length === 0) return '';
             let groupHtml = `
           <div class="col-12">
-            <h3 class="mb-3 mt-4 ${cardStyles[type].text}">
+            <h3 class="group-header">
               <i class="bi ${cardStyles[type].icon} me-2"></i>${title}
             </h3>
           </div>
@@ -278,14 +665,14 @@
             groups[type].forEach(section => {
               groupHtml += `
             <div class="col-12 col-md-6 col-lg-4">
-              <div class="card shadow h-100 ${cardStyles[type].border} border-2">
-                <div class="card-header bg-dark ${cardStyles[type].text} fw-bold">
+              <div class="card personnel-card ${cardStyles[type].type} shadow h-100">
+                <div class="card-header">
                   <i class="bi ${cardStyles[type].icon} me-2"></i>${section.name}
                 </div>
                 <div class="card-body p-0">
                   <div class="table-responsive">
                     <table class="table table-dark table-striped table-bordered table-hover table-sm align-middle mb-0">
-                      <thead style="background: #181a1b;">
+                      <thead>
                         <tr>
                           <th>Position</th>
                           <th>Callsign</th>
@@ -336,10 +723,10 @@
           }
 
           html += `<div class="row g-4">`;
-          html += renderGroup('Command', 'command');
-          html += renderGroup('Platoon', 'platoon');
-          html += renderGroup('Support', 'support');
-          html += renderGroup('Other', 'other');
+          html += renderGroup(cardStyles.command.title, 'command');
+          html += renderGroup(cardStyles.platoon.title, 'platoon');
+          html += renderGroup(cardStyles.support.title, 'support');
+          html += renderGroup(cardStyles.other.title, 'other');
           html += `</div>`;
         }
         container.innerHTML = html;
@@ -378,16 +765,16 @@
           html += `
         <div class="row g-4">
           <div class="col-12">
-            <h3 class="mb-3 mt-4 text-info">
-              <i class="bi bi-airplane me-2"></i>Aviation
-            </h3>
+                          <h3 class="group-header">
+                <i class="bi bi-airplane me-2"></i>Aviation
+              </h3>
           </div>
           ${groups
             .map(
               group => `
             <div class="col-12 col-md-6">
-              <div class="card shadow h-100 border-info border-2">
-                <div class="card-header bg-dark text-info fw-bold">
+              <div class="card personnel-card support shadow h-100">
+                <div class="card-header">
                   <i class="${
                     group.name.toLowerCase().includes('160')
                       ? 'fa-solid fa-helicopter'
@@ -397,7 +784,7 @@
                 <div class="card-body p-0">
                   <div class="table-responsive">
                     <table class="table table-dark table-striped table-bordered table-hover table-sm align-middle mb-0">
-                      <thead style="background: #181a1b;">
+                      <thead>
                         <tr>
                           <th>Position</th>
                           <th>Status</th>
@@ -469,19 +856,19 @@
         let html = `
           <div class="row g-4">
             <div class="col-12">
-              <h3 class="mb-3 mt-4 text-info">
+              <h3 class="group-header">
                 <i class="bi bi-broadcast me-2"></i>Callsigns
               </h3>
             </div>
             <div class="col-12">
-              <div class="card shadow border-info border-2">
-                <div class="card-header bg-dark text-info fw-bold">
+              <div class="card personnel-card support shadow">
+                <div class="card-header">
                   <i class="bi bi-airplane me-2"></i>Aircraft Callsigns
                 </div>
                 <div class="card-body p-0">
                   <div class="table-responsive">
                     <table class="table table-dark table-striped table-bordered table-hover table-sm align-middle mb-0">
-                      <thead style="background: #181a1b;">
+                      <thead>
                         <tr>
                           <th>A-10</th>
                           <th>F-15</th>
@@ -491,11 +878,11 @@
                       </thead>
                       <tbody>
                         ${callsignsData.map(row => `
-                          <tr>
-                            <td>${row.type === 'callsign' ? `<span class="badge bg-info text-dark">${row.a10}</span>` : row.a10}</td>
-                            <td>${row.type === 'callsign' ? `<span class="badge bg-info text-dark">${row.f15}</span>` : row.f15}</td>
-                            <td>${row.type === 'callsign' ? `<span class="badge bg-info text-dark">${row.f16}</span>` : row.f16}</td>
-                            <td>${row.type === 'callsign' ? `<span class="badge bg-info text-dark">${row.ac130}</span>` : row.ac130}</td>
+                          <tr${row.type === 'aircraft' ? ' class="aircraft-row"' : ''}>
+                            <td>${row.type === 'callsign' ? `<span class="callsign-badge">${row.a10}</span>` : row.a10}</td>
+                            <td>${row.type === 'callsign' ? `<span class="callsign-badge">${row.f15}</span>` : row.f15}</td>
+                            <td>${row.type === 'callsign' ? `<span class="callsign-badge">${row.f16}</span>` : row.f16}</td>
+                            <td>${row.type === 'callsign' ? `<span class="callsign-badge">${row.ac130}</span>` : row.ac130}</td>
                           </tr>
                         `).join('')}
                       </tbody>
@@ -507,8 +894,8 @@
           </div>
           <div class="row mt-4">
             <div class="col-12">
-              <div class="card border-info border-2">
-                <div class="card-header bg-dark text-info fw-bold">
+              <div class="card personnel-card support">
+                <div class="card-header">
                   <i class="bi bi-info-circle me-2"></i>Radio Communication Guide
                 </div>
                 <div class="card-body">

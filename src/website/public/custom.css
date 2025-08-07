@@ -113,7 +113,7 @@ body {
 }
 .btn-link,
 a {
-  color: var(--ranger-gold) !important;
+  color: var(--ranger-gold);
 }
 
 /* Form labels and controls */

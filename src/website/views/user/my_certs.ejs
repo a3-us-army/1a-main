@@ -14,62 +14,293 @@
     />
     <link rel="icon" href="/favicon.ico" />
     <link rel="stylesheet" href="/custom.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"
+    />
     <style>
-      @media (max-width: 600px) {
-        h1 {
+      :root {
+        --primary-gold: var(--ranger-gold, #e1b84c);
+        --secondary-gold: #DAA520;
+        --dark-gold: var(--ranger-gold, #e1b84c);
+        --deep-brown: var(--ranger-red, #b12a2c);
+        --pure-black: var(--ranger-bg, #241d1d);
+        --bg-gradient: linear-gradient(135deg, var(--ranger-bg, #241d1d) 0%, var(--ranger-footer, #291e1e) 100%);
+        --card-bg: var(--ranger-card, #2d2d2d);
+        --glass-bg: rgba(255, 255, 255, 0.1);
+        --border-light: rgba(225, 184, 76, 0.3);
+        --shadow-light: 0 8px 32px rgba(0, 0, 0, 0.1);
+        --shadow-medium: 0 12px 40px rgba(0, 0, 0, 0.15);
+        --shadow-heavy: 0 20px 60px rgba(0, 0, 0, 0.2);
+      }
+
+      body {
+        background: var(--bg-gradient);
+        color: #ffffff;
+        min-height: 100vh;
+      }
+
+      /* Animations */
+      @keyframes fade-in {
+        from { opacity: 0; transform: translateY(20px); }
+        to { opacity: 1; transform: translateY(0); }
+      }
+
+      @keyframes slide-in {
+        from { opacity: 0; transform: translateX(-30px); }
+        to { opacity: 1; transform: translateX(0); }
+      }
+
+      /* Modern Hero Section */
+      .my-certs-container {
+        animation: fade-in 0.8s ease-out;
+      }
+
+      .my-certs-hero {
+        background: var(--card-bg);
+        padding: 3rem 2rem;
+        border-radius: 20px;
+        border: 2px solid var(--ranger-gold);
+        margin-bottom: 3rem;
+        position: relative;
+        box-shadow: var(--shadow-heavy);
+        overflow: hidden;
+      }
+
+      .my-certs-hero::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 4px;
+        background: linear-gradient(90deg, #FFD700, #DAA520, #B8860B);
+      }
+
+      .my-certs-title {
+        color: var(--ranger-gold);
+        font-weight: 800;
+        font-size: 2.5rem;
+        margin-bottom: 1rem;
+        text-align: center;
+      }
+
+      .my-certs-subtitle {
+        color: #cccccc;
+        font-size: 1.2rem;
+        text-align: center;
+        margin-bottom: 0;
+      }
+
+      /* Modern Certification Cards */
+      .cert-card {
+        background: rgba(255, 255, 255, 0.05);
+        border: 1px solid var(--ranger-gold);
+        border-radius: 16px;
+        margin-bottom: 1.5rem;
+        box-shadow: var(--shadow-medium);
+        transition: all 0.3s ease;
+        position: relative;
+        overflow: hidden;
+        animation: slide-in 0.6s ease-out both;
+      }
+
+      .cert-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 3px;
+        background: linear-gradient(90deg, #FFD700, #DAA520);
+        opacity: 0;
+        transition: opacity 0.3s ease;
+      }
+
+      .cert-card:hover {
+        transform: translateY(-5px);
+        box-shadow: var(--shadow-heavy);
+      }
+
+      .cert-card:hover::before {
+        opacity: 1;
+      }
+
+      .cert-card .card-body {
+        background: transparent;
+        padding: 1.5rem;
+      }
+
+      .cert-card .card-title {
+        color: var(--ranger-gold);
+        font-weight: 700;
+        font-size: 1.3rem;
+        margin-bottom: 1rem;
+      }
+
+      .cert-card .card-text {
+        color: #e0e0e0;
+        font-size: 1rem;
+        line-height: 1.5;
+        margin-bottom: 1.5rem;
+      }
+
+      /* Status Badges */
+      .status-badge {
+        font-weight: 600;
+        padding: 0.5rem 1rem;
+        border-radius: 8px;
+        font-size: 0.9rem;
+        text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        margin-bottom: 1rem;
+        display: inline-block;
+      }
+
+      .status-badge.bg-success {
+        background: linear-gradient(135deg, #27AE60 0%, #2ECC71 100%) !important;
+        color: #ffffff !important;
+      }
+
+      .status-badge.bg-warning {
+        background: linear-gradient(135deg, #F39C12 0%, #E67E22 100%) !important;
+        color: #ffffff !important;
+      }
+
+      /* Date Text */
+      .cert-date {
+        color: var(--ranger-gold);
+        font-size: 0.9rem;
+        font-weight: 600;
+      }
+
+      /* No Certifications Message */
+      .no-certs {
+        background: rgba(255, 255, 255, 0.05);
+        border: 1px solid var(--ranger-gold);
+        border-radius: 16px;
+        padding: 3rem;
+        text-align: center;
+        color: #cccccc;
+        position: relative;
+        overflow: hidden;
+        animation: fade-in 0.8s ease-out;
+      }
+
+      .no-certs::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 3px;
+        background: linear-gradient(90deg, #FFD700, #DAA520);
+      }
+
+      .no-certs i {
+        color: var(--ranger-gold);
+        font-size: 3rem;
+        margin-bottom: 1rem;
+      }
+
+      /* Staggered animations */
+      .cert-card:nth-child(1) { animation-delay: 0.1s; }
+      .cert-card:nth-child(2) { animation-delay: 0.2s; }
+      .cert-card:nth-child(3) { animation-delay: 0.3s; }
+      .cert-card:nth-child(4) { animation-delay: 0.4s; }
+      .cert-card:nth-child(5) { animation-delay: 0.5s; }
+      .cert-card:nth-child(6) { animation-delay: 0.6s; }
+
+      /* Responsive Design */
+      @media (max-width: 768px) {
+        .my-certs-hero {
+          padding: 2rem 1rem;
+        }
+
+        .my-certs-title {
+          font-size: 2rem;
+        }
+
+        .my-certs-subtitle {
+          font-size: 1rem;
+        }
+
+        .cert-card .card-body {
+          padding: 1.25rem;
+        }
+
+        .cert-card .card-title {
           font-size: 1.2rem;
-          text-align: center;
         }
-        .card {
-          padding: 0.5rem;
-          margin: 0 0.2rem;
+      }
+
+      @media (max-width: 600px) {
+        .my-certs-title {
+          font-size: 1.8rem;
         }
-        .card-title {
+
+        .cert-card {
+          margin-bottom: 1rem;
+        }
+
+        .cert-card .card-body {
+          padding: 1rem;
+        }
+
+        .cert-card .card-title {
           font-size: 1.1rem;
         }
-        .card-text,
-        .text-muted {
-          font-size: 0.97rem;
+
+        .cert-card .card-text {
+          font-size: 0.95rem;
         }
-        .row > [class^='col-'] {
-          margin-bottom: 1rem;
+
+        .cert-date {
+          font-size: 0.85rem;
         }
       }
     </style>
   </head>
   <body>
     <%- include("../partials/navbar", { user, active }) %>
-    <div class="container mt-4" id="main-content">
-      <h1 class="mb-4">My Certification(s)</h1>
+    <div class="container mt-5 my-certs-container" id="main-content">
+      <!-- Hero Section -->
+      <div class="my-certs-hero">
+        <h1 class="my-certs-title">
+          <i class="bi bi-award me-2"></i>My Certifications
+        </h1>
+        <p class="my-certs-subtitle">Track your requested and approved certifications</p>
+      </div>
       <% const visibleRequests = requests.filter(req => req.status === 'pending'
       || req.status === 'approved'); %>
       <% if (visibleRequests.length === 0) { %>
-      <div class="alert alert-info">
-        You have not requested any certifications yet.
+      <div class="no-certs">
+        <i class="bi bi-award d-block"></i>
+        <h4>No certifications requested yet</h4>
+        <p>You haven't requested any certifications. Visit the certifications page to request your first certification!</p>
       </div>
       <% } else { %>
       <div class="row">
         <% visibleRequests.forEach(req => { %>
         <div class="col-12 col-md-6 col-lg-4 mb-3">
-          <div class="card shadow-sm">
+          <div class="card cert-card shadow-sm">
             <div class="card-body">
               <h5 class="card-title"><%= req.cert_name %></h5>
               <p class="card-text">
-                <%= req.cert_description || "No description" %>
+                <%= req.cert_description || "No description available" %>
               </p>
               <p>
                 <span
-                  class="badge status-badge <%= req.status === 'approved' ? 'bg-success' : 'bg-warning text-dark' %>"
+                  class="badge status-badge <%= req.status === 'approved' ? 'bg-success' : 'bg-warning' %>"
                 >
-                  <%= req.status.charAt(0).toUpperCase() + req.status.slice(1)
-                  %>
+                  <i class="bi <%= req.status === 'approved' ? 'bi-check-circle' : 'bi-clock' %> me-1"></i>
+                  <%= req.status.charAt(0).toUpperCase() + req.status.slice(1) %>
                 </span>
               </p>
-              <small class="text-muted"
-                >Requested:
-                <%= new Date(req.requested_at).toLocaleString()
-                %></small
-              >
+              <small class="cert-date">
+                <i class="bi bi-calendar3 me-1"></i>
+                Requested: <%= new Date(req.requested_at).toLocaleString() %>
+              </small>
             </div>
           </div>
         </div>

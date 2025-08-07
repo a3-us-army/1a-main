@@ -22,7 +22,7 @@
     <style>
       :root {
         --primary-gold: var(--ranger-gold, #e1b84c);
-        --secondary-gold: var(--ranger-green, #9b860d);
+        --secondary-gold: #DAA520;
         --dark-gold: var(--ranger-gold, #e1b84c);
         --deep-brown: var(--ranger-red, #b12a2c);
         --pure-black: var(--ranger-bg, #241d1d);
@@ -596,8 +596,8 @@
       }
 
       .cta-button {
-        background: linear-gradient(135deg, #FFD700 0%, #DAA520 100%);
-        color: #ffffff;
+        background: linear-gradient(135deg, var(--primary-gold) 0%, var(--secondary-gold) 100%);
+        color: #000000;
         font-size: 1.2rem;
         font-weight: 700;
         padding: 1rem 2.5rem;
@@ -629,7 +629,7 @@
       }
 
       .cta-button:hover {
-        background: linear-gradient(135deg, #B8860B 0%, #8B4513 100%);
+        background: linear-gradient(135deg, var(--dark-gold) 0%, var(--deep-brown) 100%);
         color: #ffffff;
         transform: translateY(-3px);
         box-shadow: 0 12px 30px rgba(225, 184, 76, 0.5);
