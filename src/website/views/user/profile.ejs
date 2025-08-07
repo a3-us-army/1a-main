@@ -81,6 +81,46 @@
         background: linear-gradient(transparent, rgba(0, 0, 0, 0.3));
       }
 
+      .color-banner {
+        width: 100%;
+        height: 200px;
+        position: relative;
+        background: linear-gradient(135deg, var(--user-color, #5865f2) 0%, var(--user-color-dark, #4752c4) 100%);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        overflow: hidden;
+      }
+
+      .color-banner::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: 
+          radial-gradient(circle at 20% 50%, rgba(255, 255, 255, 0.1) 0%, transparent 50%),
+          radial-gradient(circle at 80% 20%, rgba(255, 255, 255, 0.08) 0%, transparent 50%),
+          radial-gradient(circle at 40% 80%, rgba(255, 255, 255, 0.06) 0%, transparent 50%);
+        animation: subtle-float 6s ease-in-out infinite;
+      }
+
+      .color-banner::after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        height: 60px;
+        background: linear-gradient(transparent, rgba(0, 0, 0, 0.3));
+      }
+
+      @keyframes subtle-float {
+        0%, 100% { transform: translateY(0px) rotate(0deg); }
+        50% { transform: translateY(-10px) rotate(1deg); }
+      }
+
       .profile-header {
         position: relative;
         padding: 2rem;
@@ -230,8 +270,11 @@
         align-items: center;
         justify-content: center;
         gap: 0.8rem;
-        min-height: 64px;
+        min-height: 80px;
+        height: 80px;
         letter-spacing: 0.5px;
+        text-align: center;
+        line-height: 1.3;
       }
 
       .profile-btn::before {
@@ -289,12 +332,23 @@
         background: linear-gradient(135deg, #DAA520 0%, #8B4513 100%) !important;
         color: #000 !important;
         box-shadow: 0 6px 20px rgba(218, 165, 32, 0.4);
+        flex-direction: column;
+        gap: 0.5rem;
+        padding: 1rem 0.8rem;
+        white-space: normal;
+        word-wrap: break-word;
+        hyphens: auto;
       }
 
       .admin-btn.profile-btn:hover {
         background: linear-gradient(135deg, #B8860B 0%, #654321 100%) !important;
         color: #000 !important;
         box-shadow: 0 12px 30px rgba(218, 165, 32, 0.5);
+      }
+
+      .admin-btn.profile-btn i {
+        font-size: 1.5rem;
+        margin-bottom: 0.2rem;
       }
 
       .profile-btn i {
@@ -355,6 +409,17 @@
         .profile-btn {
           padding: 1rem 1.5rem;
           font-size: 0.95rem;
+          min-height: 70px;
+          height: 70px;
+        }
+        
+        .admin-btn.profile-btn {
+          padding: 0.8rem 0.6rem;
+          font-size: 0.9rem;
+        }
+        
+        .admin-btn.profile-btn i {
+          font-size: 1.3rem;
         }
       }
 
@@ -397,12 +462,31 @@
         <div class="col-12 col-lg-8 col-xl-6">
           <!-- Profile Card -->
           <div class="profile-card fade-in">
+            <% 
+            // Convert Discord accent color to hex
+            let userAccentColor = '#5865f2'; // Discord default blurple
+            let userAccentColorDark = '#4752c4';
+            if (discordUser.accent_color) {
+              userAccentColor = '#' + discordUser.accent_color.toString(16).padStart(6, '0');
+              // Create a darker variant for gradient
+              const color = parseInt(discordUser.accent_color.toString(16), 16);
+              const r = Math.max(0, ((color >> 16) & 255) - 30);
+              const g = Math.max(0, ((color >> 8) & 255) - 30);
+              const b = Math.max(0, (color & 255) - 30);
+              userAccentColorDark = '#' + ((r << 16) | (g << 8) | b).toString(16).padStart(6, '0');
+            }
+            %>
             <% if (bannerUrl) { %>
             <img
               src="<%= bannerUrl %>"
               class="user-banner"
               alt="Discord Banner"
             />
+            <% } else { %>
+            <div 
+              class="color-banner" 
+              style="--user-color: <%= userAccentColor %>; --user-color-dark: <%= userAccentColorDark %>;"
+            ></div>
             <% } %>
             
             <div class="profile-header">

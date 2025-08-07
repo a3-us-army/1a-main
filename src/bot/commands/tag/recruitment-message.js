@@ -52,8 +52,17 @@ export async function execute(interaction) {
 📘 More info: https://1a75.org/about
 📝 Apply here: https://1a75.org/apply (login via Discord)
 💬 Join our Discord: https://discord.gg/RAQwxfbu5H
+
+**🎯 We are currently looking to fill:**
+• **Squad 2** - Assault 2
+• **Squad 3** - Security
+• **Squad 4** - Weapons
+
+**👑 Leadership Positions Needed:**
+• Squad Leaders (Squads 2, 3, 4)
+• Team Leaders (Squads 2, 3, 4)
         
-**📋 Open Roles:**
+**📋 Open MOS's (refer to the perstat for roles):**
 ${availableRolesText}`,
     ephemeral: false,
   });

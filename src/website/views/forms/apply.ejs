@@ -13,64 +13,327 @@
     <link rel="stylesheet" href="/custom.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     <style>
-        @media (max-width: 600px) {
-            .card {
-                padding: 0.5rem;
-                margin: 0 0.2rem;
-            }
-            .card-title {
-                font-size: 1.2rem;
-            }
-            .form-label {
-                font-size: 1rem;
-            }
-            .form-control, .form-select {
-                font-size: 1rem;
-                padding: 0.6rem 0.7rem;
-            }
+        :root {
+            --primary-gold: var(--ranger-gold, #e1b84c);
+            --secondary-gold: var(--ranger-green, #4b5a2a);
+            --dark-gold: var(--ranger-gold, #e1b84c);
+            --deep-brown: var(--ranger-red, #b12a2c);
+            --pure-black: var(--ranger-bg, #241d1d);
+            --bg-gradient: linear-gradient(135deg, var(--ranger-bg, #241d1d) 0%, var(--ranger-footer, #291e1e) 100%);
+            --card-bg: var(--ranger-card, #2d2d2d);
+            --glass-bg: rgba(255, 255, 255, 0.1);
+            --border-light: rgba(225, 184, 76, 0.3);
+            --shadow-light: 0 8px 32px rgba(0, 0, 0, 0.1);
+            --shadow-medium: 0 12px 40px rgba(0, 0, 0, 0.15);
+            --shadow-heavy: 0 20px 60px rgba(0, 0, 0, 0.2);
         }
+
+        body {
+            background: var(--bg-gradient);
+            min-height: 100vh;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color: #ffffff;
+        }
+
+        .application-container {
+            padding: 1rem 0;
+        }
+
+        .application-hero {
+            background: var(--card-bg);
+            border-radius: 24px;
+            box-shadow: var(--shadow-heavy);
+            overflow: hidden;
+            border: 2px solid var(--ranger-gold);
+            backdrop-filter: blur(20px);
+            position: relative;
+            margin-bottom: 3rem;
+            padding: 2rem;
+            text-align: center;
+        }
+
+        .application-hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #FFD700, #DAA520, #B8860B);
+        }
+
+        .application-title {
+            font-size: 2.2rem;
+            font-weight: 800;
+            color: var(--primary-gold);
+            margin-bottom: 0.5rem;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+            line-height: 1.2;
+        }
+
+        .application-subtitle {
+            font-size: 1.1rem;
+            color: #e0e0e0;
+            opacity: 0.9;
+            margin-bottom: 0;
+            line-height: 1.6;
+        }
+
+        /* Modern form styling */
+        .application-form-card {
+            background: var(--card-bg);
+            border-radius: 20px;
+            box-shadow: var(--shadow-heavy);
+            border: 2px solid var(--ranger-gold);
+            backdrop-filter: blur(20px);
+            position: relative;
+            overflow: hidden;
+            margin-bottom: 2rem;
+        }
+
+        .application-form-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #FFD700, #DAA520, #B8860B);
+            border-radius: 20px 20px 0 0;
+        }
+
+        .form-section-title {
+            font-size: 1.6rem;
+            font-weight: 700;
+            color: var(--primary-gold);
+            margin-bottom: 1.5rem;
+            text-align: center;
+            position: relative;
+            z-index: 1;
+        }
+
         .form-help {
             font-size: 0.95em;
-            color: #6c757d;
+            color: #e0e0e0;
+            margin-top: 0.5rem;
+            opacity: 0.8;
         }
-        .card-title i {
-            color: #5865f2;
-        }
+
         .disabled-form {
             pointer-events: none;
             opacity: 0.6;
         }
-        .table-dark th, .table-dark td {
-            color: #fff;
-            background-color: #23272f;
+
+        /* Admin section styling */
+        .admin-section {
+            background: var(--card-bg);
+            border-radius: 20px;
+            box-shadow: var(--shadow-heavy);
+            border: 2px solid var(--ranger-gold);
+            padding: 2rem;
+            position: relative;
+            overflow: hidden;
+            margin-top: 3rem;
         }
-        .table-dark thead th {
-            background-color: #181a1b;
+
+        .admin-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #FFD700, #DAA520, #B8860B);
+        }
+
+        .admin-title {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--primary-gold);
+            margin-bottom: 1.5rem;
+            text-align: center;
+            position: relative;
+            z-index: 1;
+        }
+
+        .application-card .card {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--ranger-gold);
+            border-radius: 16px;
+            transition: all 0.3s ease;
+            box-shadow: var(--shadow-medium);
+        }
+
+        .application-card .card:hover {
+            background: rgba(255, 255, 255, 0.1);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-heavy);
+            border-color: var(--ranger-gold);
+        }
+
+        .application-card .card-header {
+            background: var(--ranger-footer);
+            border-bottom: 1px solid var(--ranger-gold);
+            color: #ffffff;
+        }
+
+        .application-card .card-body {
+            background: transparent;
+            color: #ffffff;
+        }
+
+        .application-card .text-muted {
+            color: #e0e0e0 !important;
+            opacity: 0.8;
+        }
+
+        /* Filter controls */
+        .filter-controls {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 16px;
+            border: 1px solid var(--ranger-gold);
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            box-shadow: var(--shadow-medium);
+        }
+
+        /* Animations */
+        .fade-in {
+            animation: fadeIn 0.8s ease-out;
+        }
+
+        .slide-in {
+            animation: slideIn 0.6s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateX(-40px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        /* Responsive design */
+        @media (max-width: 768px) {
+            .application-container {
+                padding: 1rem 0;
+            }
+
+            .application-hero {
+                padding: 1.5rem;
+                margin-bottom: 2rem;
+            }
+
+            .application-title {
+                font-size: 1.8rem;
+            }
+
+            .application-subtitle {
+                font-size: 1rem;
+            }
+
+            .application-form-card {
+                margin: 0 0.5rem 2rem 0.5rem;
+            }
+
+            .admin-section {
+                margin: 2rem 0.5rem 0 0.5rem;
+                padding: 1.5rem;
+            }
+
+            .filter-controls {
+                padding: 1rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .application-hero {
+                padding: 1rem;
+            }
+
+            .application-title {
+                font-size: 1.6rem;
+            }
+
+            .application-form-card {
+                margin: 0 0.2rem 2rem 0.2rem;
+            }
+
+            .admin-section {
+                margin: 2rem 0.2rem 0 0.2rem;
+                padding: 1rem;
+            }
+        }
+
+        /* Modal styling */
+        .modal-content {
+            background: var(--card-bg);
+            border: 2px solid var(--ranger-gold);
+            color: #ffffff;
+        }
+
+        .modal-header {
+            background: var(--ranger-footer);
+            border-bottom: 1px solid var(--ranger-gold);
+        }
+
+        .modal-footer {
+            background: var(--ranger-footer);
+            border-top: 1px solid var(--ranger-gold);
         }
     </style>
 </head>
 <body>
     <%- include("../partials/navbar", { user, active }) %>
     <div id="main-content">
-        <div class="container mt-4">
+        <div class="container application-container">
+            <!-- Hero Section -->
+            <div class="application-hero fade-in">
+                <h1 class="application-title">
+                    <i class="bi bi-file-earmark-text me-3"></i>
+                    Unit Application
+                </h1>
+                <p class="application-subtitle">
+                    Join the elite ranks of 1A. Submit your application to begin your journey with the 75th Ranger Regiment.
+                </p>
+            </div>
+
+            <!-- Alert Messages -->
             <% if (query && query.alert) { %>
-                <div class="alert alert-success alert-dismissible fade show mt-3" role="alert">
+                <div class="alert alert-success alert-dismissible fade show" role="alert">
                     <%= query.alert %>
                     <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                 </div>
             <% } %>
             <% if (query && query.error) { %>
-                <div class="alert alert-danger alert-dismissible fade show mt-3" role="alert">
+                <div class="alert alert-danger alert-dismissible fade show" role="alert">
                     <%= query.error %>
                     <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                 </div>
             <% } %>
+
+            <!-- Application Form -->
             <div class="row justify-content-center">
                 <div class="col-12 col-sm-10 col-md-8 col-lg-6">
-                    <div class="card shadow-lg mx-auto">
-                        <div class="card-body p-3">
-                            <h2 class="card-title mb-3 text-center">
-                                <i class="bi bi-file-earmark-text me-2"></i>Unit Application
+                    <div class="application-form-card slide-in">
+                        <div class="card-body p-4">
+                            <h2 class="form-section-title">
+                                <i class="bi bi-clipboard-check me-2"></i>Application Form
                             </h2>
                             
                             <% if (isAdmin) { %>
@@ -161,16 +424,20 @@
             </div>
 
             <% if (isAdmin && allApplications && allApplications.length) { %>
-              <div class="row justify-content-center mt-5">
-                <div class="col-12 col-lg-10">
-                  <h4 class="mb-3 text-center"><i class="bi bi-list-check me-1"></i> All Applications</h4>
-                  
-                  <!-- Search and Filter Controls -->
-                  <div class="row mb-3">
+              <div class="admin-section slide-in">
+                <h4 class="admin-title">
+                  <i class="bi bi-list-check me-2"></i>Application Management
+                </h4>
+                
+                <!-- Search and Filter Controls -->
+                <div class="filter-controls">
+                  <div class="row g-3">
                     <div class="col-md-6">
-                      <input type="text" id="searchApplications" class="form-control" placeholder="Search applications...">
+                      <label class="form-label">Search Applications</label>
+                      <input type="text" id="searchApplications" class="form-control" placeholder="Search by username or unit...">
                     </div>
                     <div class="col-md-3">
+                      <label class="form-label">Filter by Status</label>
                       <select id="statusFilter" class="form-select">
                         <option value="">All Statuses</option>
                         <option value="pending">Pending</option>
@@ -179,11 +446,13 @@
                       </select>
                     </div>
                     <div class="col-md-3">
-                      <button class="btn btn-outline-secondary w-100" onclick="clearFilters()">
+                      <label class="form-label">&nbsp;</label>
+                      <button class="btn btn-outline-secondary w-100 d-block" onclick="clearFilters()">
                         <i class="bi bi-x-circle me-1"></i>Clear Filters
                       </button>
                     </div>
                   </div>
+                </div>
 
                   <!-- Applications Grid -->
                   <div class="row" id="applicationsGrid">

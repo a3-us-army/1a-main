@@ -19,41 +19,221 @@
       href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css"
     />
     <style>
+      :root {
+        --primary-gold: var(--ranger-gold, #e1b84c);
+        --secondary-gold: var(--ranger-green, #4b5a2a);
+        --dark-gold: var(--ranger-gold, #e1b84c);
+        --deep-brown: var(--ranger-red, #b12a2c);
+        --pure-black: var(--ranger-bg, #241d1d);
+        --bg-gradient: linear-gradient(135deg, var(--ranger-bg, #241d1d) 0%, var(--ranger-footer, #291e1e) 100%);
+        --card-bg: var(--ranger-card, #2d2d2d);
+        --glass-bg: rgba(255, 255, 255, 0.1);
+        --border-light: rgba(225, 184, 76, 0.3);
+        --shadow-light: 0 8px 32px rgba(0, 0, 0, 0.1);
+        --shadow-medium: 0 12px 40px rgba(0, 0, 0, 0.15);
+        --shadow-heavy: 0 20px 60px rgba(0, 0, 0, 0.2);
+      }
+
+      body {
+        background: var(--bg-gradient);
+        min-height: 100vh;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        color: #ffffff;
+      }
+
+      .dashboard-container {
+        padding: 1rem 0;
+      }
+
+      .dashboard-hero {
+        background: var(--card-bg);
+        border-radius: 24px;
+        box-shadow: var(--shadow-heavy);
+        overflow: hidden;
+        border: 2px solid var(--ranger-gold);
+        backdrop-filter: blur(20px);
+        position: relative;
+        margin-bottom: 3rem;
+        padding: 2rem;
+        text-align: center;
+      }
+
+      .dashboard-hero::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 4px;
+        background: linear-gradient(90deg, #FFD700, #DAA520, #B8860B);
+      }
+
+      .dashboard-title {
+        font-size: 2.2rem;
+        font-weight: 800;
+        color: var(--primary-gold);
+        margin-bottom: 0.5rem;
+        text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+        line-height: 1.2;
+      }
+
+      .dashboard-subtitle {
+        font-size: 1.1rem;
+        color: #e0e0e0;
+        opacity: 0.9;
+        margin-bottom: 0;
+        line-height: 1.6;
+      }
+
+      .dashboard-grid {
+        margin-top: 2rem;
+      }
+
       .dashboard-btn {
         display: flex;
         align-items: center;
-        justify-content: center;
-        font-size: 1.25rem;
-        font-weight: 500;
-        padding: 1.5rem 1.2rem;
-        border-radius: 0.7rem;
-        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
-        transition:
-          background 0.15s,
-          color 0.15s,
-          transform 0.12s;
-        background: #23272f;
-        color: #ffe066;
-        border: none;
-        margin-bottom: 1.2rem;
+        justify-content: flex-start;
+        font-size: 1.15rem;
+        font-weight: 600;
+        padding: 1.5rem;
+        background: rgba(255, 255, 255, 0.05);
+        border-radius: 16px;
+        border: 1px solid var(--ranger-gold);
+        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        position: relative;
+        overflow: hidden;
+        text-decoration: none;
+        color: #ffffff;
+        box-shadow: var(--shadow-medium);
+        margin-bottom: 1rem;
+        gap: 1rem;
+      }
+
+      .dashboard-btn::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 3px;
+        background: linear-gradient(90deg, #FFD700, #DAA520);
+        transform: scaleX(0);
+        transition: transform 0.3s ease;
+      }
+
+      .dashboard-btn:hover {
+        background: rgba(255, 255, 255, 0.1);
+        transform: translateY(-4px) scale(1.02);
+        box-shadow: var(--shadow-heavy);
+        border-color: var(--ranger-gold);
+        color: #ffffff;
         text-decoration: none;
       }
+
+      .dashboard-btn:hover::before {
+        transform: scaleX(1);
+      }
+
       .dashboard-btn i {
-        font-size: 1.7rem;
-        margin-right: 0.9rem;
+        font-size: 1.4rem;
+        color: var(--ranger-gold);
+        transition: all 0.3s ease;
+        flex-shrink: 0;
       }
-      .dashboard-btn:hover,
-      .dashboard-btn:focus {
-        background: #b68900;
-        color: #fffbe6;
-        transform: translateY(-2px) scale(1.03);
-        text-decoration: none;
+
+      .dashboard-btn:hover i {
+        transform: scale(1.1);
+        color: var(--ranger-gold);
       }
-      @media (max-width: 600px) {
+
+      /* Animations */
+      .fade-in {
+        animation: fadeIn 0.8s ease-out;
+      }
+
+      .slide-in {
+        animation: slideIn 0.6s ease-out;
+      }
+
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+          transform: translateY(30px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      @keyframes slideIn {
+        from {
+          opacity: 0;
+          transform: translateX(-40px);
+        }
+        to {
+          opacity: 1;
+          transform: translateX(0);
+        }
+      }
+
+      /* Staggered button animations */
+      .dashboard-btn {
+        animation: slideIn 0.6s ease-out;
+        animation-fill-mode: both;
+      }
+
+      .dashboard-btn:nth-child(1) { animation-delay: 0.1s; }
+      .dashboard-btn:nth-child(2) { animation-delay: 0.2s; }
+      .dashboard-btn:nth-child(3) { animation-delay: 0.3s; }
+      .dashboard-btn:nth-child(4) { animation-delay: 0.4s; }
+      .dashboard-btn:nth-child(5) { animation-delay: 0.5s; }
+
+      @media (max-width: 768px) {
+        .dashboard-container {
+          padding: 1rem 0;
+        }
+
+        .dashboard-hero {
+          padding: 1.5rem;
+          margin-bottom: 2rem;
+        }
+
+        .dashboard-title {
+          font-size: 1.8rem;
+        }
+
+        .dashboard-subtitle {
+          font-size: 1rem;
+        }
+
         .dashboard-btn {
-          width: 100% !important;
+          font-size: 1rem;
+          padding: 1.25rem;
+          margin-bottom: 0.75rem;
+        }
+
+        .dashboard-btn i {
+          font-size: 1.2rem;
+        }
+      }
+
+      @media (max-width: 480px) {
+        .dashboard-hero {
+          padding: 1rem;
+        }
+
+        .dashboard-title {
+          font-size: 1.6rem;
+        }
+
+        .dashboard-btn {
+          font-size: 0.95rem;
+          padding: 1rem;
+        }
+
+        .dashboard-btn i {
           font-size: 1.1rem;
-          padding: 1.1rem 0.7rem;
         }
       }
     </style>
@@ -61,47 +241,63 @@
   <body>
     <%- include("../partials/navbar", { user, active }) %>
     <main id="main-content">
-      <div class="container mt-5">
-        <h2 class="mb-4 text-center">Dashboard</h2>
-        <div class="row justify-content-center">
-          <div
-            class="col-12 col-sm-8 col-md-6 col-lg-4 d-flex flex-column align-items-center"
-          >
-            <a
-              href="/events"
-              class="dashboard-btn w-100 mb-3"
-              aria-label="Go to Events"
-            >
-              <i class="bi bi-calendar-event"></i> Events
-            </a>
-            <a
-              href="/certs"
-              class="dashboard-btn w-100"
-              aria-label="Go to Certifications"
-            >
-              <i class="bi bi-patch-check"></i> Certifications
-            </a>
-            <a
-              href="/modpacks"
-              class="dashboard-btn w-100"
-              aria-label="Go to Modpacks"
-            >
-              <i class="bi bi-download"></i> Modpacks
-            </a>
-            <a
-              href="/personnel"
-              class="dashboard-btn w-100"
-              aria-label="Go to Personnel"
-            >
-              <i class="bi bi-person"></i>PERSTAT
-            </a>
-            <a
-              href="/documents"
-              class="dashboard-btn w-100"
-              aria-label="Go to Document Center"
-            >
-              <i class="bi bi-file-earmark-text"></i>Document Center
-            </a>
+      <div class="container dashboard-container">
+        <!-- Hero Section -->
+        <div class="dashboard-hero fade-in">
+          <h1 class="dashboard-title">
+            <i class="bi bi-speedometer2 me-3"></i>
+            Dashboard
+          </h1>
+          <p class="dashboard-subtitle">
+            Access all your essential 1A tools and resources from your centralized command center.
+          </p>
+        </div>
+
+        <!-- Dashboard Grid -->
+        <div class="row justify-content-center dashboard-grid">
+          <div class="col-12 col-sm-10 col-md-8 col-lg-6">
+            <div class="d-flex flex-column">
+              <a
+                href="/events"
+                class="dashboard-btn"
+                aria-label="Go to Events"
+              >
+                <i class="bi bi-calendar-event"></i>
+                <span>Events</span>
+              </a>
+              <a
+                href="/certs"
+                class="dashboard-btn"
+                aria-label="Go to Certifications"
+              >
+                <i class="bi bi-patch-check"></i>
+                <span>Certifications</span>
+              </a>
+              <a
+                href="/modpacks"
+                class="dashboard-btn"
+                aria-label="Go to Modpacks"
+              >
+                <i class="bi bi-download"></i>
+                <span>Modpacks</span>
+              </a>
+              <a
+                href="/personnel"
+                class="dashboard-btn"
+                aria-label="Go to Personnel"
+              >
+                <i class="bi bi-people"></i>
+                <span>PERSTAT</span>
+              </a>
+              <a
+                href="/documents"
+                class="dashboard-btn"
+                aria-label="Go to Document Center"
+              >
+                <i class="bi bi-file-earmark-text"></i>
+                <span>Document Center</span>
+              </a>
+            </div>
           </div>
         </div>
       </div>

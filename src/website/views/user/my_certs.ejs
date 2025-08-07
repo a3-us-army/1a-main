@@ -40,7 +40,7 @@
   <body>
     <%- include("../partials/navbar", { user, active }) %>
     <div class="container mt-4" id="main-content">
-      <h1 class="mb-4">My Certification Requests</h1>
+      <h1 class="mb-4">My Certification(s)</h1>
       <% const visibleRequests = requests.filter(req => req.status === 'pending'
       || req.status === 'approved'); %>
       <% if (visibleRequests.length === 0) { %>
