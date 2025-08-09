@@ -126,7 +126,7 @@
 	document.addEventListener("DOMContentLoaded", function() {
 	  const utcTimestamp = document.getElementById("eventTimeUTC")?.value;
 	  if (utcTimestamp) {
-		const date = new Date(Number(utcTimestamp) * 1000);
+		const date = new Date(parseInt(utcTimestamp, 10) * 1000);
 		const pad = n => n.toString().padStart(2, "0");
 		const local = date.getFullYear() + "-" +
 		  pad(date.getMonth() + 1) + "-" +
@@ -142,7 +142,7 @@
           // Set the value for editing (as before)
           const utcTimestamp = document.getElementById("eventTimeUTC")?.value;
           if (utcTimestamp) {
-            const date = new Date(Number(utcTimestamp) * 1000);
+            const date = new Date(parseInt(utcTimestamp, 10) * 1000);
             const pad = n => n.toString().padStart(2, "0");
             const local = date.getFullYear() + "-" +
               pad(date.getMonth() + 1) + "-" +

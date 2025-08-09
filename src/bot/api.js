@@ -38,7 +38,7 @@ apiApp.post('/api/post-event', async (req, res) => {
     }
 
     // --- FIX: Ensure event.time is an integer ---
-    event.time = Math.floor(Number(event.time));
+    event.time = parseInt(event.time, 10);
 
     const { embed, components } = buildEventEmbed(event);
     const message = await channel.send({

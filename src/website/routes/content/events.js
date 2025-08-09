@@ -65,7 +65,7 @@ router.post('/new', ensureAdmin, async (req, res) => {
     return res.redirect('/events?error=Title, time, and channel required');
 
   const id = uuidv4(); // Use UUID instead of timestamp
-  const eventTime = Number(utc_time); // Already UTC seconds from frontend
+  const eventTime = parseInt(utc_time, 10); // Already UTC seconds from frontend
 
   // --- POST TO DISCORD BOT API ---
   let messageId = null;
@@ -114,7 +114,7 @@ router.post('/edit/:id', ensureAdmin, async (req, res) => {
   ).run(
     title,
     description,
-    Number(utc_time),
+    parseInt(utc_time, 10),
     location,
     channelId,
     req.params.id

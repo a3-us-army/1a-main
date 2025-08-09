@@ -772,7 +772,7 @@ export function createEvent(eventData) {
       creator_id,
       title,
       description,
-      time,
+      parseInt(time, 10),
       location,
       image,
       message_id,

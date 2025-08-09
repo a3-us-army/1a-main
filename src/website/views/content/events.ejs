@@ -567,7 +567,7 @@
         document.querySelectorAll('.event-datebox').forEach(function (box) {
           const utc = box.getAttribute('data-utc');
           if (utc) {
-            const date = new Date(Number(utc) * 1000);
+            const date = new Date(parseInt(utc, 10) * 1000);
             const days = ['SUN', 'MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT'];
             const months = [
               'Jan',
