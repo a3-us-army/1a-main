@@ -2,11 +2,13 @@ import { Router } from 'express';
 import profileRoutes from './profile.js';
 import userRoutes from './user.js';
 import myCertRoutes from './my-certs.js';
+import staffSelfRoutes from './staff.js';
 
 const router = Router();
 
 router.use('/profile', profileRoutes);
 router.use('/user-info', userRoutes);
 router.use('/my-certs', myCertRoutes);
+router.use('/staff', staffSelfRoutes);
 
 export default router; 

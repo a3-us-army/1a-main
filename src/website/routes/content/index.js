@@ -7,6 +7,7 @@ import loaRoutes from './loa.js';
 import modpacksRouter from './modpack.js';
 import formsRoutes from './forms.js';
 import documentsRoutes from './documents.js';
+import staffRoutes from './staff.js';
 
 const router = Router();
 
@@ -18,5 +19,6 @@ router.use('/loa', loaRoutes);
 router.use('/modpacks', modpacksRouter);
 router.use('/forms', formsRoutes);
 router.use('/documents', documentsRoutes);
+router.use('/staff', staffRoutes);
 
 export default router; 

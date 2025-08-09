@@ -558,6 +558,21 @@ export function setupDatabase() {
   `
   ).run();
 
+  // Create staff_profiles table
+  db.prepare(`
+    CREATE TABLE IF NOT EXISTS staff_profiles (
+      id TEXT PRIMARY KEY,
+      user_id TEXT UNIQUE NOT NULL,
+      title TEXT,
+      description TEXT,
+      image_filename TEXT,
+      display_order INTEGER DEFAULT 0,
+      is_active INTEGER DEFAULT 1,
+      created_at TEXT NOT NULL,
+      updated_at TEXT
+    )
+  `).run();
+
   // Create document center tables
   db.prepare(`
     CREATE TABLE IF NOT EXISTS document_tabs (
@@ -1442,6 +1457,95 @@ export function getAllUserActivity(limit = 100) {
       LIMIT ?
     `)
     .all(limit);
+}
+
+// Staff profile helpers
+export function addStaffProfile({ id, user_id, title }) {
+  const db = getDatabase();
+  const created_at = new Date().toISOString();
+  db.prepare(
+    `
+      INSERT INTO staff_profiles (id, user_id, title, created_at, is_active)
+      VALUES (?, ?, ?, ?, 1)
+    `
+  ).run(id, user_id, title || null, created_at);
+  return id;
+}
+
+export function getAllStaffProfiles() {
+  return getDatabase()
+    .prepare('SELECT * FROM staff_profiles WHERE is_active = 1 ORDER BY display_order ASC, created_at ASC')
+    .all();
+}
+
+export function getStaffProfileByUserId(userId) {
+  return getDatabase()
+    .prepare('SELECT * FROM staff_profiles WHERE user_id = ?')
+    .get(userId);
+}
+
+export function updateStaffProfileByUserId(userId, { title, description, image_filename }) {
+  const db = getDatabase();
+  const fields = [];
+  const params = [];
+  if (title !== undefined) {
+    fields.push('title = ?');
+    params.push(title || null);
+  }
+  if (description !== undefined) {
+    fields.push('description = ?');
+    params.push(description || null);
+  }
+  if (image_filename !== undefined) {
+    fields.push('image_filename = ?');
+    params.push(image_filename || null);
+  }
+  fields.push('updated_at = ?');
+  params.push(new Date().toISOString());
+  params.push(userId);
+  if (fields.length === 1) return; // only updated_at added; nothing to update
+  db.prepare(`UPDATE staff_profiles SET ${fields.join(', ')} WHERE user_id = ?`).run(...params);
+}
+
+export function deleteStaffProfileById(id) {
+  return getDatabase().prepare('DELETE FROM staff_profiles WHERE id = ?').run(id);
+}
+
+export function getStaffProfileById(id) {
+  return getDatabase().prepare('SELECT * FROM staff_profiles WHERE id = ?').get(id);
+}
+
+export function updateStaffProfileById(id, { title, description, is_active }) {
+  const db = getDatabase();
+  const fields = [];
+  const params = [];
+  if (title !== undefined) {
+    fields.push('title = ?');
+    params.push(title || null);
+  }
+  if (description !== undefined) {
+    fields.push('description = ?');
+    params.push(description || null);
+  }
+  if (is_active !== undefined) {
+    fields.push('is_active = ?');
+    params.push(is_active ? 1 : 0);
+  }
+  fields.push('updated_at = ?');
+  params.push(new Date().toISOString());
+  params.push(id);
+  if (fields.length === 1) return; // only updated_at
+  db.prepare(`UPDATE staff_profiles SET ${fields.join(', ')} WHERE id = ?`).run(...params);
+}
+
+export function setStaffOrder(orderIds) {
+  const db = getDatabase();
+  const stmt = db.prepare('UPDATE staff_profiles SET display_order = ? WHERE id = ?');
+  let order = 1;
+  for (const id of orderIds) {
+    stmt.run(order, id);
+    order += 1;
+  }
 }
 
 export function getActivityStats(days = 30) {
