@@ -29,14 +29,64 @@ export async function execute(interaction) {
         if (member.user.bot) return;
         if (member.voice == null) return;
 
+        // Check if moon client is initialized
+        if (!client.moon) {
+            const embed = new EmbedBuilder()
+                .setColor(0xFC3A28)
+                .setTitle('❌ 1A Music')
+                .setDescription('🚫 **Music system is not ready.** Please try again in a moment.')
+                .setThumbnail('https://cdn.xanderxx.xyz/1a-logo.png')
+                .setFooter({
+                    text: `Requested by ${interaction.user.displayName}`,
+                    iconURL: interaction.user.displayAvatarURL({ dynamic: true }),
+                })
+                .setTimestamp();
+
+            return interaction.reply({ embeds: [embed], flags: ['Ephemeral'] });
+        }
+
         const trackRequest = interaction.options.getString('track');
 
-        const moonPlayer = client.moon.players.create({
-            guildId: interaction.guildId,
-            voiceChannelId: member.voice.channelId,
-            textChannelId: interaction.channelId,
-            autoPlay: false
-        });
+        // Create player with error handling
+        let moonPlayer;
+        try {
+            moonPlayer = client.moon.players.create({
+                guildId: interaction.guildId,
+                voiceChannelId: member.voice.channelId,
+                textChannelId: interaction.channelId,
+                autoPlay: false
+            });
+        } catch (playerError) {
+            console.error('Error creating player:', playerError);
+            const embed = new EmbedBuilder()
+                .setColor(0xFC3A28)
+                .setTitle('❌ 1A Music')
+                .setDescription('🚫 **Failed to create music player.** Please try again.')
+                .setThumbnail('https://cdn.xanderxx.xyz/1a-logo.png')
+                .setFooter({
+                    text: `Requested by ${interaction.user.displayName}`,
+                    iconURL: interaction.user.displayAvatarURL({ dynamic: true }),
+                })
+                .setTimestamp();
+
+            return interaction.reply({ embeds: [embed], flags: ['Ephemeral'] });
+        }
+
+        // Check if player was created successfully
+        if (!moonPlayer) {
+            const embed = new EmbedBuilder()
+                .setColor(0xFC3A28)
+                .setTitle('❌ 1A Music')
+                .setDescription('🚫 **Failed to create music player.** Please try again.')
+                .setThumbnail('https://cdn.xanderxx.xyz/1a-logo.png')
+                .setFooter({
+                    text: `Requested by ${interaction.user.displayName}`,
+                    iconURL: interaction.user.displayAvatarURL({ dynamic: true }),
+                })
+                .setTimestamp();
+
+            return interaction.reply({ embeds: [embed], flags: ['Ephemeral'] });
+        }
 
         if (!moonPlayer.connected) moonPlayer.connect({ setDeaf: true, setMute: false });
 

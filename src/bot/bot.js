@@ -61,8 +61,8 @@ client.moon = new Manager({
   nodes: [
     {
       host: '127.0.0.1',
-      port: 2335,
-      password: 'password',
+      port: 2334,
+      password: 'Sirmeme098',
       secure: false,
     },
   ],
