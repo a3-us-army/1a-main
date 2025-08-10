@@ -118,7 +118,7 @@ client.on('messageCreate', async message => {
   if (content.startsWith('eval')) {
     try {
       const { handleEval } = await import(
-        '../commands/text-commands/textEval.js'
+        './commands/text-commands/textEval.js'
       );
       await handleEval(message, content.slice(4).trim(), client);
     } catch (error) {
