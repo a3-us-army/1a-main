@@ -14,11 +14,19 @@ import { sendStartupLog } from './utils/logger.js';
 import { setupFullLogger } from './utils/discord_logs.js';
 import { handleButtonInteraction } from './handlers/buttonHandler.js';
 import modmailHandler from './handlers/modmail.js';
+import { Manager } from 'moonlink.js';
 
 dotenv.config();
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
+
+/**
+ * @typedef {import('moonlink.js').Manager} MoonManager
+ * @typedef {import('discord.js').Client & { moon: MoonManager }} MoonClient
+ */
+
+/** @type {MoonClient} */
 
 const client = new Client({
   intents: [
@@ -47,6 +55,23 @@ const client = new Client({
     Partials.GuildMember,
   ],
 });
+
+
+client.moon = new Manager({
+  nodes: [
+    {
+      host: '127.0.0.1',
+      port: 2335,
+      password: 'password',
+      secure: false,
+    },
+  ],
+  sendPayload: (guildId, payload) => {
+    const guild = client.guilds.cache.get(guildId);
+    if (guild) guild.shard.send(JSON.parse(payload));
+  },
+});
+
 
 setupFullLogger(client);
 modmailHandler(client);
@@ -255,7 +280,6 @@ function findCommandFile(commandsDir, commandName) {
   }
   return null;
 }
-
 // --- Error logging ---
 process.on('unhandledRejection', error => {
   console.error('Unhandled promise rejection:', error);
