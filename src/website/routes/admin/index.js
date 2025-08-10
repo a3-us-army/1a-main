@@ -7,7 +7,6 @@ import databaseRoutes from './database.js';
 import databaseEditorRoutes from './database-editor.js';
 import formsRoutes from './forms.js';
 import codebaseBackupRoutes from './codebase-backup.js';
-import staffAdminRoutes from './staff.js';
 
 const router = Router();
 
@@ -19,5 +18,5 @@ router.use('/database-health', databaseRoutes);
 router.use('/database-editor', databaseEditorRoutes);
 router.use('/form-builder', formsRoutes);
 router.use('/codebase-backup', codebaseBackupRoutes);
-router.use('/staff-admin', staffAdminRoutes);
+
 export default router; 

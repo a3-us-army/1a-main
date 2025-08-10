@@ -10,7 +10,11 @@ import {
 import { getDatabase } from '../../utils/database.js';
 
 const PAGE_SIZE = 20;
-const EXCLUDED_ROLE_IDS = ['1363631767872864437', '1363618576895840398'];
+// Exclude LOA and other roles from accountability by their role IDs
+const EXCLUDED_ROLE_IDS = [
+  '1363631767872864437', // LOA (Leave of Absence)
+  '1363618576895840398', // (other excluded role, add comment if needed)
+];
 
 // Command definition
 export const data = new SlashCommandBuilder()

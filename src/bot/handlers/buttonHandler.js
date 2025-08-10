@@ -104,7 +104,7 @@ async function handleRSVPButton(interaction) {
     // Log the change if within an hour of event start
     if (isWithinHour && previousRSVP && previousRSVP.status !== status) {
       try {
-        const logChannel = interaction.client.channels.cache.get('1401397250483028008');
+        const logChannel = interaction.client.channels.cache.get('1332773896369209371');
         if (logChannel) {
           const user = interaction.user;
           const embed = new EmbedBuilder()
