@@ -1,7 +1,7 @@
 {
   "name": "1a-bot-djs",
   "version": "1.0.1",
-  "main": "index.js",
+  "main": "./src/bot/main.js",
   "type": "module",
   "scripts": {
     "format": "prettier --write .",
@@ -12,10 +12,9 @@
   "license": "ISC",
   "description": "",
   "dependencies": {
-    "@aws-sdk/client-s3": "^3.859.0",
+    "@aws-sdk/client-s3": "^3.817.0",
     "@discordjs/builders": "^1.11.2",
-    "archiver": "^7.0.1",
-    "better-sqlite3": "^11.10.0",
+    "better-sqlite3": "^12.2.0",
     "chalk": "^5.4.1",
     "connect-sqlite3": "^0.9.15",
     "csv-parse": "^5.6.0",
@@ -27,13 +26,12 @@
     "express-session": "^1.18.1",
     "fs": "^0.0.1-security",
     "googleapis": "^150.0.1",
+    "moonlink.js": "^4.52.2",
     "multer": "^2.0.0",
-    "node-cron": "^4.2.1",
     "node-fetch": "^3.3.2",
     "passport": "^0.7.0",
     "passport-discord": "^0.1.4",
     "path": "^0.12.7",
-    "sharp": "^0.34.3",
     "sqlite": "^5.1.1",
     "sqlite3": "^5.1.7",
     "url": "^0.11.4",
@@ -41,7 +39,6 @@
     "yaml": "^2.8.0"
   },
   "devDependencies": {
-    "@types/better-sqlite3": "^7.6.13",
     "@types/node": "^22.15.17",
     "prettier": "^3.6.2",
     "prettier-plugin-ejs": "^1.0.3",
