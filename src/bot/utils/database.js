@@ -1941,3 +1941,47 @@ function calculateTableHealthScore(tableName, recordCount, tableInfo) {
     issues: issues
   };
 }
+
+export function removeUserFromEventsDatabase(userId) {
+  const db = getDatabase();
+  
+  try {
+    // Remove all RSVPs for this user
+    const rsvpResult = db.prepare('DELETE FROM rsvps WHERE user_id = ?').run(userId);
+    
+    // Remove user from users table if they exist
+    const userResult = db.prepare('DELETE FROM users WHERE id = ?').run(userId);
+    
+    // Remove any applications by this user
+    const applicationResult = db.prepare('DELETE FROM applications WHERE user_id = ?').run(userId);
+    
+    // Remove any LOA requests by this user
+    const loaResult = db.prepare('DELETE FROM loa_requests WHERE user_id = ?').run(userId);
+    
+    // Remove any staff profiles for this user
+    const staffProfileResult = db.prepare('DELETE FROM staff_profiles WHERE user_id = ?').run(userId);
+    
+    console.log(`Removed user ${userId} from events database:`, {
+      rsvpsRemoved: rsvpResult.changes,
+      userRemoved: userResult.changes,
+      applicationsRemoved: applicationResult.changes,
+      loaRequestsRemoved: loaResult.changes,
+      staffProfilesRemoved: staffProfileResult.changes
+    });
+    
+    return {
+      success: true,
+      rsvpsRemoved: rsvpResult.changes,
+      userRemoved: userResult.changes,
+      applicationsRemoved: applicationResult.changes,
+      loaRequestsRemoved: loaResult.changes,
+      staffProfilesRemoved: staffProfileResult.changes
+    };
+  } catch (error) {
+    console.error(`Error removing user ${userId} from events database:`, error);
+    return {
+      success: false,
+      error: error.message
+    };
+  }
+}

@@ -10,3 +10,5 @@ commands-manifest.json
 .vscode
 backup_db
 backup_codebase
+lavalink
+lavalink/application.yml

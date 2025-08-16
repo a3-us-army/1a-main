@@ -1,0 +1,303 @@
+<!-- Arma Server Status Sidebar -->
+<div id="arma-sidebar" class="arma-sidebar">
+  <div class="sidebar-header">
+    <h5 class="sidebar-title">
+      <i class="bi bi-server me-2"></i>Server Status
+    </h5>
+    <button class="sidebar-toggle" onclick="toggleSidebar()">
+      <i class="bi bi-chevron-left" id="sidebar-toggle-icon"></i>
+    </button>
+  </div>
+  
+  <div class="sidebar-content">
+    <div id="server-status-container">
+      <!-- Server status will be loaded here -->
+      <div class="loading-spinner">
+        <div class="spinner-border spinner-border-sm text-primary" role="status">
+          <span class="visually-hidden">Loading...</span>
+        </div>
+        <span class="ms-2">Loading server status...</span>
+      </div>
+    </div>
+    
+    <div class="sidebar-footer">
+      <small class="text-muted">
+        <i class="bi bi-clock me-1"></i>
+        <span id="last-updated">Never</span>
+      </small>
+    </div>
+  </div>
+</div>
+
+<style>
+.arma-sidebar {
+  position: fixed;
+  top: 0;
+  right: 0;
+  width: 300px;
+  height: 100vh;
+  background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+  border-left: 2px solid #e1b84c;
+  z-index: 1000;
+  transition: transform 0.3s ease;
+  box-shadow: -2px 0 10px rgba(0, 0, 0, 0.3);
+  display: flex;
+  flex-direction: column;
+}
+
+.arma-sidebar.collapsed {
+  transform: translateX(100%);
+}
+
+.sidebar-header {
+  padding: 1rem;
+  border-bottom: 1px solid #e1b84c;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: rgba(225, 184, 76, 0.1);
+}
+
+.sidebar-title {
+  color: #e1b84c;
+  margin: 0;
+  font-size: 1.1rem;
+  font-weight: 600;
+}
+
+.sidebar-toggle {
+  background: none;
+  border: none;
+  color: #e1b84c;
+  cursor: pointer;
+  padding: 0.25rem;
+  border-radius: 4px;
+  transition: all 0.2s ease;
+}
+
+.sidebar-toggle:hover {
+  color: #fff;
+  background: rgba(225, 184, 76, 0.2);
+}
+
+.sidebar-content {
+  flex: 1;
+  padding: 1rem;
+  overflow-y: auto;
+}
+
+.sidebar-footer {
+  padding: 1rem;
+  border-top: 1px solid #e1b84c;
+  background: rgba(225, 184, 76, 0.1);
+}
+
+.server-card {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid #404040;
+  border-radius: 8px;
+  padding: 1rem;
+  margin-bottom: 1rem;
+  transition: all 0.2s ease;
+}
+
+.server-card:hover {
+  background: rgba(225, 184, 76, 0.1);
+  border-color: #e1b84c;
+}
+
+.server-card.online {
+  border-left: 4px solid #28a745;
+  border-color: #28a745;
+}
+
+.server-card.offline {
+  border-left: 4px solid #dc3545;
+  border-color: #dc3545;
+}
+
+.server-name {
+  color: #e1b84c;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+  font-size: 1rem;
+}
+
+.server-status {
+  display: flex;
+  align-items: center;
+  margin-bottom: 0.5rem;
+}
+
+.status-indicator {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  margin-right: 0.5rem;
+}
+
+.status-indicator.online {
+  background: #28a745;
+  box-shadow: 0 0 6px rgba(40, 167, 69, 0.5);
+}
+
+.status-indicator.offline {
+  background: #dc3545;
+  box-shadow: 0 0 6px rgba(220, 53, 69, 0.5);
+}
+
+.status-text {
+  color: #aaa;
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
+.server-info {
+  color: #ccc;
+  font-size: 0.85rem;
+  line-height: 1.4;
+}
+
+.server-info strong {
+  color: #e1b84c;
+}
+
+.loading-spinner {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+  color: #aaa;
+}
+
+.error-message {
+  color: #dc3545;
+  text-align: center;
+  padding: 1rem;
+  font-size: 0.9rem;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .arma-sidebar {
+    width: 280px;
+  }
+  
+  .main-content {
+    margin-right: 0 !important;
+  }
+}
+
+/* Adjust main content to make room for sidebar */
+body {
+  margin-right: 300px;
+}
+
+@media (max-width: 768px) {
+  body {
+    margin-right: 0;
+  }
+  
+  .arma-sidebar {
+    transform: translateX(100%);
+  }
+  
+  .arma-sidebar.expanded {
+    transform: translateX(0);
+  }
+}
+</style>
+
+<script>
+let sidebarCollapsed = false;
+
+async function loadServerStatus() {
+  try {
+    const response = await fetch('/api/server-status');
+    if (!response.ok) {
+      throw new Error('Failed to fetch server status');
+    }
+    
+    const servers = await response.json();
+    updateServerStatusDisplay(servers);
+    
+    // Update last updated time
+    const now = new Date();
+    document.getElementById('last-updated').textContent = now.toLocaleTimeString();
+    
+  } catch (error) {
+    console.error('Error loading server status:', error);
+    document.getElementById('server-status-container').innerHTML = 
+      '<div class="error-message">Failed to load server status</div>';
+  }
+}
+
+function updateServerStatusDisplay(servers) {
+  const container = document.getElementById('server-status-container');
+  
+  if (!servers || servers.length === 0) {
+    container.innerHTML = '<div class="error-message">No servers configured</div>';
+    return;
+  }
+  
+  const serverCards = servers.map(server => `
+    <div class="server-card ${server.online ? 'online' : 'offline'}">
+      <div class="server-name">${server.name}</div>
+      <div class="server-status">
+        <div class="status-indicator ${server.online ? 'online' : 'offline'}"></div>
+        <span class="status-text">${server.online ? 'Online' : 'Offline'}</span>
+      </div>
+      <div class="server-info">
+        <div><strong>IP:</strong> ${server.ip}:${server.port}</div>
+        ${server.online ? `
+          <div><strong>Players:</strong> ${server.players}/${server.maxPlayers}</div>
+          <div><strong>Map:</strong> ${server.map}</div>
+        ` : `
+          <div><strong>Error:</strong> ${server.error || 'Connection failed'}</div>
+        `}
+      </div>
+    </div>
+  `).join('');
+  
+  container.innerHTML = serverCards;
+}
+
+// Load server status on page load
+document.addEventListener('DOMContentLoaded', function() {
+  loadServerStatus();
+  
+  // Auto-refresh every 30 seconds
+  setInterval(loadServerStatus, 30000);
+});
+
+// Handle mobile sidebar toggle
+document.addEventListener('DOMContentLoaded', function() {
+  if (window.innerWidth <= 768) {
+    const sidebar = document.getElementById('arma-sidebar');
+    sidebar.classList.add('collapsed');
+    sidebarCollapsed = true;
+  }
+});
+
+// Update toggle function to handle mobile better
+function toggleSidebar() {
+  const sidebar = document.getElementById('arma-sidebar');
+  const toggleIcon = document.getElementById('sidebar-toggle-icon');
+  
+  if (sidebarCollapsed) {
+    sidebar.classList.remove('collapsed');
+    if (window.innerWidth > 768) {
+      toggleIcon.classList.remove('bi-chevron-right');
+      toggleIcon.classList.add('bi-chevron-left');
+    }
+    sidebarCollapsed = false;
+  } else {
+    sidebar.classList.add('collapsed');
+    if (window.innerWidth > 768) {
+      toggleIcon.classList.remove('bi-chevron-left');
+      toggleIcon.classList.add('bi-chevron-right');
+    }
+    sidebarCollapsed = true;
+  }
+}
+</script>

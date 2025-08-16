@@ -179,6 +179,20 @@ export function setupFullLogger(client) {
         console.error('Error fetching kick audit log:', e);
       }
 
+      // Remove user from events database
+      try {
+        const { removeUserFromEventsDatabase } = await import('./database.js');
+        const removalResult = removeUserFromEventsDatabase(member.id);
+        
+        if (removalResult.success) {
+          console.log(`Successfully removed user ${member.user.tag} (${member.id}) from events database`);
+        } else {
+          console.error(`Failed to remove user ${member.user.tag} (${member.id}) from events database:`, removalResult.error);
+        }
+      } catch (dbError) {
+        console.error(`Error removing user ${member.user.tag} (${member.id}) from events database:`, dbError);
+      }
+
       const channel = await getLogChannel(member.guild);
       if (!channel) return;
 

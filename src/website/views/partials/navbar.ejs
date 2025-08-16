@@ -56,6 +56,15 @@
       <div
         class="d-flex align-items-center gap-2 mt-3 mt-lg-0 flex-column flex-lg-row"
       >
+        <!-- Server Status Toggle Button (Mobile) -->
+        <button 
+          class="btn btn-outline-light btn-sm d-lg-none" 
+          onclick="toggleSidebar()"
+          style="border-radius: 0.5rem;"
+        >
+          <i class="bi bi-server me-1"></i>Server Status
+        </button>
+        
         <% if (user) { %>
         <div class="d-flex align-items-center gap-2">
           <a
@@ -121,3 +130,6 @@
     </div>
   </div>
 </nav>
+
+<!-- Include the sidebar -->
+<%- include('sidebar') %>

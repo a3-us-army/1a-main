@@ -5,6 +5,7 @@ import userRoutes from './user/index.js';
 import contentRoutes from './content/index.js';
 import statusRoutes from './status/index.js';
 import formsRoutes from './forms.js';
+import apiRoutes from './api/index.js';
 
 const router = Router();
 
@@ -14,5 +15,6 @@ router.use('/', userRoutes);
 router.use('/', contentRoutes);
 router.use('/', statusRoutes);
 router.use('/form', formsRoutes);
+router.use('/api', apiRoutes);
 
 export default router;
