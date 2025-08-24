@@ -621,6 +621,23 @@ export function setupDatabase() {
 
   setupEquipmentTables();
 
+  // Create personal finance table
+  db.prepare(
+    `
+    CREATE TABLE IF NOT EXISTS personal_finance (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      user_id TEXT NOT NULL,
+      name TEXT NOT NULL,
+      description TEXT,
+      price DECIMAL(10,2) NOT NULL,
+      card_last_four TEXT,
+      created_at TEXT NOT NULL,
+      updated_at TEXT,
+      FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+    )
+  `
+  ).run();
+
   return db;
 }
 
@@ -1984,4 +2001,79 @@ export function removeUserFromEventsDatabase(userId) {
       error: error.message
     };
   }
+}
+
+// Personal Finance Functions
+export function addFinanceItem(userId, itemData) {
+  const { name, description, price, card_last_four } = itemData;
+  const created_at = new Date().toISOString();
+  
+  const db = getDatabase();
+  const result = db.prepare(
+    `
+    INSERT INTO personal_finance (user_id, name, description, price, card_last_four, created_at)
+    VALUES (?, ?, ?, ?, ?, ?)
+  `
+  ).run(userId, name, description, price, card_last_four, created_at);
+  
+  return result.lastInsertRowid;
+}
+
+export function getFinanceItems(userId) {
+  const db = getDatabase();
+  return db.prepare(
+    `
+    SELECT * FROM personal_finance 
+    WHERE user_id = ? 
+    ORDER BY created_at DESC
+  `
+  ).all(userId);
+}
+
+export function getFinanceItem(itemId, userId) {
+  const db = getDatabase();
+  return db.prepare(
+    `
+    SELECT * FROM personal_finance 
+    WHERE id = ? AND user_id = ?
+  `
+  ).get(itemId, userId);
+}
+
+export function updateFinanceItem(itemId, userId, itemData) {
+  const { name, description, price, card_last_four } = itemData;
+  const updated_at = new Date().toISOString();
+  
+  const db = getDatabase();
+  return db.prepare(
+    `
+    UPDATE personal_finance 
+    SET name = ?, description = ?, price = ?, card_last_four = ?, updated_at = ?
+    WHERE id = ? AND user_id = ?
+  `
+  ).run(name, description, price, card_last_four, updated_at, itemId, userId);
+}
+
+export function deleteFinanceItem(itemId, userId) {
+  const db = getDatabase();
+  return db.prepare(
+    `
+    DELETE FROM personal_finance 
+    WHERE id = ? AND user_id = ?
+  `
+  ).run(itemId, userId);
+}
+
+export function getMonthlyTotal(userId) {
+  const db = getDatabase();
+  const currentMonth = new Date().getFullYear() + '-' + String(new Date().getMonth() + 1).padStart(2, '0');
+  
+  const result = db.prepare(
+    `
+    SELECT SUM(price) as total FROM personal_finance 
+    WHERE user_id = ? AND created_at LIKE ?
+  `
+  ).get(userId, currentMonth + '%');
+  
+  return result.total || 0;
 }

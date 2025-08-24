@@ -1,12 +1,20 @@
 import dgram from 'dgram';
 import net from 'net';
+import https from 'https';
+
+// BattleMetrics API Configuration
+const BATTLEMETRICS_API_KEY = process.env.BATTLEMETRICS_API_KEY || null;
+const BATTLEMETRICS_SERVER_IDS = {
+  '192.135.112.202': '34768597', // Replace with your actual server ID
+  '74.112.77.254': '35315780'    // Replace with your actual server ID
+};
 
 // Arma server configuration
 const ARMA_SERVERS = [
   {
     name: '1A Main Server',
     ip: '192.135.112.202',
-    port: 9020,
+    port: 9021,
     password: '1A75',
     // Try multiple ports if the first one doesn't work
     fallbackPorts: [9021, 9022, 9023, 9024]
@@ -24,119 +32,7 @@ const ARMA_SERVERS = [
 // Configuration
 const QUERY_TIMEOUT = 3000; // 3 seconds timeout
 
-// Comprehensive Arma 3 server query implementation with multiple query attempts
-async function queryArma3Server(ip, port) {
-  return new Promise((resolve) => {
-    const client = dgram.createSocket('udp4');
-    let queryIndex = 0;
-    
-    const timeout = setTimeout(() => {
-      client.close();
-      resolve({
-        online: false,
-        players: 0,
-        maxPlayers: 0,
-        map: 'Unknown',
-        hostname: 'Unknown',
-        error: 'Connection timeout'
-      });
-    }, QUERY_TIMEOUT);
 
-    client.on('message', (msg) => {
-      clearTimeout(timeout);
-      client.close();
-      
-      try {
-        // Arma 3 server response parsing
-        const response = msg.toString('utf8');
-        console.log(`Raw response from ${ip}:${port}:`, response);
-        
-        // Parse Arma 3 server info
-        let players = 0;
-        let maxPlayers = 50;
-        let map = 'Unknown';
-        let hostname = 'Unknown';
-        
-        // Arma 3 servers typically respond with key-value pairs
-        const lines = response.split('\n');
-        lines.forEach(line => {
-          const trimmed = line.trim();
-          if (trimmed.includes('=')) {
-            const [key, value] = trimmed.split('=');
-            const cleanKey = key.trim().toLowerCase();
-            const cleanValue = value.trim();
-            
-            switch (cleanKey) {
-              case 'players':
-                players = parseInt(cleanValue) || 0;
-                break;
-              case 'maxplayers':
-                maxPlayers = parseInt(cleanValue) || 50;
-                break;
-              case 'map':
-                map = cleanValue;
-                break;
-              case 'hostname':
-                hostname = cleanValue;
-                break;
-              case 'gametype':
-                // Could be useful for additional info
-                break;
-            }
-          }
-        });
-        
-        resolve({
-          online: true,
-          players,
-          maxPlayers,
-          map,
-          hostname
-        });
-      } catch (error) {
-        console.error(`Error parsing response from ${ip}:${port}:`, error);
-        resolve({
-          online: true,
-          players: 0,
-          maxPlayers: 50,
-          map: 'Unknown',
-          hostname: 'Unknown',
-          note: 'Server responded but data parsing failed'
-        });
-      }
-    });
-
-    client.on('error', (err) => {
-      clearTimeout(timeout);
-      client.close();
-      resolve({
-        online: false,
-        players: 0,
-        maxPlayers: 0,
-        map: 'Unknown',
-        hostname: 'Unknown',
-        error: 'Connection failed'
-      });
-    });
-
-    // Arma 3 specific query packets - try multiple formats
-    const arma3Queries = [
-      // Standard Source Engine query (most Arma servers respond to this)
-      Buffer.from([0xFF, 0xFF, 0xFF, 0xFF, 0x54, 0x53, 0x6F, 0x75, 0x72, 0x63, 0x65, 0x20, 0x45, 0x6E, 0x67, 0x69, 0x6E, 0x65, 0x20, 0x51, 0x75, 0x65, 0x72, 0x79, 0x00]),
-      // Alternative query format
-      Buffer.from([0xFF, 0xFF, 0xFF, 0xFF, 0x55]),
-      // Gamespy query (some Arma servers respond to this)
-      Buffer.from([0xFE, 0xFD, 0x09, 0x00, 0x00, 0x00, 0x01]),
-      // Simple ping for basic connectivity
-      Buffer.from('ping'),
-      // A2S_INFO query
-      Buffer.from([0xFF, 0xFF, 0xFF, 0xFF, 0x54])
-    ];
-
-    // Send the first query
-    client.send(arma3Queries[0], port, ip);
-  });
-}
 
 // TCP connection test (fallback for Bisect hosting)
 async function testTCPConnection(ip, port) {
@@ -194,86 +90,279 @@ async function testUDPPort(ip, port) {
   });
 }
 
-// Main query function with proper Arma 3 server detection and multiple query types
-async function queryArmaServer(ip, port, fallbackPorts = []) {
-  const allPorts = [port, ...fallbackPorts];
-  
-  for (const testPort of allPorts) {
+// BattleMetrics-style Steam Query API with detailed info
+async function querySteamAPI(ip, port) {
+  return new Promise(async (resolve) => {
     try {
-      console.log(`Trying Arma 3 query on ${ip}:${testPort}...`);
+      // Step 1: Check if server is registered with Steam Master Server
+      const masterServerUrl = `https://api.steampowered.com/ISteamApps/GetServersAtAddress/v1/?addr=${ip}&appid=107410`;
       
-      // Try multiple query types for this port
-      const queryTypes = [
-        { name: 'Source Engine', packet: Buffer.from([0xFF, 0xFF, 0xFF, 0xFF, 0x54, 0x53, 0x6F, 0x75, 0x72, 0x63, 0x65, 0x20, 0x45, 0x6E, 0x67, 0x69, 0x6E, 0x65, 0x20, 0x51, 0x75, 0x65, 0x72, 0x79, 0x00]) },
-        { name: 'A2S_INFO', packet: Buffer.from([0xFF, 0xFF, 0xFF, 0xFF, 0x54]) },
-        { name: 'Gamespy', packet: Buffer.from([0xFE, 0xFD, 0x09, 0x00, 0x00, 0x00, 0x01]) },
-        { name: 'Ping', packet: Buffer.from('ping') }
-      ];
-      
-      for (const queryType of queryTypes) {
-        try {
-          console.log(`  Trying ${queryType.name} query...`);
-          const result = await queryWithPacket(ip, testPort, queryType.packet);
-          if (result.online) {
-            return {
-              ...result,
-              actualPort: testPort,
-              queryType: queryType.name
-            };
-          }
-        } catch (error) {
-          console.log(`  ${queryType.name} query failed:`, error.message);
-          continue;
+      const masterServerResponse = await new Promise((resolveMaster) => {
+        const timeout = setTimeout(() => {
+          resolveMaster(null);
+        }, 3000);
+
+        https.get(masterServerUrl, (res) => {
+          clearTimeout(timeout);
+          let data = '';
+          
+          res.on('data', (chunk) => {
+            data += chunk;
+          });
+          
+          res.on('end', () => {
+            try {
+              const response = JSON.parse(data);
+              console.log('Steam Master Server API response:', response);
+              resolveMaster(response);
+            } catch (error) {
+              resolveMaster(null);
+            }
+          });
+        }).on('error', () => {
+          clearTimeout(timeout);
+          resolveMaster(null);
+        });
+      });
+
+      // Step 2: If server is registered, try to get detailed info
+      if (masterServerResponse && masterServerResponse.response && masterServerResponse.response.servers && masterServerResponse.response.servers.length > 0) {
+        const serverInfo = masterServerResponse.response.servers.find(server => 
+          server.addr && server.addr.includes(`:${port}`)
+        ) || masterServerResponse.response.servers[0];
+        
+        // Step 3: Try to get detailed server info using Steam's detailed query
+        const detailedInfo = await querySteamDetailedInfo(ip, port);
+        
+        if (detailedInfo.online) {
+          resolve({
+            online: true,
+            players: detailedInfo.players || serverInfo.players || 0,
+            maxPlayers: detailedInfo.maxPlayers || serverInfo.max_players || 50,
+            map: detailedInfo.map || serverInfo.map || 'Unknown',
+            hostname: detailedInfo.hostname || serverInfo.name || 'Unknown',
+            note: 'Detailed data from Steam API'
+          });
+        } else {
+          // Fallback to basic master server info
+          resolve({
+            online: true,
+            players: serverInfo.players || 0,
+            maxPlayers: serverInfo.max_players || 50,
+            map: serverInfo.map || 'Unknown',
+            hostname: serverInfo.name || 'Unknown',
+            note: 'Basic data from Steam Master Server API'
+          });
         }
-      }
-      
-      // Fallback: test basic TCP connectivity
-      const tcpOnline = await testTCPConnection(ip, testPort);
-      if (tcpOnline) {
-        return {
-          online: true,
-          players: 0,
-          maxPlayers: 50,
-          map: 'Unknown',
-          hostname: `Server ${ip}:${testPort}`,
-          note: 'Server online but all Arma 3 queries failed',
-          actualPort: testPort
-        };
-      }
-      
-      // Additional fallback: test UDP port availability
-      const udpAvailable = await testUDPPort(ip, testPort);
-      if (udpAvailable) {
-        return {
-          online: true,
-          players: 0,
-          maxPlayers: 50,
-          map: 'Unknown',
-          hostname: `Server ${ip}:${testPort}`,
-          note: 'Server online (UDP port open) but queries disabled',
-          actualPort: testPort
-        };
+      } else {
+        // Server not in Steam master list, try direct query
+        const directInfo = await querySteamDetailedInfo(ip, port);
+        resolve(directInfo);
       }
       
     } catch (error) {
-      console.error(`Error querying server ${ip}:${testPort}:`, error);
-      continue;
+      resolve({
+        online: false,
+        players: 0,
+        maxPlayers: 0,
+        map: 'Unknown',
+        hostname: 'Unknown',
+        error: 'Steam API error'
+      });
     }
-  }
-  
-  // All ports failed
-  return {
-    online: false,
-    players: 0,
-    maxPlayers: 0,
-    map: 'Unknown',
-    hostname: 'Unknown',
-    error: 'Server offline'
-  };
+  });
 }
 
-// Helper function to send a specific query packet
-async function queryWithPacket(ip, port, packet) {
+// Steam detailed server info query (like BattleMetrics uses)
+async function querySteamDetailedInfo(ip, port) {
+  return new Promise((resolve) => {
+    // Steam's detailed server info query
+    const url = `https://api.steampowered.com/ISteamApps/GetServersAtAddress/v1/?addr=${ip}:${port}&appid=107410&detailed=1`;
+    
+    const timeout = setTimeout(() => {
+      resolve({
+        online: false,
+        players: 0,
+        maxPlayers: 0,
+        map: 'Unknown',
+        hostname: 'Unknown',
+        error: 'Detailed query timeout'
+      });
+    }, 3000);
+
+    https.get(url, (res) => {
+      clearTimeout(timeout);
+      let data = '';
+      
+      res.on('data', (chunk) => {
+        data += chunk;
+      });
+      
+      res.on('end', () => {
+        try {
+          const response = JSON.parse(data);
+          console.log('Steam detailed query response:', response);
+          
+          if (response.response && response.response.servers && response.response.servers.length > 0) {
+            const serverInfo = response.response.servers[0];
+            resolve({
+              online: true,
+              players: serverInfo.players || 0,
+              maxPlayers: serverInfo.max_players || 50,
+              map: serverInfo.map || 'Unknown',
+              hostname: serverInfo.name || 'Unknown',
+              note: 'Detailed Steam query successful'
+            });
+          } else {
+            resolve({
+              online: false,
+              players: 0,
+              maxPlayers: 0,
+              map: 'Unknown',
+              hostname: 'Unknown',
+              error: 'No detailed server info available'
+            });
+          }
+        } catch (error) {
+          resolve({
+            online: false,
+            players: 0,
+            maxPlayers: 0,
+            map: 'Unknown',
+            hostname: 'Unknown',
+            error: 'Detailed query parsing failed'
+          });
+        }
+      });
+    }).on('error', (err) => {
+      clearTimeout(timeout);
+      resolve({
+        online: false,
+        players: 0,
+        maxPlayers: 0,
+        map: 'Unknown',
+        hostname: 'Unknown',
+        error: 'Detailed query failed'
+      });
+    });
+  });
+}
+
+// BattleMetrics API query (get detailed server info)
+async function queryBattleMetricsAPI(ip, port) {
+  return new Promise((resolve) => {
+    const serverId = BATTLEMETRICS_SERVER_IDS[ip];
+    
+    if (!serverId || !BATTLEMETRICS_API_KEY) {
+      resolve({
+        online: false,
+        players: 0,
+        maxPlayers: 0,
+        map: 'Unknown',
+        hostname: 'Unknown',
+        error: 'BattleMetrics API not configured'
+      });
+      return;
+    }
+    
+    // BattleMetrics API endpoint for server info
+    const url = `https://api.battlemetrics.com/servers/${serverId}`;
+    
+    const timeout = setTimeout(() => {
+      resolve({
+        online: false,
+        players: 0,
+        maxPlayers: 0,
+        map: 'Unknown',
+        hostname: 'Unknown',
+        error: 'BattleMetrics API timeout'
+      });
+    }, 5000);
+
+    const options = {
+      headers: {
+        'Authorization': `Bearer ${BATTLEMETRICS_API_KEY}`,
+        'Content-Type': 'application/json'
+      }
+    };
+
+    https.get(url, options, (res) => {
+      clearTimeout(timeout);
+      let data = '';
+      
+      res.on('data', (chunk) => {
+        data += chunk;
+      });
+      
+      res.on('end', () => {
+        try {
+          const response = JSON.parse(data);
+          console.log('BattleMetrics API response:', response);
+          
+          if (response.data && response.data.attributes) {
+            const serverInfo = response.data.attributes;
+            
+            // Parse location array if present
+            let location = 'Unknown';
+            if (serverInfo.location && Array.isArray(serverInfo.location) && serverInfo.location.length >= 2) {
+              location = `${serverInfo.location[0]}, ${serverInfo.location[1]}`;
+            }
+            
+            // Parse details object if present
+            let map = 'Unknown';
+            if (serverInfo.details && typeof serverInfo.details === 'object') {
+              map = serverInfo.details.map || serverInfo.details.level || 'Unknown';
+            }
+            
+            resolve({
+              online: serverInfo.status === 'online',
+              players: serverInfo.players || 0,
+              maxPlayers: serverInfo.maxPlayers || 50,
+              map: map,
+              hostname: serverInfo.name || 'Unknown',
+              location: location,
+              country: serverInfo.country || 'Unknown',
+              port: serverInfo.port || port,
+              queryStatus: serverInfo.queryStatus || 'Unknown',
+              note: 'Data from BattleMetrics API'
+            });
+          } else {
+            resolve({
+              online: false,
+              players: 0,
+              maxPlayers: 0,
+              map: 'Unknown',
+              hostname: 'Unknown',
+              error: 'Invalid BattleMetrics API response'
+            });
+          }
+        } catch (error) {
+          resolve({
+            online: false,
+            players: 0,
+            maxPlayers: 0,
+            map: 'Unknown',
+            hostname: 'Unknown',
+            error: 'BattleMetrics API parsing failed'
+          });
+        }
+      });
+    }).on('error', (err) => {
+      clearTimeout(timeout);
+      resolve({
+        online: false,
+        players: 0,
+        maxPlayers: 0,
+        map: 'Unknown',
+        hostname: 'Unknown',
+        error: 'BattleMetrics API request failed'
+      });
+    });
+  });
+}
+
+// Direct server query (like BattleMetrics does when Steam API fails)
+async function queryDirectServer(ip, port) {
   return new Promise((resolve) => {
     const client = dgram.createSocket('udp4');
     
@@ -285,9 +374,9 @@ async function queryWithPacket(ip, port, packet) {
         maxPlayers: 0,
         map: 'Unknown',
         hostname: 'Unknown',
-        error: 'Query timeout'
+        error: 'Direct query timeout'
       });
-    }, 2000); // Shorter timeout for individual queries
+    }, 2000);
 
     client.on('message', (msg) => {
       clearTimeout(timeout);
@@ -295,15 +384,15 @@ async function queryWithPacket(ip, port, packet) {
       
       try {
         const response = msg.toString('utf8');
-        console.log(`    Raw response:`, response);
+        console.log(`Direct server response from ${ip}:${port}:`, response);
         
-        // Parse response - handle different response formats
+        // Parse Arma 3 server response
         let players = 0;
-        let maxPlayers = 75;
+        let maxPlayers = 50;
         let map = 'Unknown';
         let hostname = 'Unknown';
         
-        // Try different parsing approaches
+        // Try to extract information from response
         const lines = response.split('\n');
         lines.forEach(line => {
           const trimmed = line.trim();
@@ -338,31 +427,15 @@ async function queryWithPacket(ip, port, packet) {
               maxPlayers = parseInt(match[2]);
             }
           }
-          
-          // Look for map name in various formats
-          if (trimmed.toLowerCase().includes('map:') || trimmed.toLowerCase().includes('level:')) {
-            const mapMatch = trimmed.match(/(?:map|level):\s*(.+)/i);
-            if (mapMatch) {
-              map = mapMatch[1].trim();
-            }
-          }
-          
-          // Look for hostname in various formats
-          if (trimmed.toLowerCase().includes('hostname:') || trimmed.toLowerCase().includes('name:')) {
-            const nameMatch = trimmed.match(/(?:hostname|name):\s*(.+)/i);
-            if (nameMatch) {
-              hostname = nameMatch[1].trim();
-            }
-          }
         });
         
-        // If we got any response, the server is online
         resolve({
           online: true,
           players,
           maxPlayers,
           map,
-          hostname
+          hostname,
+          note: 'Direct server query successful'
         });
       } catch (error) {
         resolve({
@@ -385,13 +458,90 @@ async function queryWithPacket(ip, port, packet) {
         maxPlayers: 0,
         map: 'Unknown',
         hostname: 'Unknown',
-        error: 'Query failed'
+        error: 'Direct query failed'
       });
     });
 
-    client.send(packet, port, ip);
+    // Send Arma 3 query packet
+    const queryPacket = Buffer.from([0xFF, 0xFF, 0xFF, 0xFF, 0x54, 0x53, 0x6F, 0x75, 0x72, 0x63, 0x65, 0x20, 0x45, 0x6E, 0x67, 0x69, 0x6E, 0x65, 0x20, 0x51, 0x75, 0x65, 0x72, 0x79, 0x00]);
+    client.send(queryPacket, port, ip);
   });
 }
+
+
+
+// BattleMetrics API first, then fallback query function
+async function queryArmaServer(ip, port, fallbackPorts = []) {
+  const allPorts = [port, ...fallbackPorts];
+  
+  for (const testPort of allPorts) {
+    try {
+      console.log(`Trying BattleMetrics API query on ${ip}:${testPort}...`);
+      
+      // Try BattleMetrics API first (most reliable)
+      const battleMetricsResult = await queryBattleMetricsAPI(ip, testPort);
+      if (battleMetricsResult.online || (battleMetricsResult.error && !battleMetricsResult.error.includes('not configured'))) {
+        return {
+          ...battleMetricsResult,
+          actualPort: testPort,
+          queryType: 'BattleMetrics API'
+        };
+      }
+      
+      // Fallback: Try Steam API
+      console.log(`  Trying Steam API query for ${ip}:${testPort}...`);
+      const steamResult = await querySteamAPI(ip, testPort);
+      if (steamResult.online) {
+        return {
+          ...steamResult,
+          actualPort: testPort,
+          queryType: 'Steam API'
+        };
+      }
+      
+      // Fallback: Try direct server query
+      console.log(`  Trying direct server query for ${ip}:${testPort}...`);
+      const directResult = await queryDirectServer(ip, testPort);
+      if (directResult.online) {
+        return {
+          ...directResult,
+          actualPort: testPort,
+          queryType: 'Direct Server Query'
+        };
+      }
+      
+      // Final fallback: test basic connectivity
+      const udpAvailable = await testUDPPort(ip, testPort);
+      if (udpAvailable) {
+        return {
+          online: true,
+          players: 0,
+          maxPlayers: 50,
+          map: 'Unknown',
+          hostname: `Server ${ip}:${testPort}`,
+          note: 'Server online but queries unavailable',
+          actualPort: testPort
+        };
+      }
+      
+    } catch (error) {
+      console.error(`Error querying server ${ip}:${testPort}:`, error);
+      continue;
+    }
+  }
+  
+  // All ports failed
+  return {
+    online: false,
+    players: 0,
+    maxPlayers: 0,
+    map: 'Unknown',
+    hostname: 'Unknown',
+    error: 'Server offline (all ports tried)'
+  };
+}
+
+
 
 export async function getAllServerStatus() {
   const results = [];
